@@ -1,14 +1,14 @@
 ---
 name: doc-digest
-description: Digests a dense technical document (SDD, ADR, plan, spec, RFC, PR/MR) into a one-minute visual read and surfaces its hidden risks, assumptions and trade-offs. Use when the user asks to digest, visualize or extract risks from such a document, in any language — e.g. "mastiga esse SDD", "quais os riscos desse plano".
+description: Digests long AI output — an agent reply, SDD, ADR, plan, spec, RFC, PR/MR — given as a file or pasted text into a one-minute visual read, and surfaces its hidden risks, assumptions and trade-offs. Use when the user asks to digest, summarize, visualize or extract risks from a long text, in any language — e.g. "mastiga essa resposta", "resume isso", "quais os riscos desse plano".
 license: MIT
 ---
 
 # Doc Digest
 
-Produces a visual digest of a technical document so the developer decides
-consciously instead of skimming and coding blind. Default output is Markdown;
-`--html` also generates a standalone page.
+Produces a visual digest of a long text — a document or an agent reply — so
+the developer decides consciously instead of skimming and coding blind.
+Default output is Markdown; `--html` also generates a standalone page.
 
 ## Language
 
@@ -42,13 +42,18 @@ inside the translated heading, and Mermaid `classDef` names stay in English.
 
 ## Procedure
 
-1. **Get the document as a file.** Local path: use it directly. PR/MR by
-   number or URL: save title and description to a file and digest that file;
-   every cited line refers to it.
-   ```bash
-   gh pr view <n> --json title,body -q '"# " + .title + "\n\n" + .body' > docs/digests/<name>.md
-   glab mr view <n> > docs/digests/<name>.md
-   ```
+1. **Get the source as a file**; every cited line refers to it.
+   - Local path: use it directly.
+   - PR/MR by number or URL: save title and description to a file.
+     ```bash
+     gh pr view <n> --json title,body -q '"# " + .title + "\n\n" + .body' > docs/digests/<name>.md
+     glab mr view <n> > docs/digests/<name>.md
+     ```
+   - Pasted text, or a reply from this conversation ("your last answer"):
+     write it verbatim, with nothing added or trimmed, to
+     `docs/digests/<name>.md` at the root of the current repository
+     (`git rev-parse --show-toplevel`), or in the current directory outside
+     one. `<name>` is 3 to 5 kebab-case words naming its subject.
 2. **Map the headings with exact line numbers**, ignoring anything inside code
    blocks, and note the total line count N (`wc -l <doc>`):
    ````bash
@@ -59,18 +64,22 @@ inside the translated heading, and Mermaid `classDef` names stay in English.
    Over ~1500 lines, read it in blocks; the step is done when the last block
    read ends at line N.
 4. **Classify type and mode.** Type: SDD | ADR | Implementation Plan |
-   Spec/RFC | PR/MR (an ADR has Context/Decision/Consequences; a plan has
-   phases/tasks; a PR has "what changed/how to validate"). The type decides
-   the diagram and the matrix columns (see Per type). Mode:
+   Spec/RFC | PR/MR | Reply (an ADR has Context/Decision/Consequences; a plan
+   has phases/tasks; a PR has "what changed/how to validate"; Reply is
+   everything else: an explanation, analysis, comparison or recommendation).
+   The type decides the diagram and the matrix columns (see Per type). Mode
+   applies only when the text changes a system; a Reply that changes none
+   drops the Mode label. Mode:
    - **evolution**: a system exists and something changes in it (default case);
    - **greenfield**: nothing exists yet, everything is new;
    - **in-place**: the same component is both before and after (DDL, refactor).
    A mixed document (backend evolves, app is new) and a new system replacing a
    legacy one are both evolution. When the document does not make clear what
    already exists, record it as a gap.
-5. **Select and rank.** First cross-check every requirement against the
-   contract that serves it (endpoint, schema, field) and every contract
-   against a requirement; each mismatch is an internal contradiction. Then
+5. **Select and rank.** First cross-check the text against itself: every
+   requirement against the contract that serves it (endpoint, schema, field),
+   every contract against a requirement, and every conclusion against what
+   it rests on; each mismatch is an internal contradiction. Then
    list every assumption and decision you found, and classify each gap
    category as covered or gap: rollback, security,
    concurrency, observability, testing, data migration, external dependency
@@ -192,6 +201,7 @@ Filling rules:
 | ADR | `flowchart LR`: the problem → each option considered, the chosen one with class `chosen`, the deciding criterion on its edge | Option · In favor · Against · Why chosen or dropped |
 | Implementation Plan | `flowchart LR` of phases in execution order, edges = dependencies; a step with no way back (delete, migrate data, publish) gets class `irreversible` | Phase · Delivers · Depends on · Way back (rollback) |
 | PR/MR | areas touched and the flow they affect, marked by mode | Area · What changes · What it may break · How to validate |
+| Reply | chosen by content (see Diagram rules); none when the text has no flow, structure or comparison | Point · Conclusion · Based on · Still open |
 
 ```
 classDef chosen stroke-width:3px
@@ -200,7 +210,8 @@ classDef irreversible stroke:#D4380D,stroke-width:2px
 
 Legends: ADR "thick border = chosen option"; plan "arrow = depends on · red
 border = no way back". The mode conventions below apply to component diagrams
-(SDD, Spec/RFC, PR/MR); in an ADR or a plan the mode only goes in the metadata.
+(SDD, Spec/RFC, PR/MR, a Reply that changes a system); in an ADR or a plan
+the mode only goes in the metadata.
 
 ## Diagram rules
 

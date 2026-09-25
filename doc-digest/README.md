@@ -1,7 +1,8 @@
 # Doc Digest (`doc-digest`)
 
-Visual synthesis of AI-generated technical documents: SDD, ADR, implementation
-plan, spec, RFC, PR/MR description. Instead of 20 pages of markdown, a
+Visual synthesis of long AI output: an agent reply pasted as text, or a
+document such as an SDD, ADR, implementation plan, spec, RFC or PR/MR
+description. Instead of 20 pages of markdown, a
 one-minute digest with a Mermaid diagram, a decision matrix, hidden risks and
 assumptions, and an index with exact line numbers from the original document.
 
@@ -85,11 +86,13 @@ diagram shows the error on screen.
 
 ## Evals
 
-`evals/evals.json` contains three cases with the documents in `evals/files/`: a
+`evals/evals.json` contains four cases with the documents in `evals/files/`: a
 short ADR (digest with no diagram), an SDD in evolution mode with a contract
-inconsistency the Box must catch, and a 900-line greenfield plan with `--html`.
-All three source documents are in Portuguese, which also covers the rule that
-the digest keeps the document's language while the skill itself is in English.
+inconsistency the Box must catch, a 900-line greenfield plan with `--html`, and
+an agent reply pasted as text, with a contradiction between cache TTL and
+freshness the Box must catch. All four sources are in Portuguese, which also
+covers the rule that the digest keeps the document's language while the skill
+itself is in English.
 Format compatible with Anthropic's
 [skill-creator](https://github.com/anthropics/skills).
 
@@ -132,6 +135,9 @@ claude -p "/doc-digest docs/specs/sdd-feature.md"
 codex exec "\$doc-digest docs/specs/sdd-feature.md"
 agy --print "/doc-digest docs/specs/sdd-feature.md"
 ```
+
+Pasted text works too: "resume isso: <text>", or "mastiga sua última
+resposta" for a reply from the same conversation.
 
 It also triggers from natural language, in any language: "summarize this SDD
 visually", "walk me through this plan with diagrams", "what are the hidden
