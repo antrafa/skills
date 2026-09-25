@@ -51,10 +51,15 @@ inside the translated heading, and Mermaid `classDef` names stay in English.
 1. **Get the source as a file**; every cited line refers to it. Everything
    this skill writes goes to the output folder `<out>`, never into a
    repository, because a digest is disposable: `~/.doc-digest/<project>/`,
-   where `<project>` is the name of the repository containing the document
-   (`basename "$(git -C <doc-dir> rev-parse --show-toplevel)"`) or of the
-   current one for text; outside a repository, `~/.doc-digest/` itself.
-   `<name>` is the original file name without extension. Create `<out>`.
+   where `<project>` is the repository containing the document, or the
+   current one for text. Get `<out>` and `<commit>` from the script, which
+   also creates the folder; pass the document, or `.` for text:
+   ```bash
+   <skill-folder>/scripts/source-info.sh <doc | .>
+   ```
+   Use its `out=` and `commit=` lines as printed, rather than recomputing them
+   with inline `git` commands: a shell hook that rewrites git output corrupts
+   them. `<name>` is the original file name without extension.
    - Local path: use it directly.
    - PR/MR by number or URL: save title and description to a file.
      ```bash
@@ -206,10 +211,9 @@ Questions to send back to the agent:
 
 Filling rules:
 
-- **`<commit>` pins the version the line numbers refer to:**
-  `git -C <doc-dir> log -1 --format=%h -- <doc>`, followed by `+ local edits`
-  when `git status --porcelain <doc>` is not empty. Outside a repository or
-  for a file never committed, omit it.
+- **`<commit>` pins the version the line numbers refer to:** the `commit=`
+  line from step 1, with `+ local edits` when the file differs from it. Empty
+  (outside a repository, a file never committed, pasted text): omit it.
 - **The bottom line is the conclusion, not an introduction:** a reader who
   stops there knows what is being asked and what could go wrong with it.
 - **Explain every acronym and term of art on first use**, in plain words
