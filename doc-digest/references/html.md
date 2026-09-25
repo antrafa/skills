@@ -2,7 +2,8 @@
 
 Generates the `.md` as usual and, in addition:
 
-1. `docs/digests/<name>-digest.html` with the same content as the template.
+1. `<out>/<name>-digest.html`, next to the `.md`, with the same content as
+   the template.
 2. The diagram in `<pre class="mermaid">`, with Mermaid from
    `https://cdn.jsdelivr.net/npm/mermaid@12/dist/mermaid.min.js` and
    `mermaid.initialize({ startOnLoad: true })`. The major stays pinned: an

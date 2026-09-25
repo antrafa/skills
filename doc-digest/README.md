@@ -27,7 +27,11 @@ replies in chat in the **user's language**. Nothing is ever translated.
 
 ## What comes out
 
-A `docs/digests/<doc-name>-digest.md` file with:
+A `~/.doc-digest/<project>/<doc-name>-digest.md` file, outside the
+repository because a digest is disposable (`<project>` is the repository name;
+outside a repository the file goes straight into `~/.doc-digest/`). Pasted text
+is first saved verbatim next to it, so line references have a file to point at.
+The digest contains:
 
 1. **TL;DR** in a single paragraph of up to 70 words.
 2. **Visual overview** in Mermaid, shaped by the document type: components
@@ -47,10 +51,10 @@ the one-minute read. Matrix and index are reference.
 The whole digest fits in 600 words excluding the diagram and is always smaller
 than the original; a short document comes out without a diagram or a matrix.
 
-Chat shows only the file path, the TL;DR and the Box. Mermaid does not render
-in a terminal; open the `.md` in VS Code, GitLab or GitHub.
+Chat shows only the absolute file path, the TL;DR and the Box. Mermaid does
+not render in a terminal; open the `.md` in VS Code or use `--html`.
 
-With `--html` the skill also generates `docs/digests/<name>-digest.html`,
+With `--html` the skill also generates `<name>-digest.html` in the same folder,
 standalone, with Mermaid.js from a CDN, ready for `xdg-open` (Linux) or `open`
 (macOS).
 
@@ -66,7 +70,7 @@ anything fails, and the skill fixes the problem before moving on. The script can
 also be run by hand:
 
 ```bash
-scripts/verify-digest.sh docs/digests/my-sdd-digest.md docs/specs/my-sdd.md
+scripts/verify-digest.sh ~/.doc-digest/my-repo/my-sdd-digest.md docs/specs/my-sdd.md
 ```
 
 Section headings are matched by language-agnostic stems, so the budget check
