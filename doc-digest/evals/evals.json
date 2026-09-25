@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "/doc-digest evals/files/adr-next-primeiro.md",
-      "expected_output": "Digest of a 77-line, 588-word ADR, above the short-text threshold: TL;DR, an options diagram with the chosen one highlighted, a matrix with the ADR columns, Anti-Vibe-Coding Box and index. Smaller than the original. Written in Portuguese, matching the source document, title prefix included.",
+      "expected_output": "Digest of a 77-line, 588-word ADR, above the short-text threshold: TL;DR, an options diagram with the chosen one highlighted, a matrix with the ADR columns, Anti-Vibe-Coding Box and Your move; no index, since the source has fewer than 100 lines. Smaller than the original. Written in Portuguese, matching the source document, title prefix included.",
       "files": ["evals/files/adr-next-primeiro.md"],
       "expectations": [
         "The file ~/.doc-digest/skills/adr-next-primeiro-digest.md was written and nothing was written inside the repository",
@@ -15,8 +15,9 @@
         "The classified type is ADR",
         "The digest is written in Portuguese, like the source document, with translated section headings and no English section titles",
         "scripts/verify-digest.sh exits with code 0",
-        "Chat shows only the path, the TL;DR and the Box",
-        "The title starts with '# Resumo:' and the type label is not in English"
+        "Chat shows only the path, the bottom line, the TL;DR, the Box and Your move",
+        "The title starts with '# Resumo:' and the type label is not in English",
+        "There is no quick reference index, since the ADR has fewer than 100 lines"
       ]
     },
     {
@@ -74,7 +75,8 @@
         "Every L<n> reference points to the saved copy of the text",
         "The digest is written in Portuguese, like the source text",
         "scripts/verify-digest.sh exits with code 0",
-        "Chat shows the absolute path of the digest, the bottom line, the TL;DR and the Box"
+        "Chat shows the absolute path of the digest, the bottom line, the TL;DR, the Box and Your move",
+        "Under '## Sua vez', the first question to send back to the agent asks how the 24h TTL reconciles with seeing each court entry as soon as it is published, and names the subject without referring to the digest"
       ]
     },
     {
@@ -89,7 +91,9 @@
         "The type is Reply and the digest is written in Portuguese",
         "Below the metadata there is an '**Em uma linha:**' line of at most 30 words",
         "The pasted text was saved verbatim under ~/.doc-digest/skills/ and nothing was written inside the repository",
-        "scripts/verify-digest.sh exits with code 0"
+        "scripts/verify-digest.sh exits with code 0",
+        "Under '## Sua vez', the '**Pedem a você:**' line names the approval the text waits on (moving on to the split into sub-issues)",
+        "The first question to send back asks how 500 thousand rows fit within the 30-second timeout, and stands alone without referring to the digest"
       ]
     },
     {

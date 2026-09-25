@@ -37,6 +37,9 @@ document-language content are a defect. For a Portuguese document:
 | `Legend:` | `Legenda:` |
 | `## Decision and change matrix` | `## Matriz de decisões e mudanças` |
 | `## Anti-Vibe-Coding Box` | `## Caixa Anti-Vibe-Coding` |
+| `## Your move` | `## Sua vez` |
+| `**Asked of you:**` | `**Pedem a você:**` |
+| `Questions to send back to the agent:` | `Perguntas para devolver ao agente:` |
 | `## Quick reference index` | `## Índice de consulta rápida` |
 | `Gaps (the document does not cover)` | `Lacunas (o documento não fala de)` |
 
@@ -106,22 +109,24 @@ inside the translated heading, and Mermaid `classDef` names stay in English.
    Fix every `ERROR` and re-run until it exits with code 0. Only then proceed.
    If the output contains `SKIPPED`, the diagram was not validated: relay those
    script lines, with the install commands, to the user in chat.
-8. **In chat, show only the generated path, the bottom line, the TL;DR and
-   the Anti-Vibe-Coding Box:** the digest's absolute path on one line, then
-   those three copied verbatim from the file. Mermaid does not render in a
+8. **In chat, show only the generated path, the bottom line, the TL;DR, the
+   Anti-Vibe-Coding Box and Your move:** the digest's absolute path on one
+   line, then those four copied verbatim from the file, so the questions can
+   be pasted straight back to the agent. Mermaid does not render in a
    terminal; the file is the visual output.
 
 ## Budget
 
-The digest is read in layers: the bottom line in ten seconds; TL;DR, diagram
-and Box in a minute; matrix and index are reference. The step 7 script
-enforces these limits:
+The digest is read in layers: the bottom line in ten seconds; TL;DR, diagram,
+Box and Your move in a minute; matrix and index are reference. The step 7
+script enforces these limits:
 
 | Block | Limit |
 |---|---|
 | Bottom line | 30 words |
 | TL;DR | 70 words |
 | Anti-Vibe-Coding Box | 3 items per block, 1 sentence each |
+| Your move | the asked line + 3 questions, 1 sentence each |
 | Matrix | 6 rows |
 | Index | 10 rows |
 | Whole digest, excluding Mermaid | 600 words, and always smaller than the original |
@@ -132,7 +137,10 @@ document the ceiling becomes the size of the original itself.
 
 Short text (under ~300 words, `wc -w`; lines mislead, since a prose paragraph
 is one line): omit diagram and matrix, unless it describes a flow with four
-or more steps. TL;DR, Box and index are enough.
+or more steps. TL;DR, Box and Your move are enough.
+
+Under 100 lines, omit the index as well: the reader reaches any line of a
+text that short without it, and the words go to Your move.
 
 ## Digest template
 
@@ -177,6 +185,12 @@ Legend: <the one for the type or mode, only with the classes present in the diag
 > - <category>: <what would need to be there> (L<n> where the subject nearly
 >   appears, if any)
 
+## Your move
+**Asked of you:** <the approval or decision the text is waiting on> (L<n>)
+
+Questions to send back to the agent:
+1. <question whose answer resolves the most damaging Box item>
+
 ## Quick reference index
 | Section | Line | Why open it |
 |---|---|---|
@@ -202,6 +216,12 @@ Filling rules:
   that implies it. A gap cites a line when some excerpt touches on the
   subject; a subject that is entirely absent gets no line.
 - The `[!CAUTION]` header lists the same 3 gaps detailed below it.
+- **Your move turns the Box into the next prompt.** The asked line names
+  what the text waits on from the reader (approve, choose, answer); a text
+  that asks nothing gets `—`. Each question resolves one Box item, most
+  damaging first, and stands alone when pasted into another session: it
+  names the subject and carries no reference to this digest ("item 2", "the
+  Box").
 - The matrix header above is the SDD one; other types use their columns from
   Per type.
 - A cell with no material becomes `—`. In greenfield, "what does NOT change" is

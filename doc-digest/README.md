@@ -48,16 +48,20 @@ The digest contains:
    back (plan), risk and how to validate (PR/MR).
 5. **Anti-Vibe-Coding Box**: the 3 most damaging assumptions, decisions and
    gaps, each citing a line in the original.
-6. **Quick reference index** with the exact line number of each section.
+6. **Your move**: what the text is waiting on from you, and up to 3
+   questions that resolve the Box, written to be pasted straight back to the
+   agent. The digest ends in the next prompt, not in more reading.
+7. **Quick reference index** with the exact line number of each section,
+   only for sources of 100 lines or more.
 
 The header pins the original's commit hash, so a digest whose line numbers no
 longer match a revised document is easy to spot. The bottom line is the
-ten-second read; TL;DR, diagram and Box are the one-minute read. Matrix and index are reference.
+ten-second read; TL;DR, diagram, Box and Your move are the one-minute read. Matrix and index are reference.
 The whole digest fits in 600 words excluding the diagram and is always smaller
 than the original; a short document comes out without a diagram or a matrix.
 
-Chat shows only the absolute file path, the bottom line, the TL;DR and the
-Box. Mermaid does not render in a terminal; open the `.md` in VS Code or use
+Chat shows only the absolute file path, the bottom line, the TL;DR, the
+Box and Your move. Mermaid does not render in a terminal; open the `.md` in VS Code or use
 `--html`.
 
 With `--html` the skill also generates `<name>-digest.html` in the same folder,
