@@ -1,0 +1,61 @@
+$ kubectl describe pod relatorios-backend-7d9f8c6b5-x2k4m -n clientea-hml
+
+Name:             relatorios-backend-7d9f8c6b5-x2k4m
+Namespace:        clientea-hml
+Node:             worker-03/10.40.2.13
+Start Time:       Wed, 03 Sep 2026 14:02:11 -0300
+Labels:           app=relatorios-backend
+                  pod-template-hash=7d9f8c6b5
+Status:           Running
+IP:               10.42.7.88
+Controlled By:    ReplicaSet/relatorios-backend-7d9f8c6b5
+Containers:
+  relatorios-backend:
+    Container ID:   containerd://a1b2c3d4e5f6
+    Image:          registry.example.com/relatorios-backend:3.8.2
+    Port:           8080/TCP
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       OOMKilled
+      Exit Code:    137
+      Started:      Wed, 03 Sep 2026 14:31:40 -0300
+      Finished:     Wed, 03 Sep 2026 14:32:58 -0300
+    Ready:          False
+    Restart Count:  14
+    Limits:
+      cpu:     1
+      memory:  256Mi
+    Requests:
+      cpu:     250m
+      memory:  256Mi
+    Liveness:   http-get http://:8080/actuator/health delay=10s timeout=1s period=5s #success=1 #failure=1
+    Readiness:  http-get http://:8080/actuator/health delay=10s timeout=1s period=5s #success=1 #failure=3
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             False
+  ContainersReady   False
+  PodScheduled      True
+Events:
+  Type     Reason     Age                    From               Message
+  ----     ------     ----                   ----               -------
+  Normal   Scheduled  32m                    default-scheduler  Successfully assigned clientea-hml/relatorios-backend-7d9f8c6b5-x2k4m to worker-03
+  Normal   Pulled     32m                    kubelet            Container image "registry.example.com/relatorios-backend:3.8.2" already present on machine
+  Normal   Created    31m (x3 over 32m)      kubelet            Created container relatorios-backend
+  Normal   Started    31m (x3 over 32m)      kubelet            Started container relatorios-backend
+  Warning  Unhealthy  30m (x6 over 31m)      kubelet            Liveness probe failed: Get "http://10.42.7.88:8080/actuator/health": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+  Normal   Killing    30m (x4 over 31m)      kubelet            Container relatorios-backend failed liveness probe, will be restarted
+  Warning  BackOff    2m14s (x87 over 29m)   kubelet            Back-off restarting failed container relatorios-backend in pod relatorios-backend-7d9f8c6b5-x2k4m_clientea-hml(9b1c...)
+
+$ kubectl top pod -n clientea-hml -l app=relatorios-backend
+NAME                                  CPU(cores)   MEMORY(bytes)
+relatorios-backend-7d9f8c6b5-x2k4m    412m         251Mi
+relatorios-backend-7d9f8c6b5-q7n3p    388m         249Mi
+
+$ kubectl logs relatorios-backend-7d9f8c6b5-x2k4m -n clientea-hml --previous | tail -5
+2026-09-03 14:32:41.118  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http)
+2026-09-03 14:32:41.902  INFO 1 --- [           main] b.c.s.relatorios.RelatoriosApplication   : Started RelatoriosApplication in 68.4 seconds (JVM running for 71.2)
+2026-09-03 14:32:44.310  INFO 1 --- [nio-8080-exec-1] b.c.s.relatorios.service.CacheWarmup     : Carregando cache de modelos de relatório (1.842 modelos)...
+2026-09-03 14:32:55.771  WARN 1 --- [nio-8080-exec-3] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Slow request /actuator/health took 4118ms
+2026-09-03 14:32:57.006  INFO 1 --- [nio-8080-exec-1] b.c.s.relatorios.service.CacheWarmup     : Cache carregado: 1.842 modelos, 213MB em heap

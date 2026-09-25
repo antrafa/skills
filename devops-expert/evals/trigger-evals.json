@@ -1,0 +1,18 @@
+[
+  {"query": "revisa esse .gitlab-ci.yml do api-protocolo pra mim, o job de deploy tá rodando em todo push e às vezes não acha a pasta dist/", "should_trigger": true},
+  {"query": "o job fica em pending pra sempre no runner, as tags são [docker, k8s-runner] — o que pode ser?", "should_trigger": true},
+  {"query": "segue o describe e os logs que eu já colei do relatorios-backend, tá em CrashLoopBackOff com OOMKilled. me devolve o deployment.yaml corrigido", "should_trigger": true},
+  {"query": "monta um chart helm pra esse serviço a partir desses manifests, com values-hml.yaml e values-pro.yaml separados", "should_trigger": true},
+  {"query": "a imagem tá com 1.4GB e demora 8 min pra buildar toda vez que mexo num .ts, otimiza esse Dockerfile", "should_trigger": true},
+  {"query": "esse compose sobe mas a api não conecta no postgres na primeira tentativa, precisa de retry?", "should_trigger": true},
+  {"query": "o terraform plan tá mostrando -/+ no aws_db_instance.principal depois que eu renomeei o resource, como evito recriar o banco?", "should_trigger": true},
+  {"query": "como migro o state local do terraform pra um bucket s3 com lock?", "should_trigger": true},
+  {"query": "dá uma olhada no cluster de homologação do cliente clientea, tem pod reiniciando no namespace relatorios", "should_trigger": false},
+  {"query": "o deploy do portal não sobe no cluster do cliente X, investiga pra mim o que tá acontecendo lá", "should_trigger": false},
+  {"query": "quais pods estão consumindo mais memória no cluster de produção agora?", "should_trigger": false},
+  {"query": "atualiza o portal desse cliente pra versão 4.1 do sistema", "should_trigger": false},
+  {"query": "a api de protocolo tá com p95 de 3s no pico, vai aguentar 10x o volume ano que vem?", "should_trigger": false},
+  {"query": "escreve a mensagem de commit pra esse diff do .gitlab-ci.yml", "should_trigger": false},
+  {"query": "explica como funciona o docker por baixo, namespaces e cgroups, quero estudar", "should_trigger": false},
+  {"query": "cria uma tela de cadastro no jcompany com upload de arquivo", "should_trigger": false}
+]

@@ -1,0 +1,70 @@
+{
+  "skill_name": "devops-expert",
+  "evals": [
+    {
+      "id": 1,
+      "name": "gitlab-ci-review",
+      "prompt": "Esse é o .gitlab-ci.yml do api-protocolo. O deploy pra produção tá rodando sozinho em todo push e às vezes o job de deploy reclama que não acha a pasta dist/. Dá uma revisada e me devolve o arquivo corrigido explicando o que mudou.",
+      "expected_output": "Arquivo .gitlab-ci.yml corrigido: only/except substituído por rules com fallback when: never, deploy em produção com when: manual restrito a main, dist/ passado via artifacts (não cache), segredo REGISTRY_PASSWORD removido do arquivo em favor de CI/CD Variable protected/masked, imagem com tag imutável (SHA) em vez de latest, build da imagem no stage build e reuso no deploy.",
+      "files": [
+        "evals/files/gitlab-ci/.gitlab-ci.yml"
+      ],
+      "expectations": [
+        "rules-em-vez-de-only-except: o .gitlab-ci.yml corrigido não usa mais only:/except: e usa rules:",
+        "deploy-prod-manual-e-restrito: o job de deploy em produção tem when: manual e só roda em branch main/master/default (ou tag protegida), não em qualquer push",
+        "dist-via-artifacts: dist/ é passado do build para os stages seguintes via artifacts:, não via cache:",
+        "segredo-fora-do-yaml-e-rotacao: REGISTRY_PASSWORD (Sup3rS3cr3t!) não aparece mais no arquivo; a resposta usa variáveis predefinidas do GitLab ($CI_REGISTRY_USER/$CI_REGISTRY_PASSWORD/$CI_JOB_TOKEN) OU CI/CD Variable protected/masked, E orienta rotacionar a senha vazada",
+        "imagem-com-tag-imutavel: a imagem é publicada/deployada com tag rastreável (ex.: $CI_COMMIT_SHORT_SHA ou $CI_COMMIT_SHA), não só :latest",
+        "artefato-unico-testado-e-deployado: o build da imagem/artefato não é refeito dentro do job de deploy; o deploy reutiliza o que foi gerado e testado antes",
+        "explica-set-image-noop: a resposta explica que kubectl set image com a mesma tag (:latest) não dispara rollout, e o job de deploy termina com kubectl rollout status",
+        "dind-configurado-corretamente: o job que faz docker build usa imagem docker + serviço dind com DOCKER_TLS_CERTDIR definido (ou usa kaniko/buildah), separado do job que roda kubectl",
+        "explicacao-cobre-os-dois-sintomas: resposta.md explica por que o deploy rodava em todo push E por que dist/ não era encontrado (cache não é garantido entre jobs)"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "dockerfile-optimize",
+      "prompt": "A imagem do api-protocolo tá com 1.4GB e o build demora uns 8 minutos toda vez que eu mudo qualquer arquivo .ts. Otimiza esse Dockerfile pra mim.",
+      "expected_output": "Dockerfile multi-stage (build com node:20, runtime com node:20-alpine ou slim), COPY package*.json + npm ci antes de COPY . . para aproveitar cache, remoção das ferramentas de debug (curl/vim/netcat), remoção do NPM_TOKEN em ENV (usar --secret do BuildKit), USER não-root, sugestão de .dockerignore.",
+      "files": [
+        "evals/files/docker/Dockerfile",
+        "evals/files/docker/package.json"
+      ],
+      "expectations": [
+        "multi-stage-build: o Dockerfile tem pelo menos dois estágios FROM (build e runtime), e o runtime não contém o compilador TypeScript/devDependencies",
+        "ordem-de-cache: COPY package*.json + npm ci/install acontece ANTES de COPY . . (ou equivalente), para não invalidar o cache de dependências a cada mudança de .ts",
+        "imagem-base-enxuta-no-runtime: o estágio final usa uma base alpine/slim/distroless, não node:20 completa",
+        "ferramentas-de-debug-removidas: curl, vim e netcat não são instalados na imagem final",
+        "npm-token-fora-da-imagem: o NPM_TOKEN não aparece em ENV/ARG no Dockerfile; a resposta orienta usar --secret do BuildKit ou .npmrc montado só no build",
+        "usuario-nao-root: o estágio final define USER não-root (ex.: node)",
+        "dockerignore-proposto: um .dockerignore é entregue ou proposto, excluindo pelo menos node_modules e .git",
+        "npm-ci-em-vez-de-install: usa npm ci (build reproduzível com lockfile) em vez de npm install, ou justifica explicitamente a exceção",
+        "identifica-node-env-antes-do-install: a resposta explica que ENV NODE_ENV=production antes do npm install pula devDependencies e que o build só passava porque node_modules do host entrava via COPY . .",
+        "orienta-rotacao-do-token: a resposta diz para rotacionar o NPM_TOKEN vazado, não só removê-lo do Dockerfile",
+        "runtime-sem-devdeps: o node_modules do runtime é gerado sem devDependencies (npm prune --omit=dev ou npm ci --omit=dev), não copiado integralmente do estágio de build",
+        "procedimento-de-validacao: a resposta inclui como verificar tamanho da imagem, ausência do segredo no docker history e cache funcionando após mudar um .ts"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "k8s-crashloop-diagnose",
+      "prompt": "O relatorios-backend em clientea-hml entrou em CrashLoopBackOff depois do deploy da 3.8.2. Segue a saída do describe, top e logs que eu já coletei, e o deployment.yaml atual. O que tá acontecendo e como corrijo? Me devolve o deployment.yaml corrigido.",
+      "expected_output": "Diagnóstico identificando DUAS causas a partir da evidência: (1) OOMKilled/exit 137 porque o cache warmup carrega 213MB em heap com limit de 256Mi; (2) liveness probe agressiva demais (initialDelay 10s vs boot de ~68s, timeout 1s, failureThreshold 1, apontando para /actuator/health lento) matando o container. Correção: aumentar memory limit com folga, adicionar startupProbe ou ajustar initialDelay/timeout/failureThreshold, apontar liveness para endpoint leve (/actuator/health/liveness) separado do readiness. NÃO deve simplesmente remover a liveness probe.",
+      "files": [
+        "evals/files/k8s/describe-pod.txt",
+        "evals/files/k8s/deployment.yaml"
+      ],
+      "expectations": [
+        "identifica-oomkilled: o diagnóstico cita OOMKilled / exit code 137 como causa de reinício e relaciona com o cache warmup de 213MB em heap contra o limit de 256Mi",
+        "identifica-liveness-agressiva: o diagnóstico cita a liveness probe como segunda causa (initialDelay 10s vs boot ~68s, timeout 1s, failureThreshold 1, endpoint /actuator/health lento de 4s)",
+        "aumenta-memory-limit-com-folga: o deployment.yaml corrigido sobe resources.limits.memory para um valor com folga sobre o uso observado (>= 512Mi), e a resposta justifica com os dados do top/log",
+        "nao-remove-liveness-probe: a correção NÃO simplesmente apaga a livenessProbe; ela é recalibrada (startupProbe adicionada e/ou initialDelaySeconds/timeoutSeconds/failureThreshold ajustados)",
+        "separa-liveness-de-readiness: liveness e readiness não apontam mais para o mesmo endpoint pesado; liveness usa endpoint leve (ex.: /actuator/health/liveness) ou a resposta explica por que manter",
+        "startup-probe-ou-delay-compativel-com-boot: há startupProbe ou initialDelaySeconds compatível com o boot de ~68s observado no log",
+        "ancora-em-evidencia: a explicação referencia dados concretos dos arquivos fornecidos (exit code 137, 251Mi no top, 'Started in 68.4 seconds', 'Slow request /actuator/health took 4118ms'), não só teoria genérica",
+        "pede-confirmacao-ou-alerta-antes-de-aplicar: a resposta não aplica nada por conta própria e orienta validar (kubectl apply --dry-run=client / kubectl diff) ou observar via kubectl top antes de fechar o valor de limit",
+        "ajusta-heap-da-jvm: a correção configura o heap da JVM em relação ao limit (JAVA_TOOL_OPTIONS -XX:MaxRAMPercentage ou -Xmx), não só o limit do container"
+      ]
+    }
+  ]
+}
