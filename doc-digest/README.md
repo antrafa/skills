@@ -64,6 +64,13 @@ Chat shows only the absolute file path, the bottom line, the TL;DR, the
 Box and Your move. Mermaid does not render in a terminal; open the `.md` in VS Code or use
 `--html`.
 
+Given the previous version of an iterated text (a concept round, a revised
+SDD) with `--since <previous>` or "what changed since the last round", the
+digest becomes a **delta**: a mind map of what was decided now, changed,
+reopened or vanished, and a change table in place of the matrix. An open
+question that vanishes without an answer ranks first. See
+[references/delta.md](references/delta.md).
+
 With `--html` the skill also generates `<name>-digest.html` in the same folder,
 standalone, with Mermaid.js from a CDN, ready for `xdg-open` (Linux) or `open`
 (macOS).
@@ -100,14 +107,16 @@ diagram shows the error on screen.
 
 ## Evals
 
-`evals/evals.json` contains six cases with the documents in `evals/files/`: a
+`evals/evals.json` contains seven cases with the documents in `evals/files/`: a
 77-line ADR (options diagram with the chosen one highlighted), an SDD in
 evolution mode with a contract inconsistency the Box must catch, a 900-line
 greenfield plan with `--html`, and three agent replies pasted as text: a cache
 proposal whose TTL contradicts freshness, a concept round drawn as a mind map
 whose synchronous export cannot fit the gateway timeout, and an incident
 analysis drawn as an Ishikawa whose stated root cause contradicts its own
-evidence. All six sources are in Portuguese, which also covers the rule that the digest keeps
+evidence; plus a delta of the concept's third round against the
+second, where the per-user limit vanishes and the fix for the timeout
+reaches the shared gateway. All sources are in Portuguese, which also covers the rule that the digest keeps
 the document's language while the skill itself is in English.
 Format compatible with Anthropic's
 [skill-creator](https://github.com/anthropics/skills).

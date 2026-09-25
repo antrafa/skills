@@ -110,6 +110,23 @@
         "The pasted text was saved verbatim under ~/.doc-digest/skills/ and nothing was written inside the repository",
         "scripts/verify-digest.sh exits with code 0"
       ]
+    },
+    {
+      "id": 7,
+      "prompt": "Saiu a terceira rodada do concept de exportação. Me mostra só o que mudou em relação à anterior: a nova é evals/files/resposta-concept-exportacao-r3.md e a anterior é evals/files/resposta-concept-exportacao.md",
+      "expected_output": "Delta digest of concept round 3 against round 2. The diagram is a mind map of the delta buckets. The change table shows audit and CPF masking decided, the gateway timeout changed from 30 to 120 s, XLSX reopened, and the per-user export limit (open in round 2, L35 there) vanished without an answer. The Box ranks the vanished limit first and flags that raising the shared gateway timeout reaches every API behind it.",
+      "files": ["evals/files/resposta-concept-exportacao-r3.md", "evals/files/resposta-concept-exportacao.md"],
+      "expectations": [
+        "The metadata has an '**Anterior:**' line linking round 2, and every L<n> points to round 3",
+        "The diagram is a mindmap whose branches are the delta buckets in Portuguese (Decidido agora, Mudou, Reaberto, Sumiu), only the non-empty ones",
+        "There is a '## O que mudou' table with Item, Antes, Agora, Efeito columns and at most 6 rows",
+        "The per-user export limit is classified as Sumiu and appears in the [!CAUTION] block",
+        "The first question under '## Sua vez' asks about the per-user export limit",
+        "The Box or the change table states that raising the gateway timeout to 120 s affects other APIs behind the same gateway",
+        "XLSX is classified as Reaberto",
+        "Nothing was written inside the repository",
+        "scripts/verify-digest.sh exits with code 0"
+      ]
     }
   ]
 }
