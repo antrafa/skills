@@ -1,0 +1,51 @@
+schema_version: '1.1'
+name: 19-wrap-from-evidence
+description: Evidence-based closing; records nothing without a yes.
+tags:
+- daily
+- gate
+context:
+  scaffold_script: fixture.sh
+execution:
+  prompt: /alterego wrap
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Bash
+  - Edit
+  - Write
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-commit-or-push
+  type: tool_used
+  tool: Bash
+  input_match: git\s+(commit|push|merge|tag)\b
+  min: 0
+  max: 0
+- name: read-git
+  type: tool_used
+  tool: Bash
+  input_match: git\s+(log|status)
+- name: no-journal-write
+  type: tool_used
+  tool: Write
+  input_match: journal|mentat
+  min: 0
+  max: 0
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if it rebuilds the day from the repository evidence (today''s commits and the
+
+    uncommitted change) and returns Done / Left over / Learned / Open risk with
+
+    tomorrow''s first step, then offers once to record the pending items and waits.
+
+    FAIL if it records anything without a yes or invents work not in the evidence.'

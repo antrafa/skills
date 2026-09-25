@@ -1,0 +1,407 @@
+{
+  "tipo_dossie": "governo_presidencial",
+  "nome_eleitoral": "Governo Jair Bolsonaro",
+  "nome_civil": "JAIR MESSIAS BOLSONARO",
+  "cargo": "Presidente da República (Mandato 2019-2022)",
+  "partido": "PSL / PL",
+  "uf": "BR",
+  "data_corte": "2022-12-31",
+  "mandato_periodo": "2019 a 2022",
+  "situacao": "Mandato Concluído",
+  "status_eleitoral": "Ex-Presidente da República / Inelegível pelo TSE até 2030",
+  "foto_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Jair_Bolsonaro_em_24_de_abril_de_2019.jpg/480px-Jair_Bolsonaro_em_24_de_abril_de_2019.jpg",
+  "salario_oficial_base": "R$ 30.934,70 (Subsídio mensal bruto fixado para a Presidência até 2022)",
+  "salario_label": "Subsídio Presidencial",
+  "salario_contexto": "Valor fixado pela legislação federal vigente durante o quadriênio 2019-2022",
+  "assiduidade_label": "Atividade do Mandato",
+  "assiduidade_contexto": "Gestão e chefia do Poder Executivo Federal",
+  "assiduidade_percentual": "48 meses de mandato executivo concluídos (01/01/2019 a 31/12/2022)",
+  "patrimonio_declarado_recente": "R$ 2.314.555,27 (TSE 2022)",
+  "titulo_secao_remuneracao": "💰 Despesas do Executivo e Cartões Corporativos",
+  "remuneracao_descricao": "Gastos da Presidência da República com suprimento de fundos, diárias e cartões corporativos auditados pela Controladoria-Geral da União (CGU) e Tribunal de Contas da União (TCU).",
+  "titulo_secao_atuacao": "📜 Reformas Estruturais e Marcos Legais Sancionados",
+  "itens_label": "Reformas / Atos",
+  "titulo_secao_controversias": "🚨 Crises, CPIs, Investigações e Fatos Verificados",
+  "resumo_cidadao_ia": {
+    "sintese": "O mandato presidencial de Jair Messias Bolsonaro (2019–2022) foi marcado por uma agenda econômica de cunho liberal com reformas estruturais, enfrentamento da pandemia de Covid-19 e forte polarização política e institucional. No plano econômico, o governo aprovou no Congresso a Reforma da Previdência (EC 103/2019), a Lei de Liberdade Econômica (Lei 13.874/2019), a autonomia formal do Banco Central (LC 179/2021), o Novo Marco Legal do Saneamento Básico (Lei 14.026/2020) e a privatização da Eletrobras (Lei 14.182/2021). Os dados do Banco Central (BCB SGS) registram inflação acumulada pelo IPCA de 26,89% no quadriênio, taxa Selic que recuou à mínima histórica de 2,0% em 2020 e encerrou em 13.75% em 2022 diante de pressões inflacionárias globais e locais, e depreciação acumulada do real frente ao dólar de 34,68% (R$ 3,87 para R$ 5,22). A Dívida Bruta do Governo Geral, que atingiu o pico de 86,9% do PIB em 2020 devido aos gastos emergenciais de combate à crise sanitária (Auxílio Emergencial), recuou para 71,69% ao fim de 2022 com a recuperação da arrecadação e superávit primário de R$ 54,1 bilhões no último ano. No levantamento de promessas de campanha registradas no TSE, o governo cumpriu integralmente cerca de 34,5% dos compromissos assumidos, com destaque positivo para a área de previdência e marco regulatório, e negativo para a não correção da tabela do IRPF para 5 salários mínimos e a disputa da reeleição em 2022. No âmbito ético e judicial, a gestão foi investigada pela CPI da Pandemia no Senado por sua conduta sanitária e atrasos na aquisição de vacinas; em 2023, o TSE declarou a inelegibilidade de Bolsonaro por 8 anos em razão de reunião com embaixadores em que foram propagadas alegações sem provas sobre o sistema eletrônico de votação. A defesa de Bolsonaro sustenta que atuou dentro dos limites constitucionais, que preservou o emprego por meio de programas emergenciais sem decretar lockdown nacional, que as contas de governo refletem superávit no último ano e que as acusações judiciais decorrem de perseguição política.",
+    "pontos_chave": [
+      {
+        "titulo": "Reformas Estruturais e Desestatizações",
+        "texto": "Aprovação da Reforma da Previdência (EC 103/2019), autonomia do BACEN (LC 179/2021), Marco do Saneamento e privatização da Eletrobras."
+      },
+      {
+        "titulo": "Gestão Macroeconômica e Fiscal",
+        "texto": "IPCA acumulado de 26,89%, Selic de 6,5% a 13,75% (com mínima de 2% em 2020), dólar com variação de +34,68% e dívida bruta encerrada em 71,69% do PIB com superávit fiscal em 2022."
+      },
+      {
+        "titulo": "Pandemia e Programas Emergenciais",
+        "texto": "Implementação do Auxílio Emergencial e BEm, com forte embate federativo contra governadores sobre medidas de distanciamento social e vacinação."
+      },
+      {
+        "titulo": "CPI da Pandemia e Julgamentos do TSE",
+        "texto": "Indiciamento no relatório final da CPI do Senado e posterior condenação à inelegibilidade até 2030 pelo plenário do TSE."
+      }
+    ],
+    "lacunas": [
+      "Processos em segredo de justiça parcial perante o Supremo Tribunal Federal sem conclusão definitiva até a data de corte.",
+      "Detalhamento de gastos sigilosos com segurança de estado protegido por legislação de proteção de inteligência da Presidência."
+    ],
+    "aviso": "Síntese gerada por IA a partir de séries temporais do Banco Central do Brasil, diários oficiais e fontes jornalísticas auditadas. Não constitui avaliação opinativa ou recomendação eleitoral."
+  },
+  "cobertura_pesquisa": {
+    "data_execucao": "2026-09-15",
+    "periodo": "01/01/2019 a 31/12/2022, com desdobramentos de auditoria até 2026",
+    "nomes_consultados": [
+      "Jair Bolsonaro",
+      "Jair Messias Bolsonaro",
+      "Governo Bolsonaro",
+      "Presidência da República 2019-2022"
+    ],
+    "eixos_verificados": [
+      "Indicadores macroeconômicos oficiais do BCB SGS (IPCA, Selic, Dólar, PIB, Dívida Bruta)",
+      "Contas públicas e cartões corporativos da Presidência da República (CGU/Tesouro)",
+      "Cumprimento de promessas de campanha registradas no TSE (G1 Fato ou Fake)",
+      "Reformas legislativas, emendas constitucionais e marcos regulatórios promulgados",
+      "Crises, CPIs do Congresso Nacional e investigações judiciais no STF e TSE"
+    ],
+    "fontes_consultadas": [
+      "Banco Central do Brasil - Sistema Gerenciador de Séries Temporais (SGS)",
+      "Secretaria do Tesouro Nacional / Relatório Fiscal do Governo Central",
+      "Controladoria-Geral da União (CGU) / Portal da Transparência",
+      "Congresso Nacional / Presidência da República (Legislação)",
+      "Supremo Tribunal Federal (STF)",
+      "Tribunal Superior Eleitoral (TSE)",
+      "Senado Federal (CPI da Pandemia)",
+      "G1 / Fato ou Fake"
+    ],
+    "limitacoes": [
+      "Dados de cartão corporativo analisados a partir da desclassificação de sigilo promovida pela CGU em janeiro de 2023.",
+      "Inquéritos conexos no STF em fase de instrução e relatórios policiais em andamento.",
+      "O recorte abrange estritamente o período do mandato executivo 2019-2022."
+    ]
+  },
+  "mandato_executivo": {
+    "id": "bolsonaro",
+    "presidente": "Jair Bolsonaro",
+    "partido": "PSL / PL",
+    "vice": "Hamilton Mourão",
+    "periodo": "2019–2022",
+    "ano_inicio": 2019,
+    "ano_fim": 2022,
+    "data_inicio": "01/01/2019",
+    "data_fim": "31/12/2022",
+    "mandatos": "1º mandato presidencial",
+    "ministros_notaveis": [
+      {"pasta": "Economia", "nome": "Paulo Guedes"},
+      {"pasta": "Banco Central", "nome": "Roberto Campos Neto"},
+      {"pasta": "Justiça e Segurança Pública", "nome": "Sergio Moro / André Mendonça / Anderson Torres"},
+      {"pasta": "Infraestrutura", "nome": "Tarcísio de Freitas"},
+      {"pasta": "Saúde", "nome": "Luiz Henrique Mandetta / Nelson Teich / Eduardo Pazuello / Marcelo Queiroga"},
+      {"pasta": "Relações Exteriores", "nome": "Ernesto Araújo / Carlos França"}
+    ]
+  },
+  "indicadores_economicos": {
+    "resumo_macro": {
+      "ipca_acumulado": 26.89,
+      "ipca_media_anual": 6.72,
+      "selic_inicial": 6.5,
+      "selic_final": 13.75,
+      "selic_media": 6.75,
+      "dolar_inicial": 3.8742,
+      "dolar_final": 5.2177,
+      "dolar_variacao_pct": 34.68,
+      "divida_bruta_inicial": 75.27,
+      "divida_bruta_final": 71.69,
+      "divida_bruta_variacao_pp": -3.58,
+      "pib_crescimento_medio_anual": 1.5
+    },
+    "series": {
+      "ipca": [
+        {"data": "01/01/2019", "valor": 0.32},
+        {"data": "01/12/2022", "valor": 0.62}
+      ],
+      "selic": [
+        {"data": "01/01/2019", "valor": 6.5},
+        {"data": "31/12/2022", "valor": 13.75}
+      ],
+      "dolar": [
+        {"data": "02/01/2019", "valor": 3.8742},
+        {"data": "30/12/2022", "valor": 5.2177}
+      ],
+      "divida_bruta": [
+        {"data": "01/01/2019", "valor": 75.27},
+        {"data": "01/12/2022", "valor": 71.69}
+      ],
+      "pib": [
+        {"data": "01/01/2019", "valor": 1.22},
+        {"data": "01/01/2020", "valor": -3.28},
+        {"data": "01/01/2021", "valor": 4.76},
+        {"data": "01/01/2022", "valor": 3.02}
+      ]
+    },
+    "grafico_anual": [
+      {
+        "ano": 2019,
+        "ipca": 4.31,
+        "selic_fim": 4.5,
+        "dolar_fim": 4.0307,
+        "divida_bruta_pib": 74.43,
+        "pib_crescimento": 1.22
+      },
+      {
+        "ano": 2020,
+        "ipca": 4.52,
+        "selic_fim": 2.0,
+        "dolar_fim": 5.1967,
+        "divida_bruta_pib": 86.9,
+        "pib_crescimento": -3.28
+      },
+      {
+        "ano": 2021,
+        "ipca": 10.06,
+        "selic_fim": 9.25,
+        "dolar_fim": 5.5805,
+        "divida_bruta_pib": 77.34,
+        "pib_crescimento": 4.76
+      },
+      {
+        "ano": 2022,
+        "ipca": 5.78,
+        "selic_fim": 13.75,
+        "dolar_fim": 5.2177,
+        "divida_bruta_pib": 71.69,
+        "pib_crescimento": 3.02
+      }
+    ]
+  },
+  "cofres_publicos": {
+    "resultado_fiscal_acumulado": "Déficit primário acumulado com pico em 2020 (R$ 743,3 bilhões - 9,8% do PIB decorrente da pandemia) e reversão para superávit primário em 2022 (R$ 54,1 bilhões - 0,5% do PIB).",
+    "divida_publica_trajetoria": "Dívida Bruta do Governo Geral iniciou em 75,27% do PIB (dez/2018), atingiu 86,9% em 2020 e encerrou o mandato em 71,69% em dezembro de 2022.",
+    "cartao_corporativo_total": "R$ 27,6 milhões despendidos pela Presidência da República no quadriênio 2019-2022, dos quais 49,5% foram destinados a despesas de hospedagem e alimentação em viagens.",
+    "fontes": [
+      "Banco Central do Brasil - Séries 13762 e 5396 (SGS)",
+      "Secretaria do Tesouro Nacional / Relatório Fiscal do Governo Central",
+      "Controladoria-Geral da União (CGU) / Dados Abertos de Cartão de Pagamento do Governo Federal"
+    ],
+    "descricao": "Dados macrofiscais oficiais consolidados do Governo Federal auditados pelo Tesouro Nacional e CGU."
+  },
+  "promessas_campanha": {
+    "fonte": "Levantamento G1 / Fato ou Fake / Diretrizes do Programa de Governo TSE 2018",
+    "total": 58,
+    "cumpridas": 20,
+    "parciais": 10,
+    "nao_cumpridas": 28,
+    "taxa_cumprimento_pct": 34.5,
+    "itens": [
+      {
+        "titulo": "Reforma da Previdência Social",
+        "categoria": "Previdência",
+        "status": "Cumprida",
+        "detalhes": "Promulgada a Emenda Constitucional nº 103/2019 instituindo idade mínima geral (65 anos para homens e 62 para mulheres) e novas alíquotas progressivas.",
+        "fonte": "Congresso Nacional (EC 103/2019)"
+      },
+      {
+        "titulo": "Autonomia formal do Banco Central",
+        "categoria": "Economia e Governança",
+        "status": "Cumprida",
+        "detalhes": "Sancionada a Lei Complementar nº 179/2021 estabelecendo mandato fixo de 4 anos não coincidente para a diretoria colegiada do BACEN.",
+        "fonte": "Diário Oficial da União (LC 179/2021)"
+      },
+      {
+        "titulo": "Redução do número de ministérios",
+        "categoria": "Administração Pública",
+        "status": "Cumprida em parte",
+        "detalhes": "Iniciou o governo com redução de 29 para 22 pastas ministeriais, mas posteriormente recriou os Ministérios das Comunicações e do Trabalho e Previdência, encerrando com 23 pastas.",
+        "fonte": "Diário Oficial da União / Casa Civil"
+      },
+      {
+        "titulo": "Isenção do IRPF até 5 salários mínimos",
+        "categoria": "Tributação",
+        "status": "Não cumprida",
+        "detalhes": "A tabela do Imposto de Renda de Pessoa Física permaneceu congelada durante todo o quadriênio sem a ampliação da faixa de isenção.",
+        "fonte": "Receita Federal / Portal G1"
+      },
+      {
+        "titulo": "Fim da reeleição para cargos do Poder Executivo",
+        "categoria": "Reforma Política",
+        "status": "Não cumprida",
+        "detalhes": "Nenhuma proposta de emenda à constituição extinguindo a reeleição foi pautada pelo Executivo e o mandatário concorreu à reeleição em 2022.",
+        "fonte": "TSE DivulgaCandContas 2022"
+      }
+    ]
+  },
+  "projetos_de_lei_e_reformas": [
+    {
+      "titulo": "Reforma da Previdência Social",
+      "norma": "Emenda Constitucional nº 103/2019",
+      "ano": 2019,
+      "ementa": "Altera o sistema de previdência social e estabelece regras de transição e disposições transitórias.",
+      "impacto": "Economia fiscal estimada em R$ 800 bilhões em 10 anos, fixação de idade mínima e unificação de regras do RGPS e RPPS.",
+      "link": "https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc103.htm"
+    },
+    {
+      "titulo": "Declaração de Direitos de Liberdade Econômica",
+      "norma": "Lei Ordinária nº 13.874/2019",
+      "ano": 2019,
+      "ementa": "Institui a Declaração de Direitos de Liberdade Econômica e estabelece normas de proteção à livre iniciativa.",
+      "impacto": "Dispensou alvarás e licenças para atividades de baixo risco e estabeleceu garantias contra interferência excessiva do Estado.",
+      "link": "https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2019/lei/l13874.htm"
+    },
+    {
+      "titulo": "Autonomia do Banco Central",
+      "norma": "Lei Complementar nº 179/2021",
+      "ano": 2021,
+      "ementa": "Define os objetivos do Banco Central do Brasil e dispõe sobre sua autonomia técnica, operacional e administrativa.",
+      "impacto": "Mandatos de 4 anos não coincidentes com o Presidente da República para blindar a política monetária de pressões político-eleitorais.",
+      "link": "https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp179.htm"
+    },
+    {
+      "titulo": "Novo Marco Legal do Saneamento Básico",
+      "norma": "Lei Ordinária nº 14.026/2020",
+      "ano": 2020,
+      "ementa": "Atualiza o marco legal do saneamento básico e aprimora as condições estruturais do setor.",
+      "impacto": "Fim dos contratos de programa sem licitação, abertura a concessões privadas e meta de universalização de água e esgoto até 2033.",
+      "link": "https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/lei/l14026.htm"
+    },
+    {
+      "titulo": "Desestatização da Eletrobras",
+      "norma": "Lei Ordinária nº 14.182/2021",
+      "ano": 2021,
+      "ementa": "Dispõe sobre a desestatização da empresa Centrais Elétricas Brasileiras S.A. - Eletrobras.",
+      "impacto": "Privatização por meio de capitalização em bolsa com diluição da participação societária direta da União para menos de 45%.",
+      "link": "https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/lei/l14182.htm"
+    }
+  ],
+  "evolucao_patrimonial": [
+    {
+      "ano": "2022",
+      "cargo_disputado": "Presidente da República (Candidatura à Reeleição)",
+      "valor": 2314555.27,
+      "valor_formatado": "R$ 2.314.555,27",
+      "variacao_percentual": "+1,4% vs 2018",
+      "principais_bens": "4 imóveis residenciais no Rio de Janeiro (Barra da Tijuca), veículo automotor e saldos em conta corrente e poupança."
+    },
+    {
+      "ano": "2018",
+      "cargo_disputado": "Presidente da República (Eleito)",
+      "valor": 2286779.48,
+      "valor_formatado": "R$ 2.286.779,48",
+      "variacao_percentual": "+10,2% vs 2014",
+      "principais_bens": "Casas no Rio de Janeiro, veículo automotor e aplicações de renda fixa."
+    }
+  ],
+  "controversias_e_noticias": [
+    {
+      "titulo": "CPI da Pandemia e Condução das Ações Sanitárias na COVID-19",
+      "data": "26/10/2021",
+      "categoria": "CPI / Gestão Sanitária",
+      "status": "Relatório Aprovado / Em Apuração no Judiciário",
+      "grau_veracidade": "Confirmado por documento/decisão",
+      "criterio_veracidade": "Relatório final formalmente aprovado pela CPI do Senado Federal encaminhado à PGR e STF.",
+      "o_que_esta_comprovado": "Aprovação do relatório final da comissão parlamentar de inquérito atribuindo responsabilidades políticas e sanitárias pela condução do governo federal na pandemia.",
+      "o_que_nao_esta_comprovado": "Sentença penal condenatória definitiva transitada em julgado contra o ex-mandatário pelos crimes tipificados no relatório da CPI.",
+      "resumo": "A CPI da Pandemia apurou omissões e atrasos na aquisição de vacinas, incentivo a tratamentos precoces sem eficácia científica comprovada e embate federativo com medidas de distanciamento social impostas por estados.",
+      "posicao_defesa": "A defesa de Bolsonaro sustentou que o governo federal repassou bilhões de reais a estados e municípios, adquiriu centenas de milhões de doses de vacinas após aprovação pela Anvisa e protegeu os empregos através do Auxílio Emergencial e BEm, caracterizando a comissão como um tribunal político da oposição.",
+      "fontes": [
+        {
+          "veiculo": "Senado Federal",
+          "data": "26/10/2021",
+          "url": "https://www12.senado.leg.br/noticias/materias/2021/10/26/cpi-da-pandemia-aprova-relatorio-final",
+          "status_link": "ok"
+        },
+        {
+          "veiculo": "G1",
+          "data": "26/10/2021",
+          "url": "https://g1.globo.com/politica/noticia/2021/10/26/cpi-da-covid-aprova-relatorio-final-que-pede-indiciamento-de-bolsonaro-e-outras-79-pessoas.ghtml",
+          "status_link": "ok"
+        }
+      ]
+    },
+    {
+      "titulo": "Reunião com Embaixadores e Declaração de Inelegibilidade pelo TSE",
+      "data": "30/06/2023",
+      "categoria": "Processo Eleitoral / TSE",
+      "status": "Condenado pelo Plenário do TSE",
+      "grau_veracidade": "Confirmado por documento/decisão",
+      "criterio_veracidade": "Acórdão do Tribunal Superior Eleitoral proferido na Ação de Investigação Judicial Eleitoral (AIJE) 0600814-85.",
+      "o_que_esta_comprovado": "O TSE julgou procedente a representação por 5 votos a 2 e decretou a inelegibilidade de Jair Bolsonaro pelo prazo de 8 anos contados a partir da eleição de 2022.",
+      "o_que_nao_esta_comprovado": "Fraude documental na contagem dos votos nas eleições gerais brasileiras.",
+      "resumo": "Em julho de 2022, no Palácio da Alvorada, o mandatário reuniu embaixadores estrangeiros e veiculou pela TV Brasil questionamentos à integridade das urnas eletrônicas sem apresentar provas documentais.",
+      "posicao_defesa": "A defesa alegou que a reunião com embaixadores ocorreu no exercício legítimo do direito à manifestação política, visando aprimoramento da transparência eleitoral com diálogo institucional, sem impacto desequilibrador no pleito eleitoral de 2022.",
+      "fontes": [
+        {
+          "veiculo": "Tribunal Superior Eleitoral",
+          "data": "30/06/2023",
+          "url": "https://www.tse.jus.br/comunicacao/noticias/2023/Junho/por-maioria-tse-declara-inelegibilidade-de-jair-bolsonaro-por-oito-anos",
+          "status_link": "ok"
+        },
+        {
+          "veiculo": "Agência Brasil",
+          "data": "30/06/2023",
+          "url": "https://agenciabrasil.ebc.com.br/justica/noticia/2023-06/tse-torna-jair-bolsonaro-inelegivel-por-oito-anos",
+          "status_link": "ok"
+        }
+      ]
+    },
+    {
+      "titulo": "Despesas e Faturas dos Cartões Corporativos da Presidência da República",
+      "data": "12/01/2023",
+      "categoria": "Gastos Públicos / CGU",
+      "status": "Auditoria Concluída / Dados Públicos",
+      "grau_veracidade": "Confirmado por documento/decisão",
+      "criterio_veracidade": "Planilhas oficiais de faturas do Cartão de Pagamento do Governo Federal publicadas pela Controladoria-Geral da União.",
+      "o_que_esta_comprovado": "Gasto total de R$ 27,6 milhões nos cartões vinculados à Secretaria de Administração da Presidência no período 2019-2022.",
+      "o_que_nao_esta_comprovado": "Desvio ilícito de recursos públicos comprovado em decisão condenatória do TCU.",
+      "resumo": "Abertura dos dados anteriormente sob sigilo revelou concentração de gastos em hotéis e restaurantes durante deslocamentos oficiais e motociatas.",
+      "posicao_defesa": "A assessoria do ex-presidente afirmou que os gastos do cartão corporativo englobavam a segurança presidencial, comitiva de apoio de centenas de militares e servidores em viagens oficiais por todo o país, mantendo patamar equivalente ou inferior a mandatos presidenciais anteriores quando corrigido pela inflação.",
+      "fontes": [
+        {
+          "veiculo": "Controladoria-Geral da União",
+          "data": "12/01/2023",
+          "url": "https://portaldatransparencia.gov.br/cartoes",
+          "status_link": "ok"
+        },
+        {
+          "veiculo": "G1",
+          "data": "12/01/2023",
+          "url": "https://g1.globo.com/politica/noticia/2023/01/12/cartao-corporativo-gastos-bolsonaro.ghtml",
+          "status_link": "ok"
+        }
+      ]
+    },
+    {
+      "titulo": "Inquérito sobre Destinação de Presentes e Joias Oficiais",
+      "data": "04/07/2024",
+      "categoria": "Investigação Policial / STF",
+      "status": "Indiciamento pela Polícia Federal / Em Análise na PGR",
+      "grau_veracidade": "Alegação oficial em apuração",
+      "criterio_veracidade": "Relatório de indiciamento formalizado pela Polícia Federal e protocolado no Supremo Tribunal Federal.",
+      "o_que_esta_comprovado": "A existência de inquérito policial e indiciamento formal perante o STF para apuração de peculato e lavagem de dinheiro.",
+      "o_que_nao_esta_comprovado": "Condenação penal ou julgamento de mérito pelo Poder Judiciário.",
+      "resumo": "Investigação sobre a suposta apropriação e venda no exterior de kits de joias e presentes de alto valor recebidos de autoridades estrangeiras durante compromissos oficiais da Presidência da República.",
+      "posicao_defesa": "Os advogados de Jair Bolsonaro afirmaram que os presentes foram catalogados pelo Gabinete Adjunto de Documentação Histórica (GADH) de acordo com a legislação e portarias vigentes à época, que os itens foram voluntariamente entregues ao TCU assim que solicitados e negaram qualquer desvio deliberado de bens da União.",
+      "fontes": [
+        {
+          "veiculo": "G1",
+          "data": "04/07/2024",
+          "url": "https://g1.globo.com/politica/noticia/2024/07/04/pf-indicia-bolsonaro-no-caso-das-joias-sauditas.ghtml",
+          "status_link": "ok"
+        },
+        {
+          "veiculo": "Supremo Tribunal Federal",
+          "data": "05/07/2024",
+          "url": "https://noticias.stf.jus.br",
+          "status_link": "ok"
+        }
+      ]
+    }
+  ],
+  "links_transparencia": {
+    "portal_transparencia_federal": "https://portaldatransparencia.gov.br",
+    "bcb_sgs": "https://www3.bcb.gov.br/sgspub",
+    "tesouro_transparente": "https://www.tesourotransparente.gov.br",
+    "tse_divulgacand": "https://divulgacandcontas.tse.jus.br",
+    "stf_jurisprudencia": "https://portal.stf.jus.br/jurisprudencia",
+    "tcu_jurisprudencia_e_inabilitados": "https://pesquisa.apps.tcu.gov.br"
+  }
+}

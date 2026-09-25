@@ -1,0 +1,44 @@
+schema_version: '1.1'
+name: 01-dev-map
+description: Seven-step map, Superpowers absence stated once, no code.
+tags:
+- dev
+execution:
+  prompt: /alterego dev
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Bash
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-write
+  type: tool_used
+  tool: Write
+  min: 0
+  max: 0
+- name: no-edit
+  type: tool_used
+  tool: Edit
+  min: 0
+  max: 0
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if the reply shows the map of the seven pipeline steps (conception, plan,
+
+    isolation, TDD, review, verification, delivery) and either proposes the step that
+
+    fits the context or asks once what the task is.
+
+    PASS also requires that it says in one line that Superpowers was not detected and
+
+    the pipeline runs in the chat with the same gates (the plugin is absent here).
+
+    FAIL if it writes code, creates files, or treats the missing plugin as a blocker.'

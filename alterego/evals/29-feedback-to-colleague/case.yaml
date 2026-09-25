@@ -1,0 +1,36 @@
+schema_version: '1.1'
+name: 29-feedback-to-colleague
+description: Situation-behavior-impact, one request, no label.
+tags:
+- mediation
+execution:
+  prompt: /alterego help me give a teammate feedback about Friday's deploy that went out without a rollback
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-write
+  type: tool_used
+  tool: Write
+  min: 0
+  max: 0
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if it produces feedback text in the first person built on situation,
+
+    observable behavior and impact, with one concrete request, without a
+
+    compliment sandwich and without labeling the person; it sends nothing.
+
+    FAIL if the text judges the person ("careless", "irresponsible") or wraps the
+
+    point in praise.'

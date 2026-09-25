@@ -1,0 +1,40 @@
+schema_version: '1.1'
+name: 32-start-appsec-direct
+description: Lens activated without the question; persona reset pointed.
+tags:
+- start
+execution:
+  prompt: /alterego start appsec
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: lens-named
+  type: regex
+  target: last_message
+  pattern: appsec
+  flags: i
+- name: no-lens-question
+  type: regex
+  target: last_message
+  pattern: which lens
+  flags: i
+  match: not_contains
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if it activates the appsec lens directly without asking which lens, states
+
+    the session state in at most three lines (guardrails absent, lens appsec) and
+
+    points to persona reset to return to the default.
+
+    FAIL if it asks the lens question or reports guardrails as on.'

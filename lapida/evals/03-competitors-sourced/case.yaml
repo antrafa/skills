@@ -1,0 +1,29 @@
+schema_version: '1.1'
+name: 03-competitors-sourced
+description: Asked for competitors up front, names none without a source or a hypothesis label.
+tags:
+- fit
+- hallucination
+execution:
+  prompt: '/lapida penso em criar uma assinatura mensal de marmitas saudáveis para quem trabalha em home office. Quem são os concorrentes?'
+  max_turns: 20
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+graders:
+- name: criteria
+  type: llm
+  weight: 3
+  criteria: 'PASS if every competitor or market number named in the reply comes with a
+
+    link or is explicitly labeled as a hypothesis to verify (with the check that
+
+    would close it), and the reply still classifies the idea and rewrites it as a
+
+    problem before going deep on competition.
+
+    FAIL if it lists named companies, prices or market sizes from memory presented
+
+    as fact, or skips the problem rewrite to do a competitive analysis.'

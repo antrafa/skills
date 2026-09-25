@@ -1,0 +1,45 @@
+schema_version: '1.1'
+name: 16-skill-review
+description: Pointer first, levels inline, install offered once.
+tags:
+- skill
+context:
+  scaffold_script: fixture.sh
+execution:
+  prompt: /alterego skill skills/release-notes
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-edit
+  type: tool_used
+  tool: Edit
+  min: 0
+  max: 0
+- name: no-write
+  type: tool_used
+  tool: Write
+  min: 0
+  max: 0
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if it reads the whole skill before proposing cuts and diagnoses from the
+
+    biggest lever to the smallest, starting with the description (here a long list
+
+    of synonym triggers renaming one branch). Since writing-for-agents is absent, it
+
+    works through the levels inline and offers the installation once, at the end.
+
+    FAIL if it starts from the body before the description, edits the files, or
+
+    mixes a wording change with a behavior change in one proposal.'

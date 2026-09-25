@@ -1,0 +1,47 @@
+schema_version: '1.1'
+name: 33-refactor-mikado
+description: Characterization test first, attempt reverted, graph leaves-first.
+tags:
+- refactor
+context:
+  scaffold_script: fixture.sh
+execution:
+  prompt: /alterego refactor get OrderService off the direct infra.oracle dependency
+  max_turns: 40
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Bash
+  - Edit
+  - Write
+  timeout_seconds: 600
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if it follows the Mikado Method: checks for a test that pins the current
+
+    behavior (there is none, so a characterization test becomes the first leaf),
+
+    tries or reasons through the naive change, collects what breaks, reverts before
+
+    committing anything, and records the prerequisite graph (in the reply or in
+
+    docs/refactor/<slug>-mikado.md) with leaves first and the goal last.
+
+    FAIL if it leaves a half-done change in the source files, or commits the goal
+
+    before the leaves.'
+- name: no-commit-or-push
+  type: tool_used
+  tool: Bash
+  input_match: git\s+(commit|push|merge|tag)\b
+  min: 0
+  max: 0

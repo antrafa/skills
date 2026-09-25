@@ -1,0 +1,44 @@
+schema_version: '1.1'
+name: 30-start-lens-picker
+description: Numbered lens picker with 0 and new; no work.
+tags:
+- start
+execution:
+  prompt: /alterego start
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-write
+  type: tool_used
+  tool: Write
+  min: 0
+  max: 0
+- name: zero-is-none
+  type: regex
+  target: last_message
+  pattern: ^\s*0\s+none
+  flags: im
+- name: offers-new
+  type: regex
+  target: last_message
+  pattern: new <name>
+  flags: ''
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if it shows a numbered list of the catalog lenses (name and focus, one line
+
+    each), then 0 for none and "new <name>", asks once which lens, and does not
+
+    organize the day, read the repository or propose work.
+
+    FAIL if it lists without numbers, asks more than once, or starts doing work.'

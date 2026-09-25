@@ -1,0 +1,311 @@
+{
+  "nome_eleitoral": "Arthur Lira",
+  "nome_civil": "ARTHUR CESAR PEREIRA DE LIRA",
+  "cargo": "Deputado Federal (Ex-Presidente da Câmara dos Deputados 2021-2025)",
+  "partido": "PP (Partido Progressistas)",
+  "uf": "AL",
+  "situacao": "Em Exercício",
+  "legislatura": 57,
+  "mandato_periodo": "2023 a 2027 (Deputado Federal) | Presidente da Câmara (2021 a 2025)",
+  "foto_url": "https://www.camara.leg.br/internet/deputado/bandep/160541.jpg",
+  "email": "dep.arthurlira@camara.leg.br",
+  "telefone_gabinete": "(61) 3215-5930 / Gabinete da Liderança e Presidência",
+  "data_nascimento": "25/06/1969 (57 anos)",
+  "municipio_nascimento": "Maceió - AL",
+  "escolaridade": "Superior Completo (Direito e Agropecuária)",
+  "redes_sociais": [
+    "https://twitter.com/arthurlira_",
+    "https://www.instagram.com/oficialarthurlira/",
+    "https://www.facebook.com/arthurliraoficial"
+  ],
+  "salario_oficial_base": "R$ 44.008,52 bruto (Subvenção Fixada no Decreto Legislativo 172/2022)",
+  "auxilios_previstos": [
+    "Cota para o Exercício da Atividade Parlamentar (CEAP - R$ 42.798,07/mês para a bancada de Alagoas)",
+    "Verba de Gabinete (R$ 118.823,24/mês destinada à contratação de até 25 secretários parlamentares)",
+    "Residência Oficial da Presidência da Câmara dos Deputados (Península dos Ministros) / Auxílio-Moradia (R$ 4.253,00)",
+    "Ajuda de custo equivalente a um subsídio parlamentar no início e encerramento de cada legislatura (R$ 44.008,52)",
+    "Passagens aéreas semanais de ida e volta Brasília-Maceió e transporte oficial"
+  ],
+  "assiduidade_percentual": "100% de Presença Institucional",
+  "proposicoes_principais": [
+    {
+      "tipo": "PEC",
+      "numero": "45",
+      "ano": "2019",
+      "ementa": "Reforma Tributária sobre o Consumo (Promulgada como Emenda Constitucional nº 132/2023). Unifica PIS, Cofins, IPI, ICMS e ISS no IBS e CBS, instituindo o modelo de Imposto sobre Valor Agregado (IVA Dual). Articulada e aprovada sob a presidência de Lira.",
+      "data": "15/12/2023",
+      "status_tramitacao": "Promulgada (EC 132/2023)",
+      "link": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2196833"
+    },
+    {
+      "tipo": "PLP",
+      "numero": "93",
+      "ano": "2023",
+      "ementa": "Novo Arcabouço Fiscal (Promulgado como Lei Complementar nº 200/2023). Substituiu o Teto de Gastos de 2016, fixando limites de despesas atrelados ao crescimento das receitas com pisos de investimento público.",
+      "data": "22/08/2023",
+      "status_tramitacao": "Sancionado (LC 200/2023)",
+      "link": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2353327"
+    },
+    {
+      "tipo": "PL",
+      "numero": "1085",
+      "ano": "2023",
+      "ementa": "Igualdade Salarial e Remuneratória entre Mulheres e Homens (Lei nº 14.611/2023). Estabelece mecanismos de transparência salarial e fiscalização contra discriminação de gênero no ambiente de trabalho.",
+      "data": "04/05/2023",
+      "status_tramitacao": "Sancionado (Lei 14.611/2023)",
+      "link": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2350700"
+    },
+    {
+      "tipo": "PL",
+      "numero": "948",
+      "ano": "2021",
+      "ementa": "Permite que pessoas jurídicas de direito privado adquiram diretamente vacinas contra a Covid-19 para imunização de empregados com doação de cota equivalente ao SUS.",
+      "data": "07/04/2021",
+      "status_tramitacao": "Aprovado na Câmara / Em tramitação",
+      "link": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2275466"
+    },
+    {
+      "tipo": "PEC",
+      "numero": "3",
+      "ano": "2021",
+      "ementa": "PEC da Imunidade Parlamentar (apelidada de 'PEC da Blindagem'). Restringe a prisão em flagrante de congressistas e submete a manutenção de medidas cautelares exclusivamente ao plenário das Casas.",
+      "data": "24/02/2021",
+      "status_tramitacao": "Aguardando deliberação de comissão especial",
+      "link": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2271878"
+    }
+  ],
+  "evolucao_patrimonial": [
+    {
+      "ano": "2026",
+      "cargo_disputado": "Senador da República (Registro Eleitoral)",
+      "valor": 25960000.0,
+      "valor_formatado": "R$ 25.960.000,00",
+      "variacao_percentual": "+335,2% vs 2022",
+      "principais_bens": "Fazendas em Alagoas e Pernambuco, rebanhos de gado de raça (Nelore), aplicações financeiras, imóveis urbanos e participação na D'Lira Agropecuária."
+    },
+    {
+      "ano": "2022",
+      "cargo_disputado": "Deputado Federal (Reeleito)",
+      "valor": 5965487.0,
+      "valor_formatado": "R$ 5.965.487,00",
+      "variacao_percentual": "+241,8% vs 2018",
+      "principais_bens": "Propriedades rurais, quotas da D'Lira Agropecuária e Eventos, veículos automotores e saldo em conta corrente."
+    },
+    {
+      "ano": "2018",
+      "cargo_disputado": "Deputado Federal (Reeleito)",
+      "valor": 1745000.0,
+      "valor_formatado": "R$ 1.745.000,00",
+      "variacao_percentual": "+12,9% vs 2014",
+      "principais_bens": "Imóveis residenciais em Maceió, quotas de capital social de empresas rurais e semoventes."
+    },
+    {
+      "ano": "2014",
+      "cargo_disputado": "Deputado Federal (Reeleito)",
+      "valor": 1545000.0,
+      "valor_formatado": "R$ 1.545.000,00",
+      "variacao_percentual": "-20,9% vs 2010",
+      "principais_bens": "Apartamentos em Maceió, terrenos rurais em São Sebastião (AL) e veículos."
+    },
+    {
+      "ano": "2010",
+      "cargo_disputado": "Deputado Federal (Eleito)",
+      "valor": 1954846.0,
+      "valor_formatado": "R$ 1.954.846,00",
+      "variacao_percentual": "+181,2% vs 2006",
+      "principais_bens": "Fazendas, cabeças de gado bovino, quotas de empresas agropecuárias e depósitos bancários."
+    },
+    {
+      "ano": "2006",
+      "cargo_disputado": "Deputado Estadual - ALEAL (Reeleito)",
+      "valor": 695000.0,
+      "valor_formatado": "R$ 695.000,00",
+      "variacao_percentual": "Base inicial",
+      "principais_bens": "Terrenos rurais, veículos e participação em sociedade limitada."
+    }
+  ],
+  "controversias_e_noticias": [
+    {
+      "titulo": "Operação Hefesto e o Caso dos Kits de Robótica em Alagoas",
+      "data": "Junho/2023 a Setembro/2023",
+      "categoria": "Operação da Polícia Federal / STF",
+      "status": "Arquivado no STF / Provas Anuladas",
+      "resumo": "Em junho de 2023, a Polícia Federal deflagrou a Operação Hefesto para investigar suposto esquema de superfaturamento e lavagem de dinheiro na compra de kits de robótica com recursos do FNDE destinados a 43 municípios de Alagoas. Durante a operação, foram apreendidos cerca de R$ 4,4 milhões em espécie e um cofre na posse de Luciano Cavalcante, então assessor direto de Lira, além de anotações com menções a repasses que citavam o parlamentar.",
+      "posicao_defesa": "A defesa de Arthur Lira impetrou Reclamação Constitucional no Supremo Tribunal Federal sustentando que a 1ª Vara Federal de Alagoas usurpou a competência privativa do STF ao conduzir atos investigatórios contra um parlamentar detentor de prerrogativa de foro. Em setembro de 2023, o ministro Gilmar Mendes acolheu o pedido, declarou a nulidade absoluta de todas as provas colhidas pela PF e determinou o trancamento do inquérito para todos os investigados.",
+      "fontes": [
+        {
+          "veiculo": "G1 / TV Globo",
+          "data": "consultar pelo veículo e pela data do fato"
+        },
+        {
+          "veiculo": "CNN Brasil",
+          "data": "consultar pelo veículo e pela data do fato"
+        },
+        {
+          "veiculo": "Poder360",
+          "data": "consultar pelo veículo e pela data do fato"
+        }
+      ],
+      "grau_veracidade": "Confirmado por documento/decisão",
+      "criterio_veracidade": "Decisão judicial de arquivamento e de anulação de provas publicada.",
+      "o_que_esta_comprovado": "A investigação existiu e foi encerrada no STF, com anulação das provas obtidas.",
+      "o_que_nao_esta_comprovado": "A anulação é processual: não julga se houve ou não desvio nos contratos investigados."
+    },
+    {
+      "titulo": "Inquérito do 'Quadrilhão do PP' na Operação Lava Jato (STF)",
+      "data": "2017 a Março/2021",
+      "categoria": "Operação Lava Jato / STF",
+      "status": "Denúncia Rejeitada / Arquivado",
+      "resumo": "A Procuradoria-Geral da República (PGR) apresentou denúncia no Inquérito 3989 imputando a parlamentares da cúpula do Partido Progressistas (incluindo Arthur Lira, Ciro Nogueira, Aguinaldo Ribeiro e Eduardo da Fonte) a prática de organização criminosa e desvios sistemáticos de recursos da Petrobras entre 2006 e 2014.",
+      "posicao_defesa": "A defesa alegou inépcia da denúncia e ausência de elementos mínimos de corroboração, demonstrando que a acusação se apoiava exclusivamente em delações premiadas de executivos e operadores financeiros. Em 2 de março de 2021, a Segunda Turma do STF, por 3 votos a 2 (votos dos ministros Gilmar Mendes, Ricardo Lewandowski e Nunes Marques), rejeitou a denúncia e determinou o arquivamento definitivo da ação.",
+      "fontes": [
+        {
+          "veiculo": "O Estado de S. Paulo",
+          "data": "consultar pelo veículo e pela data do fato"
+        },
+        {
+          "veiculo": "JOTA Notícias",
+          "data": "consultar pelo veículo e pela data do fato"
+        },
+        {
+          "veiculo": "Migalhas Jurídicas",
+          "data": "consultar pelo veículo e pela data do fato"
+        }
+      ],
+      "grau_veracidade": "Confirmado por documento/decisão",
+      "criterio_veracidade": "Há decisão do STF rejeitando a denúncia.",
+      "o_que_esta_comprovado": "A denúncia foi apresentada e rejeitada pelo STF, encerrando aquela imputação.",
+      "o_que_nao_esta_comprovado": "A rejeição não julga o mérito das acusações apresentadas na Lava Jato contra terceiros."
+    },
+    {
+      "titulo": "Caso dos R$ 106 mil em Dinheiro no Aeroporto de Congonhas (Assessor)",
+      "data": "2012 a Junho/2023",
+      "categoria": "Corrupção Passiva / Denúncia Criminal",
+      "status": "Denúncia Rejeitada por Unanimidade no STF",
+      "resumo": "Em 2012, o assessor parlamentar Jaymme Amorim foi detido no Aeroporto de Congonhas (SP) tentando embarcar com R$ 106 mil em cédulas presas ao corpo. A PGR acusou Arthur Lira de corrupção passiva, afirmando que o dinheiro teria sido repassado pelo doleiro Alberto Youssef a pedido de Paulo Roberto Costa em troca de sustentação política na diretoria da Petrobras.",
+      "posicao_defesa": "Arthur Lira sempre negou veementemente qualquer ligação com os valores apreendidos ou com a conduta do funcionário. Em junho de 2023, a Primeira Turma do STF julgou recursos pendentes e, após a própria PGR mudar seu posicionamento e pedir a rejeição da peça acusatória por falta de provas autônomas que corroborassem a palavra dos delatores, rejeitou a denúncia por unanimidade (5 a 0), sob relatoria do ministro André Mendonça.",
+      "fontes": [
+        {
+          "veiculo": "G1 Notícias",
+          "data": "consultar pelo veículo e pela data do fato"
+        },
+        {
+          "veiculo": "CNN Brasil",
+          "data": "consultar pelo veículo e pela data do fato"
+        },
+        {
+          "veiculo": "Congresso em Foco",
+          "data": "consultar pelo veículo e pela data do fato"
+        }
+      ],
+      "grau_veracidade": "Confirmado por documento/decisão",
+      "criterio_veracidade": "Denúncia rejeitada por decisão unânime do STF.",
+      "o_que_esta_comprovado": "O episódio da apreensão de dinheiro com assessor ocorreu e a denúncia dele decorrente foi rejeitada por unanimidade.",
+      "o_que_nao_esta_comprovado": "A origem e a destinação do dinheiro não foram objeto de decisão de mérito."
+    },
+    {
+      "titulo": "Articulação do Orçamento Secreto (Emendas de Relator RP9)",
+      "data": "2020 a Dezembro/2022",
+      "categoria": "Transparência Orçamentária / Controle Institucional",
+      "status": "Declarado Inconstitucional pelo STF (ADPF 854)",
+      "resumo": "Durante sua presidência na Câmara dos Deputados, Lira consolidou ampla influência política através do manejo das Emendas de Relator-Geral (identificador RP9), que destinaram dezenas de bilhões de reais do orçamento federal a bases parlamentares sem exigência de critérios técnicos equitativos ou publicidade dos deputados solicitantes reais.",
+      "posicao_defesa": "Arthur Lira defendeu publicamente a legitimidade das emendas parlamentares, sustentando que os representantes eleitos têm maior proximidade e conhecimento das demandas locais das cidades do que os burocratas do Executivo. Em dezembro de 2022, o Plenário do STF julgou procedente a ADPF 854 (relatoria da Min. Rosa Weber) e declarou o esquema inconstitucional por violação aos princípios da transparência, publicidade e impessoalidade orçamentária.",
+      "fontes": [
+        {
+          "veiculo": "STF — julgamento das ADPFs 850, 851, 854 e 1014 (notícia oficial)",
+          "url": "https://portal.stf.jus.br/noticias/verNoticiaDetalhe.asp?idConteudo=499330&ori=1"
+        },
+        {
+          "veiculo": "Agência Brasil",
+          "url": "https://agenciabrasil.ebc.com.br/justica/noticia/2022-12/stf-considera-orcamento-secreto-inconstitucional"
+        }
+      ],
+      "grau_veracidade": "Confirmado por documento/decisão",
+      "criterio_veracidade": "Acórdão do STF nas ADPFs 850, 851, 854 e 1014, com efeito sobre o mecanismo orçamentário.",
+      "o_que_esta_comprovado": "O STF declarou inconstitucional o mecanismo das emendas de relator (RP-9) em dezembro de 2022, por falta de transparência e impessoalidade.",
+      "o_que_nao_esta_comprovado": "A decisão recai sobre o mecanismo orçamentário e não imputa responsabilidade pessoal a Arthur Lira, que não figura como parte nas ações. Atribuir a ele a autoria do esquema extrapola o que a decisão diz."
+    },
+    {
+      "titulo": "Operação Taturana e Desvios na Assembleia Legislativa de Alagoas (ALEAL)",
+      "data": "2007 a 2023",
+      "categoria": "Ação Civil Pública / Improbidade Administrativa",
+      "status": "Condenação Anulada pelo STJ / Ação Criminal Trancada",
+      "resumo": "A Operação Taturana, deflagrada pela Polícia Federal em 2007, apurou desvios milionários de recursos públicos, empréstimos fraudulentos no Banco Rural e uso de verbas de gabinete por deputados estaduais da Mesa Diretora da ALEAL nos anos 2000, período em que Arthur Lira integrava o legislativo alagoano.",
+      "posicao_defesa": "Na esfera criminal, o Tribunal de Justiça de Alagoas (TJ-AL) trancou o processo em 2020 reconhecendo a nulidade das provas produzidas pelo MP-AL. Na esfera cível de improbidade, em abril de 2023 o ministro Humberto Martins, do Superior Tribunal de Justiça (STJ), anulou a condenação por vício formal insanável (ausência de notificação prévia do réu para manifestação no início do processo), determinando o retorno dos autos à 1ª instância.",
+      "fontes": [
+        {
+          "veiculo": "Portal iG / Agência Brasil",
+          "data": "consultar pelo veículo e pela data do fato"
+        },
+        {
+          "veiculo": "O Jornal Extra de Alagoas",
+          "data": "consultar pelo veículo e pela data do fato"
+        },
+        {
+          "veiculo": "Ranking dos Políticos",
+          "data": "consultar pelo veículo e pela data do fato"
+        }
+      ],
+      "grau_veracidade": "Confirmado por documento/decisão",
+      "criterio_veracidade": "Decisão do STJ anulando a condenação e trancando a ação.",
+      "o_que_esta_comprovado": "Houve condenação em instância anterior, posteriormente anulada pelo STJ.",
+      "o_que_nao_esta_comprovado": "A anulação é processual e não equivale a absolvição quanto aos fatos apurados na Assembleia Legislativa."
+    }
+  ],
+  "link_perfil_oficial": "https://www.camara.leg.br/deputados/160541",
+  "link_transparencia_gastos": "https://www.camara.leg.br/deputados/160541/gastos",
+  "link_presenca": "https://www.camara.leg.br/deputados/160541/presenca-plenario",
+  "link_tse": "https://divulgacandcontas.tse.jus.br",
+  "cobertura_pesquisa": {
+    "data_execucao": "2026-09-08",
+    "periodo": "2006-01-01 a 2026-09-08",
+    "nomes_consultados": [
+      "Arthur Lira",
+      "Arthur Cesar Pereira de Lira"
+    ],
+    "eixos_verificados": [
+      "STF",
+      "STJ",
+      "Polícia Federal",
+      "TCU",
+      "Conselho de Ética da Câmara",
+      "Cota parlamentar"
+    ],
+    "fontes_consultadas": [
+      "portal.stf.jus.br",
+      "Agência Brasil",
+      "API de Dados Abertos da Câmara"
+    ],
+    "limitacoes": [
+      "Exemplo de referência da skill: a lista de casos é ilustrativa e não substitui uma auditoria nova na data de uso.",
+      "Litígios familiares presentes na versão anterior deste exemplo foram removidos: pessoas sem função pública estão fora do escopo (seção 0 de legal-journalism-ethics.md).",
+      "Fontes sem URL registram veículo e data em vez de link remontado de memória."
+    ]
+  },
+  "resumo_cidadao_ia": {
+    "sintese": "Arthur Lira é deputado federal por Alagoas pelo PP e presidiu a Câmara dos Deputados entre 2021 e 2025, período em que concentrou forte influência sobre a pauta legislativa e sobre a execução do orçamento.\n\nRecebe o subsídio parlamentar fixado em norma do Congresso e utiliza a Cota para o Exercício da Atividade Parlamentar, cujos valores agregados por ano, categoria e fornecedor são coletados automaticamente por esta skill a partir da API de Dados Abertos da Câmara. O patrimônio declarado à Justiça Eleitoral consta da tabela de evolução patrimonial deste relatório.\n\nOs casos catalogados estão majoritariamente encerrados por decisão judicial, e cada um deve ser lido pelo seu estágio. Investigações no STF foram arquivadas ou tiveram denúncia rejeitada; uma condenação anterior na Operação Taturana foi anulada pelo STJ, o que é decisão processual e não absolvição de mérito. O caso do orçamento secreto merece leitura cuidadosa: o STF declarou inconstitucional o mecanismo das emendas de relator, mas a decisão recai sobre o instrumento orçamentário e não imputa responsabilidade pessoal ao deputado.\n\nEste é um exemplo de referência da skill, com recorte fechado na data de execução informada. Nenhuma conclusão sobre caráter, culpa ou voto deve ser extraída daqui.",
+    "pontos_chave": [
+      {
+        "titulo": "Comando da Câmara",
+        "texto": "Presidiu a Câmara dos Deputados de 2021 a 2025."
+      },
+      {
+        "titulo": "Casos encerrados",
+        "texto": "As investigações catalogadas foram arquivadas, tiveram denúncia rejeitada ou condenação anulada."
+      },
+      {
+        "titulo": "Orçamento secreto",
+        "texto": "O STF declarou o mecanismo inconstitucional sem imputar responsabilidade pessoal ao deputado."
+      },
+      {
+        "titulo": "Cota parlamentar",
+        "texto": "Os gastos da CEAP são agregados automaticamente por ano, categoria e fornecedor."
+      }
+    ],
+    "lacunas": [
+      "Emendas de relator individualizadas não foram rastreadas por beneficiário.",
+      "Contratos de fornecedores da cota não foram cruzados com bases de sanções."
+    ],
+    "aviso": "Síntese gerada por IA a partir dos dados e fontes deste dossiê; confira os links antes de formar sua conclusão."
+  }
+}

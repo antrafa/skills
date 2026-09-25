@@ -1,0 +1,35 @@
+schema_version: '1.1'
+name: 02-internal-tool
+description: Internal tool idea gets the smaller forecast and no monetization talk.
+tags:
+- classify
+execution:
+  prompt: /lapida quero fazer uma ferramenta interna pra automatizar a abertura de chamados de deploy no nosso time
+  max_turns: 15
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+graders:
+- name: no-write
+  type: tool_used
+  tool: Write
+  min: 0
+  max: 0
+- name: small-forecast
+  type: regex
+  target: last_message
+  pattern: ~\s*(8|9|10)\b|8\s*[–-]\s*10
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if the reply, in Portuguese, classifies the idea as an internal product
+
+    with a forecast of roughly 8-10 questions, rewrites it as a problem of the team
+
+    (time lost, errors, waiting) without naming the tool, and asks for confirmation.
+
+    FAIL if it talks about price, monetization, market or competitors, or proposes
+
+    how to build the tool.'

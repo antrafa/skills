@@ -1,0 +1,41 @@
+schema_version: '1.1'
+name: 22-adr-sync-or-queue
+description: Full decision cycle, asks before saving.
+tags:
+- adr
+execution:
+  prompt: '/alterego adr communication between billing and notifications: synchronous or queue?'
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Write
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-edit
+  type: tool_used
+  tool: Edit
+  min: 0
+  max: 0
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if it treats this as a real, expensive-to-reverse decision; says it found no
+
+    earlier record (no memory or archive is available here); critiques the option it
+
+    leans to; compares alternatives including doing nothing; classifies
+
+    reversibility; and recommends in one sentence saying what it gives up. It asks
+
+    before saving any dossier.
+
+    FAIL if it saves a dossier without asking, skips the alternatives, or recommends
+
+    without stating the cost of the choice.'

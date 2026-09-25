@@ -1,0 +1,17 @@
+{
+  "name": "antrafa",
+  "owner": { "name": "Antonio Rafael Ortega", "url": "https://github.com/antrafa" },
+  "metadata": {
+    "description": "Antonio Rafael Ortega's skills for Claude Code, Codex and Antigravity.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "alterego",
+      "source": "./",
+      "description": "The developer's journey partner and cognitive clone.",
+      "version": "3.0.0",
+      "category": "productivity"
+    }
+  ]
+}

@@ -1,0 +1,301 @@
+{
+  "nome_eleitoral": "Sergio Moro",
+  "nome_civil": "SERGIO FERNANDO MORO",
+  "cargo": "Senador da República (Ex-Ministro da Justiça e Ex-Juiz Federal)",
+  "partido": "União Brasil",
+  "uf": "PR",
+  "situacao": "Em Exercício",
+  "mandato_periodo": "2023 a 2031 (57ª e 58ª Legislaturas do Senado)",
+  "foto_url": "http://www.senado.leg.br/senadores/img/fotos-oficiais/senador6331.jpg",
+  "email": "sen.sergiomoro@senado.leg.br",
+  "telefone_gabinete": "(61) 3303-6202 / 3303-6204",
+  "bloco_parlamentar": "Bloco Parlamentar Vanguarda (PL / Novo / União)",
+  "data_nascimento": "01/08/1972 (54 anos)",
+  "municipio_nascimento": "Maringá - PR",
+  "escolaridade": "Doutor em Direito das Relações Sociais (UFPR)",
+  "redes_sociais": [
+    "https://twitter.com/SF_Moro",
+    "https://www.instagram.com/sf_moro/",
+    "https://www.facebook.com/sergiomoroparanasp"
+  ],
+  "salario_oficial_base": "R$ 44.008,52 bruto (Subsidio Fixado pelo Decreto Legislativo 172/2022)",
+  "auxilios_previstos": [
+    "Cota para o Exercício da Atividade Parlamentar dos Senadores (CEAPS - até R$ 34.000,00/mês para o Paraná)",
+    "Verba de Gabinete (R$ 118.800+/mês para contratação de assessores parlamentares e consultores)",
+    "Auxílio-moradia (R$ 5.500,00) ou Apartamento Funcional do Senado em Brasília",
+    "Plano de Saúde vitalício do Senado Federal com cobertura médico-hospitalar integral",
+    "Passagens aéreas semanais oficiais no trecho Brasília-Curitiba e transporte institucional"
+  ],
+  "assiduidade_percentual": "97.2% de Presença em Sessões Deliberativas",
+  "proposicoes_principais": [
+    {
+      "tipo": "PL",
+      "numero": "1307",
+      "ano": "2023",
+      "ementa": "Proteção a Agentes Públicos e Combate a Facções Criminosas. Tipifica a obstrução de ações contra o crime organizado e amplia medidas de segurança pessoal para juízes, promotores, policiais e testemunhas ameaçados por facções.",
+      "data": "22/03/2023",
+      "status_tramitacao": "Em tramitação na Comissão de Segurança Pública (CSP)",
+      "link": "https://www25.senado.leg.br/web/atividade/materias/-/materia/156398"
+    },
+    {
+      "tipo": "PEC",
+      "numero": "1",
+      "ano": "2023",
+      "ementa": "Proteção Jurídica da Coisa Julgada. Altera os arts. 5º e 102 da Constituição Federal para assegurar a estabilidade das decisões judiciais transitadas em julgado e prevenir insegurança jurídica tributária e cível.",
+      "data": "15/02/2023",
+      "status_tramitacao": "Em exame na Comissão de Constituição e Justiça (CCJ)",
+      "link": "https://www25.senado.leg.br/web/atividade/materias/-/materia/155952"
+    },
+    {
+      "tipo": "PEC",
+      "numero": "16",
+      "ano": "2023",
+      "ementa": "Blindagem e Integridade de Empresas Estatais. Restringe a indicação político-partidária para Conselhos de Administração e Diretorias de empresas públicas e sociedades de economia mista.",
+      "data": "20/03/2023",
+      "status_tramitacao": "Em tramitação na CCJ",
+      "link": "https://www25.senado.leg.br/web/atividade/materias/-/materia/156667"
+    },
+    {
+      "tipo": "PEC",
+      "numero": "15",
+      "ano": "2023",
+      "ementa": "Garantias e Proteção Especial aos Profissionais de Segurança Pública e do Sistema Prisional em âmbito constitucional.",
+      "data": "14/03/2023",
+      "status_tramitacao": "Em tramitação na CCJ",
+      "link": "https://www25.senado.leg.br/web/atividade/materias/-/materia/156651"
+    },
+    {
+      "tipo": "PDL",
+      "numero": "28",
+      "ano": "2023",
+      "ementa": "Susta os efeitos dos dispositivos do Decreto nº 11.328/2023 que criaram a Procuradoria Nacional da União de Defesa da Democracia na Advocacia-Geral da União (AGU).",
+      "data": "08/02/2023",
+      "status_tramitacao": "Em tramitação no Senado",
+      "link": "https://www25.senado.leg.br/web/atividade/materias/-/materia/155800"
+    }
+  ],
+  "evolucao_patrimonial": [
+    {
+      "ano": "2022",
+      "cargo_disputado": "Senador da República pelo Paraná (Eleito)",
+      "valor": 1589369.94,
+      "valor_formatado": "R$ 1.589.369,94",
+      "variacao_percentual": "Primeiro registro eleitoral",
+      "principais_bens": "Apartamento residencial em Curitiba (PR), investimentos em renda fixa/fundos de previdência, quotas de empresa de consultoria e automóvel."
+    },
+    {
+      "ano": "2021",
+      "cargo_disputado": "Setor Privado / Consultoria Alvarez & Marsal (EUA)",
+      "valor": 3600000.0,
+      "valor_formatado": "R$ 3.600.000,00 (US$ 656 mil)",
+      "variacao_percentual": "Rendimentos privados declarados",
+      "principais_bens": "Rendimentos auferidos no exterior como diretor da Alvarez & Marsal em investigações e compliance, divulgados publicamente com comprovantes fiscais."
+    }
+  ],
+  "controversias_e_noticias": [
+    {
+      "titulo": "Julgamento da Cassação do Mandato por Abuso de Poder Econômico (TSE e TRE-PR)",
+      "data": "2023 a Maio/2024",
+      "categoria": "Processo Eleitoral / Julgamento de Mandato",
+      "status": "Absolvido por Unanimidade no TSE (7 a 0)",
+      "resumo": "O Partido dos Trabalhadores (PT) e o Partido Liberal (PL) ajuizaram Ações de Investigação Judicial Eleitoral (AIJEs) pedindo a cassação do mandato de Sergio Moro e a declaração de inelegibilidade por 8 anos. As legendas sustentaram que o senador cometeu abuso de poder econômico na pré-campanha de 2022 ao utilizar recursos vultosos como pré-candidato a presidente pelo Podemos antes de migrar para o União Brasil para disputar o Senado pelo Paraná.",
+      "posicao_defesa": "A defesa de Moro demonstrou que não houve violação da legislação eleitoral, uma vez que os gastos de pré-campanha presidencial não podem ser computados de forma desproporcional na disputa estadual, inexistindo teto fixado em lei para a pré-campanha. Em abril de 2024, o TRE-PR rejeitou a cassação por 5 a 2. Em 21 de maio de 2024, o Tribunal Superior Eleitoral (TSE) rejeitou os recursos por unanimidade (7 a 0), sob relatoria do ministro Floriano de Azevedo Marques e com votos dos ministros Alexandre de Moraes, Cármen Lúcia, Nunes Marques e demais membros.",
+      "fontes": [
+        {
+          "veiculo": "Tribunal Superior Eleitoral (notícia oficial)",
+          "url": "https://www.tse.jus.br/comunicacao/noticias/2024/Maio/tse-mantem-improcedencia-de-acoes-que-pediam-a-cassacao-do-senador-sergio-moro"
+        },
+        {
+          "veiculo": "Agência Brasil",
+          "url": "https://agenciabrasil.ebc.com.br/justica/noticia/2024-05/por-unanimidade-tse-rejeita-cassacao-de-mandato-de-sergio-moro"
+        }
+      ],
+      "grau_veracidade": "Confirmado por documento/decisão",
+      "criterio_veracidade": "Há decisão colegiada publicada do TSE encerrando as AIJEs.",
+      "o_que_esta_comprovado": "O TRE-PR rejeitou a cassação e o TSE manteve a improcedência das ações por unanimidade em maio de 2024.",
+      "o_que_nao_esta_comprovado": "A decisão não avaliou o mérito político da pré-campanha; rejeitou a existência de prova robusta de abuso, o que não equivale a atestar regularidade de cada gasto."
+    },
+    {
+      "titulo": "Vaza Jato e Declaração de Parcialidade / Suspeição pelo STF (HC 164.493)",
+      "data": "Junho/2019 a Março/2021",
+      "categoria": "Operação Lava Jato / Decisão do STF",
+      "status": "Suspeição Reconhecida pelo STF / Nulidade Processual",
+      "resumo": "Em 2019, reportagens do The Intercept Brasil divulgaram conversas privadas trocadas no aplicativo Telegram entre o então juiz Sergio Moro e procuradores da força-tarefa da Lava Jato (Operação Spoofing). As mensagens revelaram discussões sobre estratégias acusatórias, sugestões de testemunhas e orientações processuais, levantando questionamentos sobre a imparcialidade do magistrado nas ações penais envolvendo o presidente Luiz Inácio Lula da Silva.",
+      "posicao_defesa": "Sergio Moro e os membros do MPF sustentaram que as mensagens foram obtidas por invasão hacker criminosa, sem autenticação pericial ou cadeia de custódia válida, e que não revelavam qualquer ilicitude ou conluio. Em 23 de março de 2021, a Segunda Turma do STF (por 3 votos a 2, com votos de Gilmar Mendes, Ricardo Lewandowski e Cármen Lúcia) declarou a suspeição de Sergio Moro no processo do Tríplex do Guarujá, determinando a anulação de todos os atos decisórios e o envio dos autos à Justiça Federal do DF.",
+      "fontes": [
+        {
+          "veiculo": "STF — 2ª Turma reconhece parcialidade (notícia oficial)",
+          "url": "https://portal.stf.jus.br/noticias/verNoticiaDetalhe.asp?idConteudo=462854&ori=1"
+        },
+        {
+          "veiculo": "STF — Plenário confirma a suspeição (notícia oficial)",
+          "url": "https://portal.stf.jus.br/noticias/verNoticiaDetalhe.asp?idConteudo=468086&ori=1"
+        }
+      ],
+      "grau_veracidade": "Confirmado por documento/decisão",
+      "criterio_veracidade": "Decisão da 2ª Turma no HC 164.493, confirmada pelo Plenário do STF.",
+      "o_que_esta_comprovado": "O STF reconheceu a parcialidade do então juiz na ação penal do triplex e anulou os atos por ele praticados naquele processo.",
+      "o_que_nao_esta_comprovado": "A anulação é processual e não declara inocência do réu daquele processo, nem imputa crime a Sergio Moro."
+    },
+    {
+      "titulo": "Ação Penal por Calúnia contra o Ministro Gilmar Mendes (STF - Pet 11.134)",
+      "data": "Abril/2023 a Junho/2024",
+      "categoria": "Ação Penal no STF / Calúnia",
+      "status": "Denúncia Recebida pela 1ª Turma do STF / Réu",
+      "resumo": "Em abril de 2023, veio a público um vídeo gravado em 2022 no qual Sergio Moro dizia a interlocutores em tom jocoso: 'Não, isso é fiança, para comprar... para comprar um habeas corpus do Gilmar Mendes'. A Procuradoria-Geral da República (PGR) ofereceu denúncia criminal contra o senador pelo crime de calúnia contra funcionário público, afirmando que a fala atribuía falsamente ao magistrado a prática de corrupção passiva.",
+      "posicao_defesa": "A defesa de Moro declarou que a fala foi uma expressão infeliz pinçada de um contexto de brincadeira em festa junina ('prisão da cadeia'), sem qualquer dolo específico de caluniar ou ofender a honra do ministro, tendo apresentado petição de retratação. Em 4 de junho de 2024, a Primeira Turma do STF (relatoria da Min. Cármen Lúcia, com votos de Alexandre de Moraes, Cristiano Zanin, Flávio Dino e Luiz Fux) recebeu a denúncia por unanimidade, instaurando a ação penal que segue em instrução probatória.",
+      "fontes": [
+        {
+          "veiculo": "Portal STF",
+          "data": "consultar pelo veículo e pela data do fato"
+        },
+        {
+          "veiculo": "CNN Brasil",
+          "data": "consultar pelo veículo e pela data do fato"
+        },
+        {
+          "veiculo": "G1 / Política",
+          "data": "consultar pelo veículo e pela data do fato"
+        }
+      ],
+      "grau_veracidade": "Alegação oficial em apuração",
+      "criterio_veracidade": "A denúncia foi recebida: existe ação penal em curso, sem julgamento de mérito.",
+      "o_que_esta_comprovado": "A 1ª Turma do STF recebeu a denúncia e o senador passou à condição de réu.",
+      "o_que_nao_esta_comprovado": "Culpa, dolo e a própria caracterização da calúnia seguem sem decisão de mérito."
+    },
+    {
+      "titulo": "Operação Sequaz da PF — Desbaratamento de Plano do PCC contra Sergio Moro",
+      "data": "Março/2023",
+      "categoria": "Segurança Pública / Operação da Polícia Federal",
+      "status": "Ameaça Neutralizada / Réus Presos e Denunciados",
+      "resumo": "Em março de 2023, a Polícia Federal deflagrou a Operação Sequaz após identificar um plano estruturado da facção criminosa Primeiro Comando da Capital (PCC) para sequestrar e assassinar o senador Sergio Moro, sua esposa Rosangela Moro e seus filhos. A facção criminosa alugou imóveis em Curitiba, instalou câmeras e monitorou a rotina do parlamentar como represália pelo isolamento e transferência de chefes do tráfico (incluindo Marcola) para presídios federais de segurança máxima em 2019.",
+      "posicao_defesa": "Moro elogiou o trabalho técnico e a pronta resposta da Polícia Federal e da Justiça de Curitiba. O parlamentar intensificou a apresentação de projetos de lei para punir com severidade a obstrução de ações contra o crime organizado e garantir escolta e blindagem vitalícia a autoridades do sistema penal.",
+      "fontes": [
+        {
+          "veiculo": "Agência Brasil",
+          "data": "consultar pelo veículo e pela data do fato"
+        },
+        {
+          "veiculo": "O Estado de S. Paulo",
+          "data": "consultar pelo veículo e pela data do fato"
+        },
+        {
+          "veiculo": "G1 / Fantástico",
+          "data": "consultar pelo veículo e pela data do fato"
+        }
+      ],
+      "grau_veracidade": "Confirmado por documento/decisão",
+      "criterio_veracidade": "Operação policial deflagrada com prisões e denúncia formal; o senador figura como alvo do plano, não como investigado.",
+      "o_que_esta_comprovado": "A Polícia Federal deflagrou a Operação Sequaz e prendeu suspeitos de planejar atentado.",
+      "o_que_nao_esta_comprovado": "A extensão do plano e a responsabilidade individual de cada denunciado dependem do desfecho da ação penal."
+    },
+    {
+      "titulo": "Rompimento com o Governo Bolsonaro e Saída do Ministério da Justiça (Inquérito 4831)",
+      "data": "Abril/2020 a 2022",
+      "categoria": "Ministério da Justiça / Inquérito STF",
+      "status": "Inquérito Arquivado no STF",
+      "resumo": "Em 24 de abril de 2020, Sergio Moro renunciou ao cargo de Ministro da Justiça e Segurança Pública, acusando o então presidente Jair Bolsonaro de tentar interferir politicamente na direção-geral da Polícia Federal e na superintendência da PF no Rio de Janeiro para obter relatórios confidenciais de inteligência. O STF instaurou o Inquérito 4831 para apurar crimes de falsidade ideológica, coação e advocacia administrativa.",
+      "posicao_defesa": "Moro entregou mensagens de texto, áudios e a gravação da reunião ministerial de 22 de abril de 2020 como elementos de convicção. Ao final das investigações, o relatório da Polícia Federal e a manifestação da PGR (sob comando de Augusto Aras) concluíram pela ausência de provas suficientes de conduta criminosa tanto por parte de Bolsonaro quanto de denunciação caluniosa por parte de Moro, levando o ministro Alexandre de Moraes a determinar o arquivamento definitivo dos autos.",
+      "fontes": [
+        {
+          "veiculo": "JOTA Notícias",
+          "data": "consultar pelo veículo e pela data do fato"
+        },
+        {
+          "veiculo": "G1 / Política",
+          "data": "consultar pelo veículo e pela data do fato"
+        },
+        {
+          "veiculo": "Poder360",
+          "data": "consultar pelo veículo e pela data do fato"
+        }
+      ],
+      "grau_veracidade": "Confirmado por documento/decisão",
+      "criterio_veracidade": "Decisão de arquivamento publicada nos autos do inquérito.",
+      "o_que_esta_comprovado": "O inquérito aberto a partir das declarações no pedido de demissão foi arquivado.",
+      "o_que_nao_esta_comprovado": "O arquivamento não julga se as declarações eram verdadeiras; encerra a apuração criminal por ausência de elementos."
+    },
+    {
+      "titulo": "Atuação na Consultoria Alvarez & Marsal e Auditoria do TCU",
+      "data": "Novembro/2020 a 2022",
+      "categoria": "Tribunal de Contas da União / Conflito de Interesses",
+      "status": "Arquivado pelo TCU / Sem Irregularidade",
+      "resumo": "Após deixar o governo federal, Moro foi contratado como diretor de investigações corporativas e disputas pela consultoria norte-americana Alvarez & Marsal, empresa responsável pela administração judicial de grandes empreiteiras afetadas pela Lava Jato (como Odebrecht e OAS). O Ministério Público junto ao TCU abriu representação para investigar potencial conflito de interesses, prática de 'porta giratória' e eventual prejuízo à administração pública.",
+      "posicao_defesa": "Moro divulgou em transmissão pública seus holerites e comprovantes de recolhimento de impostos, comprovando que trabalhou exclusivamente para a divisão internacional da consultoria nos EUA em compliance e arbitragens privadas, com cláusula contratual expressa que o proibia de atuar para empresas brasileiras em recuperação. Em 2022, o Tribunal de Contas da União (TCU) arquivou o processo por unanimidade, concluindo pela ausência de qualquer ilegalidade ou envolvimento com recursos públicos.",
+      "fontes": [
+        {
+          "veiculo": "G1 / Economia",
+          "data": "consultar pelo veículo e pela data do fato"
+        },
+        {
+          "veiculo": "Consultor Jurídico (ConJur)",
+          "data": "consultar pelo veículo e pela data do fato"
+        },
+        {
+          "veiculo": "Gazeta do Povo",
+          "data": "consultar pelo veículo e pela data do fato"
+        }
+      ],
+      "grau_veracidade": "Confirmado por documento/decisão",
+      "criterio_veracidade": "Processo do TCU encerrado por decisão do próprio tribunal.",
+      "o_que_esta_comprovado": "O TCU encerrou o processo sem apontar irregularidade na contratação pela consultoria.",
+      "o_que_nao_esta_comprovado": "O encerramento é do processo de controle externo; não avalia conflito de interesses sob outros marcos normativos."
+    }
+  ],
+  "link_perfil_oficial": "http://www25.senado.leg.br/web/senadores/senador/-/perfil/6331",
+  "link_transparencia_gastos": "https://www.senado.leg.br/transparencia/sen/6331/",
+  "link_presenca": "https://www25.senado.leg.br/web/senadores/senador/-/perfil/6331#votacoes",
+  "link_tse": "https://divulgacandcontas.tse.jus.br",
+  "cobertura_pesquisa": {
+    "data_execucao": "2026-09-08",
+    "periodo": "2019-01-01 a 2026-09-08, com fatos anteriores ainda com efeito jurídico",
+    "nomes_consultados": [
+      "Sergio Moro",
+      "Sergio Fernando Moro",
+      "Sérgio Moro"
+    ],
+    "eixos_verificados": [
+      "STF",
+      "TSE/TRE-PR",
+      "TCU",
+      "Polícia Federal",
+      "Conselho de Ética do Senado"
+    ],
+    "fontes_consultadas": [
+      "portal.stf.jus.br",
+      "tse.jus.br",
+      "Agência Brasil",
+      "API de Dados Abertos do Senado"
+    ],
+    "limitacoes": [
+      "Exemplo de referência da skill: a lista de casos é ilustrativa e não substitui uma auditoria nova na data de uso.",
+      "Fontes sem URL foram deixadas assim de propósito: registram veículo e data em vez de link remontado de memória."
+    ]
+  },
+  "resumo_cidadao_ia": {
+    "sintese": "Sergio Moro é senador da República pelo Paraná, eleito em 2022 pelo União Brasil, e antes disso foi juiz federal responsável pelos processos da Operação Lava Jato em Curitiba e ministro da Justiça e Segurança Pública no governo Jair Bolsonaro, cargo que deixou em abril de 2020.\n\nNo Senado atua sobretudo em segurança pública e legislação penal. Recebe o subsídio parlamentar fixado em norma do Congresso e tem acesso às verbas de gabinete e à cota de exercício da atividade parlamentar, cujos valores devem ser conferidos no portal de transparência da Casa. O patrimônio declarado à Justiça Eleitoral em 2022 foi de R$ 1.589.369,94, primeiro registro eleitoral do senador.\n\nOs casos catalogados abaixo estão em estágios diferentes e não devem ser lidos como um bloco. O TSE encerrou em maio de 2024, por unanimidade, as ações que pediam a cassação do mandato. O STF reconheceu em 2021 a parcialidade do então juiz na ação penal do triplex e anulou os atos daquele processo — decisão processual que não imputa crime a ele. Responde como réu por calúnia contra o ministro Gilmar Mendes, ação sem julgamento de mérito. Foi alvo, e não investigado, de um plano criminoso desarticulado pela Polícia Federal em 2023. O inquérito aberto a partir de suas declarações ao deixar o Ministério da Justiça foi arquivado, e o TCU encerrou sem apontar irregularidade o processo sobre sua atuação na consultoria Alvarez & Marsal.\n\nEste é um exemplo de referência da skill, com recorte fechado na data de execução informada. Vários links de fonte foram deixados apenas como veículo e data, sem URL, para demonstrar o padrão correto quando o endereço não é reconferido. Nenhuma conclusão sobre caráter, culpa ou voto deve ser extraída daqui.",
+    "pontos_chave": [
+      {
+        "titulo": "Mandato mantido",
+        "texto": "O TSE rejeitou por unanimidade, em maio de 2024, os pedidos de cassação."
+      },
+      {
+        "titulo": "Suspeição reconhecida",
+        "texto": "O STF anulou os atos do então juiz na ação penal do triplex por parcialidade — decisão processual, não penal."
+      },
+      {
+        "titulo": "Uma ação penal em curso",
+        "texto": "É réu por calúnia contra o ministro Gilmar Mendes, sem julgamento de mérito."
+      },
+      {
+        "titulo": "Patrimônio declarado",
+        "texto": "R$ 1.589.369,94 no registro de 2022, primeiro declarado à Justiça Eleitoral."
+      }
+    ],
+    "lacunas": [
+      "Gastos da CEAPS não agregados: o coletor automático de despesas existe apenas para a Câmara.",
+      "Evolução patrimonial limitada aos registros eleitorais localizados."
+    ],
+    "aviso": "Síntese gerada por IA a partir dos dados e fontes deste dossiê; confira os links antes de formar sua conclusão."
+  }
+}

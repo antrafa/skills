@@ -1,0 +1,51 @@
+schema_version: '1.1'
+name: 21-pr-desc
+description: Four blocks on the repository template, nothing remote.
+tags:
+- delivery
+- gate
+context:
+  scaffold_script: fixture.sh
+execution:
+  prompt: /alterego pr-desc
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Bash
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-commit-or-push
+  type: tool_used
+  tool: Bash
+  input_match: git\s+(commit|push|merge|tag)\b
+  min: 0
+  max: 0
+- name: read-branch
+  type: tool_used
+  tool: Bash
+  input_match: git\s+(log|diff)
+- name: no-remote-edit
+  type: tool_used
+  tool: Bash
+  input_match: (glab|gh)\s+(mr|pr)\s+(create|edit|update)
+  min: 0
+  max: 0
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if it writes a title in the commit format and the four blocks — what
+
+    changed, why, how to validate, out of scope / side effects — filling the
+
+    repository''s MR template, and edits nothing remote.
+
+    FAIL if it ignores the template, invents changes not in the branch, or claims to
+
+    have updated the MR.'

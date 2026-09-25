@@ -1,0 +1,172 @@
+{
+  "skill_name": "mentat",
+  "notes": "Never run an eval against the real vault. `seed_vault.py --scenario <name>` builds a throwaway one and prints its path; export MENTAT_VAULT to it first. Entry ages are generated relative to today, because the decay assertions are meaningless against frozen dates.",
+  "harnesses": {
+    "script": "Deterministic — checked by run_script_evals.py, no agent involved. These assert vault.py's arithmetic and cross-file consistency, which have exact right answers.",
+    "agent": "Needs judgment — run as a subagent with the skill, against a baseline without it. These assert routing, curation and query expansion, which a script cannot grade."
+  },
+  "evals": [
+    {
+      "id": 1,
+      "name": "remember-a-bug",
+      "harness": "script",
+      "seed": "empty",
+      "prompt": "/mentat passei a tarde caçando isso: o preflight de CORS quebrava em POST /api/orders só quando o upstream devolvia 502. era o nginx descartando o Access-Control-Allow-Origin nas respostas de erro, resolvi com `always` no add_header. projeto é o checkout-api",
+      "expected_output": "A bug entry created under entries/ with valid frontmatter, indexed into maps/bugs.md, the daily note and index.md.",
+      "files": [],
+      "assertions": [
+        "An entry file matching entries/*-*.md exists with type: bug in its frontmatter",
+        "The frontmatter parses as valid YAML",
+        "The tags field contains type/bug and carries no '#' character",
+        "The frontmatter includes a decayed_at field set to today",
+        "project is set to checkout-api",
+        "salience is 100 and usage_count is 0",
+        "The entry slug appears in maps/bugs.md, today's daily note, and index.md"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "ambiguous-input-routes-to-recall",
+      "harness": "agent",
+      "seed": "cors",
+      "prompt": "/mentat cors nginx 502",
+      "expected_output": "Treated as a search, not a save. No new entry is created.",
+      "files": [],
+      "assertions": [
+        "No new file was created in entries/",
+        "The response reports search results or explicitly states nothing was found",
+        "If nothing was found, the agent offers to save the topic instead of doing so unprompted"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "recall-by-synonym",
+      "harness": "agent",
+      "seed": "cors",
+      "prompt": "/mentat como foi que eu resolvi aquele problema de cabeçalho de origem cruzada?",
+      "expected_output": "Finds the seeded CORS bug entry despite the query sharing no literal term with it, and reconsolidates only that one.",
+      "files": [],
+      "assertions": [
+        "The seeded nginx-strips-cors-header entry is present in the response as a file link",
+        "The query was expanded into English/technical synonyms before searching, not passed through verbatim",
+        "usage_count on that entry incremented by exactly 1 and last_accessed equals today",
+        "browser-preflight-caching and api-gateway-timeout were NOT reconsolidated — they match on keywords but do not answer the question"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "groom-is-cadence-insensitive",
+      "harness": "script",
+      "seed": "mixed-age",
+      "prompt": "/mentat groom",
+      "expected_output": "Idle transient entries fade; running groom repeatedly on the same day changes nothing further; permanent types are untouched.",
+      "files": [],
+      "assertions": [
+        "salience is unchanged for every entry of type bug, decision, feature, learning, snippet and schema",
+        "Running groom a second time in the same session reports 0 entries faded",
+        "A note idle for 14 days lands within 3 points of 75",
+        "Fourteen grooms and one groom agree on final salience within rounding error",
+        "Entries archived by groom were removed from their MOC, the daily notes and index.md",
+        "Archived files still exist under archive/"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "duplicate-becomes-amend",
+      "harness": "agent",
+      "seed": "cors",
+      "prompt": "/mentat sobre aquele bug do nginx com CORS — descobri que também acontece em 504, não só 502",
+      "expected_output": "Recognizes the existing entry and amends it instead of creating a second one.",
+      "files": [],
+      "assertions": [
+        "The number of files in entries/ did not increase",
+        "The existing entry's body now mentions 504",
+        "type, date and project on the amended entry are unchanged",
+        "usage_count incremented and last_accessed equals today",
+        "If the summary changed, vault.py reindex was used rather than editing the MOC by hand",
+        "New sibling links were threaded with vault.py relate, so both entries carry the link"
+      ],
+      "script_covers": "The mechanical half — identity preservation and index consistency after touch + reindex — is asserted by run_script_evals.py. The agent run tests whether the duplicate is noticed at all."
+    },
+    {
+      "id": 6,
+      "name": "validity-gate-pushes-back",
+      "harness": "agent",
+      "seed": "empty",
+      "prompt": "/mentat anota que python usa indentação em vez de chaves",
+      "expected_output": "Declines as trivial, explains why, and offers to save anyway if the user insists.",
+      "files": [],
+      "assertions": [
+        "No entry was created without the user insisting",
+        "The response states specifically why the fact is trivial rather than refusing generically",
+        "The agent makes clear the user can override the decision"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "status-reports-health",
+      "harness": "script",
+      "seed": "mixed-age",
+      "prompt": "/mentat status",
+      "expected_output": "A compact table of counts and health flags, computed by the script rather than by hand.",
+      "files": [],
+      "assertions": [
+        "Reported total entry count matches the actual file count in entries/",
+        "Per-type counts plus unclassified entries sum to the total",
+        "Orphans and broken links are surfaced when the seed vault contains them",
+        "audit --fix clears the orphan but leaves broken body links for a judgment call",
+        "A re-indexed orphan keeps its own summary rather than a placeholder",
+        "An un-indexed entry whose slug is a prefix of an indexed one is still reported as an orphan"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "fresh-vault-bootstraps",
+      "harness": "agent",
+      "seed": "bare",
+      "prompt": "/mentat guarda essa decisão: vamos ficar no Postgres em vez de migrar pro Mongo, o motivo é que precisamos de transações multi-tabela no fechamento de pedido",
+      "expected_output": "Detects the missing vault, initializes it, then writes the decision entry.",
+      "files": [],
+      "assertions": [
+        "init-vault.sh ran before any entry was written",
+        "entries/, maps/, daily/, archive/, index.md and .obsidian/ all exist afterward",
+        "A decision entry was created with status: open",
+        "The rationale is recorded under a Rationale section",
+        "The entry links Postgres and Mongo as [[wiki-links]]"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "archiving-spares-sibling-slugs",
+      "harness": "script",
+      "seed": "empty",
+      "prompt": "(regression, no prompt — exercises groom directly)",
+      "expected_output": "Archiving an entry whose slug is a prefix of another leaves the sibling's index lines intact.",
+      "files": [],
+      "assertions": [
+        "The faded entry moved to archive/",
+        "The prefix-sharing sibling kept its MOC line",
+        "The sibling kept its index.md and daily note lines"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "archived-entry-comes-back",
+      "harness": "script",
+      "seed": "empty",
+      "prompt": "(regression, no prompt — exercises groom, search --include-archived and restore)",
+      "expected_output": "An archived entry is invisible to an ordinary search, findable with --include-archived, and returns to the working set fully re-indexed.",
+      "files": [],
+      "assertions": [
+        "groom archived the spent entry instead of deleting it",
+        "An unfiltered search no longer returns it",
+        "search --include-archived returns it marked as archived",
+        "restore moved the file from archive/ back to entries/",
+        "The restored entry carries full salience and a reset decayed_at",
+        "The restored entry is indexed again in its MOC, index.md and its original daily note",
+        "stats reports no orphan afterward",
+        "A groom run the same day does not archive it again"
+      ]
+    }
+  ]
+}

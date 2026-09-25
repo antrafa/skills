@@ -1,0 +1,46 @@
+schema_version: '1.1'
+name: 06-refine-options
+description: REFINE opens three real options, one without software, and cuts v1 around the riskiest assumption.
+tags:
+- refine
+- methods
+context:
+  scaffold_script: fixture.sh
+execution:
+  prompt: /lapida ideas/estoque-feirantes.md avança
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Edit
+  - Write
+graders:
+- name: no-fit-round
+  type: regex
+  target: last_message
+  pattern: FIT\s*·\s*\S+\s+\d+
+  match: not_contains
+- name: criteria
+  type: llm
+  weight: 3
+  criteria: 'PASS if it resumes at REFINE and its summary lists at least three genuinely
+
+    different solution options, at least one without software (manual, concierge,
+
+    paper, WhatsApp or similar); states the solution hypothesis as "we believe /
+
+    acreditamos que <solution> will <outcome> for <audience>"; gives a differentiator
+
+    against the notebook-and-memory workaround; lists what stays out of v1 with a
+
+    reason; the chosen option tests the riskiest assumption (the end-of-market
+
+    recording habit) early or depends on it as little as possible; and it asks for
+
+    the ok before opening FIT.
+
+    FAIL if all options are variations of the same app, nothing is cut from v1, the
+
+    choice ignores the riskiest assumption, or it opens FIT without waiting.'

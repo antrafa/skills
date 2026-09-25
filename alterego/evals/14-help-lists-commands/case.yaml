@@ -1,0 +1,136 @@
+schema_version: '1.1'
+name: 14-help-lists-commands
+description: One line per subcommand, no removed alias, footer tip.
+tags:
+- help
+- smoke
+execution:
+  prompt: /alterego help
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: lists-start
+  type: regex
+  target: last_message
+  pattern: '`?start\b'
+  flags: i
+- name: lists-dev
+  type: regex
+  target: last_message
+  pattern: '`?dev\b'
+  flags: i
+- name: lists-refactor
+  type: regex
+  target: last_message
+  pattern: '`?refactor\b'
+  flags: i
+- name: lists-daily
+  type: regex
+  target: last_message
+  pattern: '`?daily\b'
+  flags: i
+- name: lists-wrap
+  type: regex
+  target: last_message
+  pattern: '`?wrap\b'
+  flags: i
+- name: lists-study
+  type: regex
+  target: last_message
+  pattern: '`?study\b'
+  flags: i
+- name: lists-review
+  type: regex
+  target: last_message
+  pattern: '`?review\b'
+  flags: i
+- name: lists-mr
+  type: regex
+  target: last_message
+  pattern: '`?mr\b'
+  flags: i
+- name: lists-adr
+  type: regex
+  target: last_message
+  pattern: '`?adr\b'
+  flags: i
+- name: lists-commit
+  type: regex
+  target: last_message
+  pattern: '`?commit\b'
+  flags: i
+- name: lists-pr-desc
+  type: regex
+  target: last_message
+  pattern: '`?pr-desc\b'
+  flags: i
+- name: lists-tour-project
+  type: regex
+  target: last_message
+  pattern: '`?tour-project\b'
+  flags: i
+- name: lists-project-analyser
+  type: regex
+  target: last_message
+  pattern: '`?project-analyser\b'
+  flags: i
+- name: lists-local-app
+  type: regex
+  target: last_message
+  pattern: '`?local-app\b'
+  flags: i
+- name: lists-idea
+  type: regex
+  target: last_message
+  pattern: '`?idea\b'
+  flags: i
+- name: lists-digest
+  type: regex
+  target: last_message
+  pattern: '`?digest\b'
+  flags: i
+- name: lists-skill
+  type: regex
+  target: last_message
+  pattern: '`?skill\b'
+  flags: i
+- name: lists-sre
+  type: regex
+  target: last_message
+  pattern: '`?sre\b'
+  flags: i
+- name: lists-setup
+  type: regex
+  target: last_message
+  pattern: '`?setup\b'
+  flags: i
+- name: lists-persona
+  type: regex
+  target: last_message
+  pattern: '`?persona\b'
+  flags: i
+- name: lists-help
+  type: regex
+  target: last_message
+  pattern: '`?help\b'
+  flags: i
+- name: no-removed-aliases
+  type: regex
+  target: last_message
+  pattern: '`(sdlc|mikado|end-of-day|decision|mr-desc|project-tour|tour|analyser|audit|review-skill|incident|onboard|info)`'
+  flags: i
+  match: not_contains
+- name: footer-tip
+  type: regex
+  target: last_message
+  pattern: help <cmd>
+  flags: ''

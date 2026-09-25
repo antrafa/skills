@@ -1,0 +1,46 @@
+schema_version: '1.1'
+name: 34-refactor-trivial-rename
+description: No graph for a one-step rename.
+tags:
+- refactor
+context:
+  scaffold_script: fixture.sh
+execution:
+  prompt: /alterego refactor rename the getTotal method to getGrandTotal
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Bash
+  - Edit
+  - Write
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-commit-or-push
+  type: tool_used
+  tool: Bash
+  input_match: git\s+(commit|push|merge|tag)\b
+  min: 0
+  max: 0
+- name: no-mikado-graph
+  type: file_exists
+  path: docs/refactor/**
+  exists: false
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if it says the rename fits in one green step and needs no Mikado graph,
+
+    then either does the rename in both files (OrderService and OrderReport) or
+
+    hands it back as a plain request.
+
+    FAIL if it opens a prerequisite graph for the rename or renames only one of the
+
+    two usages.'

@@ -1,0 +1,46 @@
+schema_version: '1.1'
+name: 12-analyser-payments
+description: Injection, swallowed error and theatrical test found, scoped to payments.
+tags:
+- analyser
+context:
+  scaffold_script: fixture.sh
+execution:
+  prompt: /alterego project-analyser payments
+  max_turns: 40
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Write
+  timeout_seconds: 600
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-edit
+  type: tool_used
+  tool: Edit
+  min: 0
+  max: 0
+- name: cites-file-line
+  type: regex
+  target: last_message
+  pattern: Payment\w*\.java:\d+
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if the audit stays on the payments module and reports, each with file:line
+
+    and severity: the SQL injection in the native query built by concatenation, the
+
+    empty catch that swallows the refund error, and the theatrical test that mocks
+
+    the controller it claims to test. It includes a manual testing guide or its
+
+    outline and applies no fix.
+
+    FAIL if it misses the injection, audits the catalog module instead, or edits code.'

@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editors
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Obsidian (vault config is user-specific)
+.obsidian/
+
+# Python
+__pycache__/
+*.pyc

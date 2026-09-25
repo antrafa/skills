@@ -1,0 +1,36 @@
+schema_version: '1.1'
+name: 25-study-memory-events
+description: Mechanism explained, Socratic challenge, In short.
+tags:
+- study
+execution:
+  prompt: /alterego study cgroups v2 memory.events
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: closes-in-short
+  type: regex
+  target: last_message
+  pattern: In short
+  flags: ''
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if it aligns the goal of the study, explains the mechanism in plain language
+
+    (what memory.events counts, such as low, high, max, oom and oom_kill), poses at
+
+    least one Socratic question about an edge case, and closes with an "In short"
+
+    block.
+
+    FAIL if it is a plain lecture with no question, or gets the counters wrong.'

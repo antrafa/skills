@@ -1,0 +1,49 @@
+schema_version: '1.1'
+name: 05-free-form-good-morning
+description: Free-form 'organize the day', stability first, first step named.
+tags:
+- routing
+- daily
+execution:
+  prompt: /alterego good morning, today I have a meeting at 2pm, a big PR to review and the reports pod
+    went down overnight
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-write
+  type: tool_used
+  tool: Write
+  min: 0
+  max: 0
+- name: no-edit
+  type: tool_used
+  tool: Edit
+  min: 0
+  max: 0
+- name: no-good-subcommand
+  type: regex
+  target: last_message
+  pattern: \bgood\b.{0,40}(is not|isn't|unknown).{0,20}(subcommand|command)
+  flags: i
+  match: not_contains
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if it treats the message as organizing the day: puts the reports pod first
+
+    (production stability), the PR review next (unblocking a colleague), fits the
+
+    2pm meeting, and names the first concrete step.
+
+    FAIL if it treats "good" as an unknown subcommand, lists the items without an
+
+    order, or starts executing work.'

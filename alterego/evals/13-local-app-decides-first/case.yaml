@@ -1,0 +1,51 @@
+schema_version: '1.1'
+name: 13-local-app-decides-first
+description: Decisions first, nothing scaffolded.
+tags:
+- local-app
+- gate
+execution:
+  prompt: /alterego local-app "k8s metrics dashboard using SQLite"
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Bash
+  - Edit
+  - Write
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-write
+  type: tool_used
+  tool: Write
+  min: 0
+  max: 0
+- name: no-edit
+  type: tool_used
+  tool: Edit
+  min: 0
+  max: 0
+- name: no-scaffold-yet
+  type: tool_used
+  tool: Bash
+  input_match: (npm|npx|pnpm|yarn)\s+(create|init|install)
+  min: 0
+  max: 0
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if, before generating anything, it lays out the key decisions with pros and
+
+    cons specific to this idea: Next.js full-stack vs React + Vite, whether AI is
+
+    needed and how, and at least three visual styles with dark/light mode, then asks
+
+    the user to choose.
+
+    FAIL if it scaffolds or writes files before the user validates the decisions.'

@@ -1,0 +1,37 @@
+schema_version: '1.1'
+name: 17-skill-new
+description: Invocation first, steps vs reference, starts small.
+tags:
+- skill
+execution:
+  prompt: /alterego skill new "migrations reviewer"
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Write
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-edit
+  type: tool_used
+  tool: Edit
+  min: 0
+  max: 0
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if, before writing, it resolves who invokes the skill (and says that a
+
+    user-invoked skill uses disable-model-invocation: true and pays no context
+
+    load) and separates steps from reference. Any draft it shows is small, with no
+
+    speculative sections.
+
+    FAIL if it writes a long SKILL.md straight away without settling invocation first.'

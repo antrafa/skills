@@ -1,0 +1,59 @@
+{
+  "skill_name": "doc-digest",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/doc-digest evals/files/adr-next-primeiro.md",
+      "expected_output": "Short digest of a 77-line ADR: TL;DR, Anti-Vibe-Coding Box and index. No diagram and no matrix, because the document is short and describes no flow. Smaller than the original. Written in Portuguese, matching the source document.",
+      "files": ["evals/files/adr-next-primeiro.md"],
+      "expectations": [
+        "The file docs/digests/adr-next-primeiro-digest.md was written",
+        "The digest contains no ```mermaid block and no matrix section",
+        "The digest has fewer words than the original",
+        "Each Anti-Vibe-Coding Box block has at most 3 items",
+        "Every Box item cites a line (L<n>) that exists in the original",
+        "The classified type is ADR",
+        "The digest is written in Portuguese, like the source document, with translated section headings and no English section titles",
+        "scripts/verify-digest.sh exits with code 0",
+        "Chat shows only the path, the TL;DR and the Box"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Mastiga esse SDD pra mim de forma visual: evals/files/sdd-radio-app.md",
+      "expected_output": "Full digest of an SDD in evolution mode (existing Payload CMS backend gains endpoints; the React Native app is new). The diagram distinguishes existing, new and modified. The Box points out the real inconsistency between the ad placement requirement (L74) and the /api/app/publicidades endpoint contract, which does not return that field. Digest and chat reply are both in Portuguese, although the skill is written in English.",
+      "files": ["evals/files/sdd-radio-app.md"],
+      "expectations": [
+        "The skill triggered from natural language in Portuguese, without /doc-digest, even though the skill is written in English",
+        "The classified mode is evolution",
+        "The diagram uses classDef new and classDef modified and marks ConfiguracaoRadio or Parceiros as modified",
+        "The Box states that the /api/app/publicidades contract does not return posicionamento",
+        "TL;DR has at most 70 words",
+        "The matrix has at most 6 rows and every row cites (L<n>)",
+        "The digest is written in Portuguese and the chat reply is in Portuguese",
+        "The Origem line carries the short commit hash of the original",
+        "scripts/verify-digest.sh exits with code 0"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "/doc-digest evals/files/plano-protocolo-demissao.md --html",
+      "expected_output": "Digest of a 900-line greenfield plan full of bash code, in .md and .html. The index ignores bash comments inside code blocks. As an implementation plan, the diagram shows the phases in execution order with their dependencies and marks the rm -rf step as irreversible; the matrix uses the plan columns (phase, delivers, depends on, way back). The Box highlights concrete rm -rf risks: pkill -f by substring (L352-355) and safe_remove by exact match (L149). The HTML follows DESIGN.md and turns the alerts into textual labels in Portuguese.",
+      "files": ["evals/files/plano-protocolo-demissao.md"],
+      "expectations": [
+        "docs/digests/plano-protocolo-demissao-digest.md and .html were both written",
+        "The classified type is Implementation Plan and the mode is greenfield",
+        "The diagram is a flowchart of phases with classDef irreversible on at least one node, and the legend explains it",
+        "The matrix columns are the plan ones: phase, delivers, depends on, way back",
+        "The index contains no bash comment lines (# --- CORES ---, # Testar ...)",
+        "The Box cites pkill -f by substring or safe_remove by exact match, with a line number from the original",
+        "The HTML loads mermaid.min.js from jsdelivr and does not use the [!WARNING] syntax",
+        "The HTML alert labels are in Portuguese (AVISO —, IMPORTANTE —, CUIDADO —), matching the source document",
+        "The HTML has no box-shadow and no border-radius above 4px",
+        "The whole digest has at most 600 words excluding Mermaid",
+        "scripts/verify-digest.sh exits with code 0",
+        "Chat states the xdg-open or open command to open the HTML"
+      ]
+    }
+  ]
+}

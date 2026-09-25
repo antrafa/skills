@@ -1,0 +1,46 @@
+schema_version: '1.1'
+name: 37-dev-verify
+description: Real test run with exit code; characteristic marked unverified.
+tags:
+- dev
+context:
+  scaffold_script: fixture.sh
+execution:
+  prompt: /alterego dev verify
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Bash
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-commit-or-push
+  type: tool_used
+  tool: Bash
+  input_match: git\s+(commit|push|merge|tag)\b
+  min: 0
+  max: 0
+- name: ran-tests
+  type: tool_used
+  tool: Bash
+  input_match: (make test|unittest)
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if it runs the real tests and shows their output with the exit code, then
+
+    asks where the architectural characteristic of this work is checked and, since
+
+    none is, says it is unverified (or proposes the cheapest check the repository
+
+    already supports) instead of reporting it as held.
+
+    FAIL if it reports tests as passing without running them, or claims a
+
+    characteristic is guaranteed without a check.'

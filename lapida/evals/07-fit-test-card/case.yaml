@@ -1,0 +1,46 @@
+schema_version: '1.1'
+name: 07-fit-test-card
+description: FIT writes the next test as a test card with a numeric criterion and ties go/pivot/stop to it.
+tags:
+- fit
+- methods
+context:
+  scaffold_script: fixture.sh
+execution:
+  prompt: /lapida ideas/estoque-feirantes.md avança
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Edit
+  - Write
+graders:
+- name: recommendation
+  type: regex
+  target: last_message
+  pattern: \b(go|pivot|stop|seguir|pivotar|parar)\b
+  flags: i
+- name: criteria
+  type: llm
+  weight: 3
+  criteria: 'PASS if it resumes at FIT and its summary has: alternatives including the
+
+    current workaround and doing nothing, with any named competitor either linked or
+
+    labeled as a hypothesis to verify; two to four fit signals each tagged with
+
+    current evidence (strong / weak / none); monetization (who pays, how much, why);
+
+    a next test that targets the recording-habit assumption, written as a test card
+
+    with hypothesis, test, metric, a numeric success criterion and a deadline; and a
+
+    go / pivot / stop recommendation explicitly conditional on that test.
+
+    FAIL if the success criterion is not a number, the test has no deadline, the
+
+    test ignores the riskiest assumption, a competitor or market number is stated as
+
+    fact without a source, or the recommendation is unconditional.'

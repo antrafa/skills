@@ -1,0 +1,52 @@
+schema_version: '1.1'
+name: 03-review-local-file
+description: Finds the shared map and the N+1, cites lines, one verdict, file untouched.
+tags:
+- review
+- smoke
+context:
+  scaffold_script: fixture.sh
+execution:
+  prompt: /alterego review src/services/BillingService.java
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-edit
+  type: tool_used
+  tool: Edit
+  min: 0
+  max: 0
+- name: no-write
+  type: tool_used
+  tool: Write
+  min: 0
+  max: 0
+- name: cites-file-line
+  type: regex
+  target: last_message
+  pattern: BillingService\.java:\d+
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if the review points out both real defects with their line: the shared
+
+    mutable HashMap in a singleton bean (a concurrency problem) and the repository
+
+    call inside the loop (N+1). It proposes the smallest fix or the missing
+
+    investigation for each, and ends with exactly one verdict (for example
+
+    "Awaiting changes").
+
+    FAIL if it misses either defect, invents a finding not in the code, or says it
+
+    changed the file.'

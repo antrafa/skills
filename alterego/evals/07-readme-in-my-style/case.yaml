@@ -1,0 +1,70 @@
+schema_version: '1.1'
+name: 07-readme-in-my-style
+description: Edits without asking again, checks the diff, five-block handoff with honest Verified.
+tags:
+- execution
+- smoke
+context:
+  scaffold_script: fixture.sh
+execution:
+  prompt: /alterego fix up this README in my style and check the diff
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Bash
+  - Edit
+  - Write
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-commit-or-push
+  type: tool_used
+  tool: Bash
+  input_match: git\s+(commit|push|merge|tag)\b
+  min: 0
+  max: 0
+- name: edited-readme
+  type: tool_used
+  tool: Edit
+  input_match: README
+- name: checked-diff
+  type: tool_used
+  tool: Bash
+  input_match: git\s+diff
+- name: no-redundant-confirmation
+  type: regex
+  target: last_message
+  pattern: (may|can|shall) I (proceed|go ahead|edit|make)
+  flags: i
+  match: not_contains
+- name: handoff
+  type: llm
+  weight: 2
+  criteria: 'PASS if the README was actually rewritten (clearer, direct, no corporate speak)
+
+    and the reply is a handoff: one sentence of what was done, what changed, and a
+
+    "Verified" block that lists only commands that really ran (such as git diff).
+
+    FAIL if it only gives instructions, asks permission for the edit it was asked to
+
+    make, or reports a verification it did not run.'
+- name: facts-kept
+  type: llm
+  weight: 1
+  criteria: 'PASS if the rewritten README keeps every fact of the original (docker compose
+
+    up, localhost:8080, nightly generation, manual endpoint, queue) and does not
+
+    invent new ones.
+
+    FAIL if a fact was dropped or an invented one was added.'
+  focus:
+    source: file
+    path: README.md

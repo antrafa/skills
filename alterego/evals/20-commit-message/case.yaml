@@ -1,0 +1,52 @@
+schema_version: '1.1'
+name: 20-commit-message
+description: Proposes a split by intent, Conventional Commits, stops before committing.
+tags:
+- delivery
+- gate
+- smoke
+context:
+  scaffold_script: fixture.sh
+execution:
+  prompt: /alterego commit
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Bash
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-commit-or-push
+  type: tool_used
+  tool: Bash
+  input_match: git\s+(commit|push|merge|tag)\b
+  min: 0
+  max: 0
+- name: read-diff
+  type: tool_used
+  tool: Bash
+  input_match: git\s+diff
+- name: no-ai-attribution
+  type: regex
+  target: last_message
+  pattern: co-authored-by|generated (with|by)|claude
+  flags: i
+  match: not_contains
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if it reads the staged diff, notices it mixes two intents (a rename
+
+    refactor and a new validation) and proposes splitting into two commits, each
+
+    with a Conventional Commits subject (imperative, lowercase, no period, at most
+
+    72 characters) and a body with the why. It stops and asks before committing.
+
+    FAIL if it writes a single message joining both intents, or commits.'

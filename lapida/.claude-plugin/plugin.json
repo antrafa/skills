@@ -1,0 +1,10 @@
+{
+  "name": "lapida",
+  "displayName": "Lapida",
+  "version": "0.1.0",
+  "description": "Refines a raw idea into a viable, testable proposal in four phases: EXPLORE, CHALLENGE, REFINE, FIT.",
+  "author": { "name": "Antonio Rafael Ortega", "url": "https://github.com/antrafa" },
+  "license": "MIT",
+  "keywords": ["skill", "ideation", "lean-startup", "jobs-to-be-done", "pre-mortem", "claude-code", "codex"],
+  "skills": ["."]
+}

@@ -1,0 +1,12 @@
+{
+  "name": "alterego",
+  "displayName": "Alter Ego",
+  "version": "3.0.0",
+  "description": "The developer's journey partner and cognitive clone: plans the day, reviews code and MRs, decides with ADRs, investigates incidents and executes through to a verified delivery.",
+  "author": { "name": "Antonio Rafael Ortega", "url": "https://github.com/antrafa" },
+  "homepage": "https://github.com/antrafa/alterego",
+  "repository": "https://github.com/antrafa/alterego",
+  "license": "MIT",
+  "keywords": ["skill", "persona", "pair-programming", "code-review", "adr", "sre", "claude-code", "codex"],
+  "skills": ["."]
+}

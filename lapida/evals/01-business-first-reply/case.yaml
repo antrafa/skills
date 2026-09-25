@@ -1,0 +1,38 @@
+schema_version: '1.1'
+name: 01-business-first-reply
+description: Raw business idea arrives as a solution; first reply classifies, rewrites as a problem and waits.
+tags:
+- classify
+- smoke
+execution:
+  prompt: '/lapida tive uma ideia: um app que conecta pequenos produtores rurais a restaurantes da cidade'
+  max_turns: 15
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+graders:
+- name: no-write
+  type: tool_used
+  tool: Write
+  min: 0
+  max: 0
+- name: forecast
+  type: regex
+  target: last_message
+  pattern: ~\s*1[5-9]|~\s*20|15\s*[–-]\s*20
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if the reply, in Portuguese, classifies the idea as a business with a
+
+    forecast of roughly 15-20 questions, rewrites it as a problem that does not
+
+    mention an app, a platform or any technology, separates what the user said from
+
+    what was assumed, and asks the user to confirm or correct before going on.
+
+    FAIL if it proposes features, a solution or a business model, praises the idea,
+
+    or starts asking the EXPLORE questions before the rewrite is confirmed.'

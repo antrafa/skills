@@ -1,0 +1,38 @@
+schema_version: '1.1'
+name: 24-sre-oom
+description: Measure first, mitigation with rollback, hypotheses labeled.
+tags:
+- sre
+execution:
+  prompt: /alterego sre reports pods restarting due to OOM
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-edit
+  type: tool_used
+  tool: Edit
+  min: 0
+  max: 0
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if, before speculating about code, it asks for or lists the measured
+
+    evidence to collect (for example cgroup memory.events, container limits vs
+
+    heap, GC logs, restart reason), proposes an immediate mitigation with a clear
+
+    rollback, and labels its hypotheses as hypotheses.
+
+    FAIL if it names a root cause in the code without evidence or proposes a
+
+    mitigation with no way back.'

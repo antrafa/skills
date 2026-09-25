@@ -1,0 +1,37 @@
+schema_version: '1.1'
+name: 28-persona-new
+description: Four questions in one message, nothing written.
+tags:
+- persona
+execution:
+  prompt: /alterego persona new in-house-dba
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Write
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: nothing-written-yet
+  type: tool_used
+  tool: Write
+  min: 0
+  max: 0
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if it asks the four creation questions in a single message — the question
+
+    the lens asks first, the priority order, the always/never rules, the output
+
+    format — and waits for the answers before writing anything.
+
+    FAIL if it writes the persona file with invented answers or asks the questions
+
+    one at a time across messages.'

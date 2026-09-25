@@ -1,0 +1,44 @@
+schema_version: '1.1'
+name: 11-tour-project
+description: Stack, layers, Mermaid flow and study order from the real repository.
+tags:
+- tour
+context:
+  scaffold_script: fixture.sh
+execution:
+  prompt: /alterego tour-project
+  max_turns: 40
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Write
+  timeout_seconds: 600
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-edit
+  type: tool_used
+  tool: Edit
+  min: 0
+  max: 0
+- name: has-mermaid
+  type: regex
+  target: last_message
+  pattern: '```mermaid'
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if it identifies the stack from the manifest (Node.js, Express, PostgreSQL
+
+    via pg), the layering (controllers, services, repositories), shows a Mermaid
+
+    flow of a request, and gives a numbered study order through the real files.
+
+    Asking once about the focus, or assuming the full tour and saying so, both pass.
+
+    FAIL if it proposes code fixes or describes files that do not exist.'

@@ -1,0 +1,46 @@
+schema_version: '1.1'
+name: 08-digest-plan-routes
+description: Digests the plan, doc-digest absence handled, original untouched.
+tags:
+- digest
+context:
+  scaffold_script: fixture.sh
+execution:
+  prompt: /alterego digest docs/superpowers/plans/2026-09-19-feature.md
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-edit
+  type: tool_used
+  tool: Edit
+  min: 0
+  max: 0
+- name: original-untouched
+  type: tool_used
+  tool: Write
+  input_match: 2026-09-19-feature
+  min: 0
+  max: 0
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if the reply digests that plan (what exists vs what changes, the decision,
+
+    the risks such as the long-held replica connection and the column-order
+
+    contract) and, since doc-digest is absent here, says so in one line and offers
+
+    its installation only at the end.
+
+    FAIL if it rewrites the plan, refuses because the skill is missing, or omits
+
+    the plan''s risks.'

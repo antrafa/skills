@@ -1,0 +1,45 @@
+schema_version: '1.1'
+name: 38-idea-degraded
+description: Without lapida, says so, starts the refinement inline, offers the installation last.
+tags:
+- idea
+- degrade
+execution:
+  prompt: /alterego idea um app que conecta pequenos produtores rurais a restaurantes da cidade
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-write
+  type: tool_used
+  tool: Write
+  min: 0
+  max: 0
+- name: offers-lapida
+  type: regex
+  target: last_message
+  pattern: antrafa/lapida
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if, in this order: one line saying lapida is not installed; in the same
+
+    reply, the idea classified as a business with a forecast of questions and
+
+    rewritten as a problem that names no app, platform or technology, separating what
+
+    the user said from what was assumed, and asking for confirmation; the
+
+    installation offer only at the end.
+
+    FAIL if the offer replaces or precedes the refinement, the absence is treated as
+
+    a blocker, or it proposes features or a solution.'

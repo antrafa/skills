@@ -1,0 +1,42 @@
+schema_version: '1.1'
+name: 18-daily-board
+description: Production > blocked colleague > architecture, first step named.
+tags:
+- daily
+execution:
+  prompt: /alterego daily I have an alignment at 2pm, a teammate's PR to review, the reports pod went
+    down overnight and I need to design the new gateway
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-write
+  type: tool_used
+  tool: Write
+  min: 0
+  max: 0
+- name: no-edit
+  type: tool_used
+  tool: Edit
+  min: 0
+  max: 0
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if the order is: the reports pod (production) first, the teammate''s PR
+
+    (blocked colleague) next, the gateway design after, with the 2pm alignment
+
+    placed in the day; it caps the work in progress and names the first step.
+
+    FAIL if the gateway or the meeting comes before the pod, or if it starts doing
+
+    the work.'

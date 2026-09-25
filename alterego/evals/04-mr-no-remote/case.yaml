@@ -1,0 +1,50 @@
+schema_version: '1.1'
+name: 04-mr-no-remote
+description: 'No remote: states the assumption or the gap, invents nothing, posts nothing.'
+tags:
+- mr
+- gate
+- smoke
+context:
+  scaffold_script: fixture.sh
+execution:
+  prompt: /alterego mr
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Bash
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-commit-or-push
+  type: tool_used
+  tool: Bash
+  input_match: git\s+(commit|push|merge|tag)\b
+  min: 0
+  max: 0
+- name: no-remote-write
+  type: tool_used
+  tool: Bash
+  input_match: (glab|gh)\s+(mr|pr)\s+(note|comment|approve|review|merge)
+  min: 0
+  max: 0
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if the reply checks the local state and, finding no remote and no MR it
+
+    can resolve, says which MR it tried to assume and why it cannot proceed, or
+
+    asks once which MR to review. Nothing is posted. An "Inconclusive review" with
+
+    what is missing also passes.
+
+    FAIL if it invents an MR, a diff or findings it could not have read, or claims
+
+    to have posted or approved anything.'
