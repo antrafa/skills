@@ -61,6 +61,9 @@ modules involved.
 - **A reversible assumption does not block the work.** Assume, record it in
   the handoff and move on. Only stop to ask when the answer materially changes
   the result and is not in the code.
+- **Delegating an action `guardrails` covers, when it is armed:** a subagent
+  other than `fork` starts with zero context and does not inherit the armed
+  guardrails on its own — see [playbook-start.md](playbook-start.md#1-arm-the-guardrails).
 
 ---
 

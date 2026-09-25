@@ -140,6 +140,36 @@ modo de permissão ativo (auto-aceite, bypass, plan, "yolo").
 Essas regras se somam às guardas específicas de cada projeto (ex.: política de
 escrita por ambiente definida no CLAUDE.md) — nunca as substituem nem afrouxam.
 
+## Escopo: subagentes (Agent tool)
+
+As regras 1–16 vivem no contexto desta sessão. Um subagente lançado pelo
+`Agent` tool com qualquer `subagent_type` diferente de `fork` começa **sem**
+esse contexto: ele não leu este arquivo, não sabe que guardrails está ativo, e
+segue a autonomia padrão do harness, não as regras daqui. Delegar a ele uma
+ação coberta pelas regras 3 a 13 (commit, push, ação destrutiva, dependência,
+edição de arquivo sensível) sem repetir a regra no prompt tem o mesmo efeito de
+desligar guardrails para aquela ação — o subagente executa sem pedir a
+confirmação que o usuário espera, e a sessão principal continua achando que
+está protegida.
+
+Antes de delegar uma ação desse tipo:
+
+- **Preferir `fork`** quando o objetivo é executar, não só investigar: ele
+  herda o contexto inteiro da sessão, guardrails incluído, e responde às
+  mesmas regras.
+- **Subagente novo, se a tarefa pode tocar uma ação coberta**: incluir no
+  prompt a regra aplicável como comportamento — "antes de rodar `git commit`,
+  mostrar `git status`/`git diff --stat` e esperar confirmação" — não "segue
+  guardrails" (o subagente não tem este arquivo para resolver a referência).
+- **Delegação só de leitura ou investigação** (localizar código, mapear
+  chamadores, revisar diff) não precisa disso — nada nela é coberto pelas
+  regras 3 a 13.
+
+A camada mecânica (hook) não depende dessa distinção: ela intercepta toda
+chamada de `Bash`, venha da sessão principal ou de um subagente, porque roda
+no nível do harness. O que fica sem cobertura quando o prompt do subagente não
+repete a regra é só a camada de instrução.
+
 ## Camada mecânica: hook que bloqueia antes de executar
 
 As regras acima são instrução: valem enquanto o agente as lê e obedece, e um
@@ -216,3 +246,5 @@ as regras deste arquivo são tudo o que há.
   regras voltam a valer na próxima. Se o hook bloquear a ação aprovada, pedir
   que o usuário rode com `!`; nunca reescrever o comando para escapar do padrão.
 - Desativar a skill não desliga o hook (ver *Camada mecânica*).
+- Guardrails ativo na sessão principal não se propaga sozinho a um subagente
+  novo (ver *Escopo: subagentes*).

@@ -47,7 +47,13 @@ itself rather than a bare "may I run X?".
 <critical>Arming the guardrails is not a promise to be careful. It is a mode that
 is either loaded in context or is not. Never report the session as protected
 without having invoked the skill or read its rules — an announced guardrail that
-was never loaded is worse than none, because the user stops watching.</critical>
+was never loaded is worse than none, because the user stops watching.
+
+That "loaded in context" does not reach a subagent spawned later: any `Agent`
+tool call with `subagent_type` other than `fork` starts blind to it. Before
+delegating an action `guardrails` covers, see its `SKILL.md`, section *Escopo:
+subagentes* — prefer `fork`, or restate the rule in the subagent's
+prompt.</critical>
 
 ---
 
