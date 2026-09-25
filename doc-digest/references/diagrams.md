@@ -23,6 +23,26 @@ mindmap
 
 No `classDef` and no legend: branch position already says what each item is.
 
+## Timeline: what happened, and when
+
+One section per phase of the story, events in the order the text gives them.
+Keep the text's own times; a gap between two events is often the finding.
+
+```mermaid
+timeline
+  title Incident, Monday
+  section Deploy
+    08h58 : Deploy of 4.12 starts
+    09h01 : Migration V87 starts L7
+  section Outage
+    09h05 : 5xx alerts fire
+    09h12 : Rollback fails
+  section Recovery
+    09h47 : API responds again
+```
+
+No `classDef` and no legend: the axis already says what each position means.
+
 ## Ishikawa: why did it happen
 
 Causes grouped by category, all converging on the effect. Categories fit

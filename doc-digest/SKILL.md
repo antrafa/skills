@@ -93,7 +93,10 @@ inside the translated heading, and Mermaid `classDef` names stay in English.
 5. **Select and rank.** First cross-check the text against itself: every
    requirement against the contract that serves it (endpoint, schema, field),
    every contract against a requirement, and every conclusion against what
-   it rests on; each mismatch is an internal contradiction. Then
+   it rests on; each mismatch is an internal contradiction. Next, explain
+   the central mechanism to yourself in plain words, as to a newcomer
+   (Feynman test): every step you can only fill in by guessing is an
+   assumption or a gap. Then
    list every assumption and decision you found, and classify each gap
    category as covered or gap: rollback, security,
    concurrency, observability, testing, data migration, external dependency
@@ -226,6 +229,8 @@ Filling rules:
   damaging first, and stands alone when pasted into another session: it
   names the subject and carries no reference to this digest ("item 2", "the
   Box").
+- In the Reply matrix, `Based on` names the kind of evidence: measured (log,
+  metric, test), estimated, or only asserted.
 - The matrix header above is the SDD one; other types use their columns from
   Per type.
 - A cell with no material becomes `—`. In greenfield, "what does NOT change" is
@@ -256,7 +261,7 @@ the mode only goes in the metadata.
 
 - The per-type table fixes the diagram for an ADR and a plan; for the other
   types, choose by the question the reader brings to the text. Skeletons for
-  the last four rows are in [references/diagrams.md](references/diagrams.md).
+  the last five rows are in [references/diagrams.md](references/diagrams.md).
 
   | The reader asks | Diagram |
   |---|---|
@@ -264,6 +269,7 @@ the mode only goes in the metadata.
   | Who calls whom, in what order? | `sequenceDiagram` |
   | What states can it be in? | `stateDiagram-v2` |
   | How is it organized? | `flowchart TB` with `subgraph`, one zoom level per diagram: system context, containers or components (C4) |
+  | What happened, and when? | timeline |
   | What is settled, what is still open? | mind map |
   | Why did it happen? | Ishikawa |
   | How do these ideas relate? | concept map |
