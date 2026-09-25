@@ -1,0 +1,154 @@
+{
+  "skill_name": "performance-architect",
+  "evals": [
+    {
+      "id": 1,
+      "name": "volumetria-antes-de-arquitetura-sem-dados",
+      "prompt": "temos uma aplicação Spring Boot que registra passagens de veículos em radares. o órgão comprou mais de 100 radares novos e o volume vai pra 6 milhões de requisições por dia, com pico no meio do dia e quase nada de madrugada. cada requisição vem com um payload e até 3 imagens. hoje o mesmo serviço salva tudo e já calcula se excedeu a velocidade pra virar auto de infração. o dado tem que ficar disponível quase em tempo real porque a PF e a Receita podem pedir. estamos preocupados com performance — o que a gente faz?",
+      "expected_output": "Faz a aritmética de volumetria mostrando as contas (6.000.000 ÷ 86.400 ≈ 70 req/s médio; fator de pico diurno levando a algo na faixa de 350-700 req/s de projeto; 3 imagens × 6M = ~18M objetos/dia e o storage/dia resultante), oferece as fontes de evidência (repo, manifests, cluster read-only, métricas, volumetria) deixando explícito que qualquer uma pode ser pulada, questiona o que a premissa de tempo real exige de fato (dado consultável) versus o que pode ser assíncrono (cálculo da infração), e entrega uma proposta de solução inicial concreta (o que tirar do caminho síncrono, anexo para object storage, idempotência, réplicas estimadas sob premissa declarada) — sem fechar a arquitetura como conclusão: o que for dimensionado sem medição vem marcado como premissa, com a medição que a corrigiria.",
+      "files": [],
+      "expectations": [
+        "aritmetica-de-volumetria-mostrada: a resposta mostra a conta de 6.000.000/dia para req/s médio (~70) e não apenas o resultado",
+        "pico-de-projeto-calculado: a resposta calcula um req/s de pico aplicando um fator explícito sobre a média (não trata 6 milhões/dia como se fosse a carga instantânea)",
+        "volume-de-imagens-e-storage: a resposta calcula o volume de objetos/dia (~18 milhões) e o storage decorrente, tratando-o como número que decide o projeto",
+        "fontes-de-evidencia-oferecidas-e-pulaveis: a resposta lista as fontes de evidência que sabe usar e deixa claro que o usuário pode pular qualquer uma, sem exigir dado como pré-condição para continuar",
+        "separa-consultavel-de-processado: a resposta questiona explicitamente se a premissa de tempo real exige o dado consultável ou a infração já calculada, tratando isso como a decisão que autoriza processamento assíncrono",
+        "conclusoes-sem-medicao-marcadas-como-hipotese: qualquer gargalo ou proposta apresentado sem evidência vem rotulado como hipótese, acompanhado da medição que o confirmaria",
+        "nao-propoe-reescrita-nem-tecnologia-pesada: a resposta não sugere reescrever em outra linguagem, Kafka, microserviços ou NoSQL como recomendação para esse patamar de carga",
+        "postura-somente-leitura: a resposta não altera código nem configuração e não se propõe a aplicar mudanças",
+        "termina-em-proposta-concreta: a resposta termina com ações concretas e dimensionadas sob premissa declarada (o que mudar, quantas réplicas/recursos estimados, que componente), e não apenas com 'medir primeiro' ou lista de perguntas"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "transacao-englobando-upload",
+      "prompt": "sob carga o serviço começa a dar timeout e o log enche de 'Connection is not available, request timed out after 30000ms' do Hikari. já subimos o maximumPoolSize de 10 pra 50 e melhorou um pouco mas voltou. a CPU do Oracle tá em 20%. segue o método:\n\n@Transactional\npublic void registrarPassagem(PassagemDTO dto, List<MultipartFile> imagens) {\n    Passagem p = passagemRepository.save(dto.toEntity());\n    for (MultipartFile img : imagens) {\n        byte[] bytes = img.getBytes();\n        String chave = storageClient.upload(bytes, p.getId());\n        imagemRepository.save(new Imagem(p, chave));\n    }\n    if (dto.getVelocidade() > dto.getLimite()) {\n        autuacaoService.gerarAutoInfracao(p);\n    }\n}",
+      "expected_output": "Identifica a causa raiz como a conexão de banco retida pelo upload ao storage (I/O de rede dentro da fronteira transacional) e pelo cálculo da autuação, aponta a evidência que confirma (espera por conexão com CPU do banco em 20% — pool saturado sem o banco estar saturado), explica por que aumentar o pool de 10 para 50 só adiou o problema, e nota o getBytes() carregando a imagem inteira em heap como segundo problema (pressão de memória e GC no pico). Devolve a correção como código para o time aplicar, sem editar nada.",
+      "files": [],
+      "expectations": [
+        "causa-raiz-e-io-dentro-da-transacao: a resposta identifica que o upload ao storage (chamada de rede) dentro do @Transactional é a causa raiz da exaustão do pool",
+        "usa-a-evidencia-da-cpu-do-banco: a resposta usa o fato de a CPU do Oracle estar em 20% como evidência de que o banco não é o gargalo e o pool está sendo retido indevidamente",
+        "explica-por-que-aumentar-o-pool-nao-resolve: a resposta explica que ampliar o maximumPoolSize apenas adia o problema (ou transfere a fila para o banco), em vez de recomendar aumentá-lo mais",
+        "aponta-getbytes-em-heap: a resposta identifica o getBytes() carregando a imagem inteira em memória como problema adicional de heap/GC sob concorrência",
+        "aponta-autuacao-no-caminho-sincrono: a resposta questiona a geração do auto de infração estar no caminho síncrono da requisição",
+        "correcao-como-bloco-para-o-time: a correção é apresentada como código/comando para o usuário aplicar, sem a skill editar arquivos",
+        "quantifica-retencao-de-conexao: a resposta relaciona o tempo de retenção da conexão com o número de conexões necessárias no throughput alvo (não fica só no qualitativo)"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "recusa-tecnologia-sem-numero",
+      "prompt": "decidimos aqui que vamos reescrever esse serviço de ingestão em Go e colocar Kafka na frente, porque Java não aguenta esse volume e Kafka é o padrão de mercado pra alta vazão. me ajuda a desenhar essa arquitetura nova?",
+      "expected_output": "Diz em poucas linhas que nesta faixa de carga (centenas de req/s) nem a linguagem nem o Kafka são o que decide, aponta qual medição resolveria a dúvida (breakdown de latência por etapa e o que satura no pico), lembra que Kafka se justifica por replay/múltiplos consumidores e não por vazão nesse patamar, e apresenta a alternativa proporcional (tirar I/O da transação, anexo por streaming para object storage, separar ingestão de processamento). Não vira sermão, não recusa a ajudar, e não desenha a arquitetura pedida como se ela estivesse justificada.",
+      "files": [],
+      "expectations": [
+        "recusa-curta-e-fundamentada-no-numero: a resposta contesta a reescrita em Go e o Kafka referindo-se ao patamar de carga, em poucas linhas, sem sermão ou repetição",
+        "pede-a-medicao-que-decidiria: a resposta nomeia a medição concreta que resolveria a decisão (o que satura no pico, breakdown de latência por etapa)",
+        "kafka-justificado-por-replay-nao-por-vazao: a resposta explica que Kafka se justifica por retenção/replay ou múltiplos consumidores, não por vazão nessa faixa",
+        "apresenta-alternativa-proporcional: a resposta oferece as mudanças de menor custo que atacam o problema (I/O fora da transação, anexo em object storage, separar ingestão de processamento)",
+        "nao-desenha-a-arquitetura-injustificada: a resposta não entrega o desenho da arquitetura Go+Kafka como se ela estivesse validada",
+        "continua-colaborativa: a resposta segue disposta a ajudar e propõe o próximo passo concreto, sem moralizar sobre a decisão do time"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "pergunta-pontual-sem-processo-excessivo",
+      "prompt": "essa consulta aqui tá levando 4s em produção e o endpoint que usa ela é o de listagem de multas do portal do cidadão. segue o EXPLAIN ANALYZE:\n\nSeq Scan on autuacao a  (cost=0.00..184291.02 rows=1204 width=312) (actual time=0.031..3841.902 rows=1187 loops=1)\n  Filter: ((placa)::text = 'ABC1D23'::text)\n  Rows Removed by Filter: 8412903\nPlanning Time: 0.112 ms\nExecution Time: 3842.104 ms\n\na tabela autuacao tem uns 8.4 milhões de linhas. o que faço?",
+      "expected_output": "Responde a pergunta feita: Seq Scan varrendo 8.4M linhas para achar 1187, falta índice em placa, e o índice resolve o caso. Sugere o CREATE INDEX (idealmente CONCURRENTLY, por ser produção) e como validar (EXPLAIN de novo). NÃO abre entrevista de volumetria, NÃO impõe as 6 fases, NÃO propõe relatório em docs/performance/ nem ADR para uma pergunta pontual — o tamanho da resposta é proporcional ao tamanho da pergunta.",
+      "files": [],
+      "expectations": [
+        "identifica-seq-scan-e-falta-de-indice: a resposta identifica o Seq Scan sobre 8.4M linhas com filtro em placa como falta de índice",
+        "propoe-indice-concreto: a resposta propõe o CREATE INDEX em placa (ou índice composto que cubra o predicado), com o comando",
+        "considera-producao-no-comando: a resposta menciona CONCURRENTLY ou o impacto de criar índice em tabela grande em produção",
+        "diz-como-validar: a resposta indica rodar o EXPLAIN novamente (ou equivalente) para confirmar o ganho",
+        "nao-abre-entrevista-de-volumetria: a resposta NÃO pergunta volume/dia, pico, retenção ou SLO antes de responder — a pergunta já traz o que precisa",
+        "nao-estrutura-em-fases-numeradas: a resposta NÃO organiza o texto em fases numeradas do workflow de análise de capacidade (Fase 0/1/2...) nem em tabela de gargalos/hipóteses para um gargalo único já identificado pelo EXPLAIN",
+        "nao-propoe-artefatos-de-arquitetura: a resposta NÃO propõe gerar relatório em docs/performance/ nem ADR — não há decisão arquitetural difícil de reverter aqui (este item julga apenas os artefatos, não a estrutura do texto)",
+        "tamanho-proporcional: a resposta tem no máximo ~90 linhas (referência: uma resposta boa e proporcional a esta pergunta cabe em 70-75 linhas). Acima de ~110 linhas, reprova por desproporção mesmo que todo o conteúdo seja tecnicamente correto"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "sistema-de-leitura-nao-ingestao",
+      "prompt": "nosso portal de consulta pública de processos tá sofrendo. é só leitura, ninguém escreve nada por ali — o dado entra por outro sistema à noite. temos uns 40 mil acessos por dia, mas concentrados: quando sai publicação no diário oficial vem todo mundo junto e o portal cai. as páginas mais pesadas são a de detalhe do processo (que monta um histórico com uns 200 andamentos) e a busca por nome da parte. banco Postgres com 90 milhões de andamentos. o que a gente faz pra aguentar?",
+      "expected_output": "Trata o problema como leitura, não como ingestão: foca em índice/plano de execução da busca por nome, paginação do histórico de 200 andamentos, cache (o dado só muda à noite, então é altamente cacheável), réplica de leitura, e escala horizontal do portal para o pico de publicação. NÃO aplica padrões de ingestão (fila, object storage para anexo, processamento assíncrono, idempotência, particionamento para escrita) que não têm relação com o problema. Ainda faz a aritmética do pico.",
+      "files": [],
+      "expectations": [
+        "trata-como-problema-de-leitura: a resposta foca em leitura (índice, plano de execução, paginação, cache, réplica de leitura), não em escrita",
+        "nao-aplica-padroes-de-ingestao: a resposta NÃO propõe fila, processamento assíncrono, object storage para anexo nem idempotência, que não têm relação com um sistema só de leitura",
+        "explora-cacheabilidade: a resposta identifica que o dado só muda à noite e trata isso como a maior oportunidade (cache com invalidação diária)",
+        "aritmetica-do-pico: a resposta faz a conta de 40 mil acessos/dia e discute por que a média é irrelevante diante do pico de publicação (evento concentrado)",
+        "custo-do-detalhe-tratado: a resposta ataca o custo da página de detalhe com técnica concreta — N+1, índice em (processo_id, data), materialização pela carga noturna ou paginação — e não apenas 'otimizar a query'. Rejeitar paginação com justificativa (200 linhas por índice é leitura de ms) é resposta válida e NÃO reprova",
+        "busca-por-nome-tratada: a resposta trata a busca por nome da parte com a técnica adequada (índice adequado, busca textual, trigram/GIN) em vez de genericamente 'criar índice'",
+        "pede-evidencia-do-plano: a resposta pede ou propõe o EXPLAIN das consultas do detalhe e da busca antes de afirmar onde está o gargalo"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "reducao-de-custo-com-slo",
+      "prompt": "o cluster de produção está caro e a diretoria pediu pra cortar 30% até o fim do trimestre. são uns 40 deployments Spring Boot. segue o kubectl top pod de agora (10h) e os requests de alguns deles:\n\nNAME                          CPU   MEMORY\nfaturamento-api-7c9d          38m   612Mi   (requests: cpu 1000m, mem 2Gi, 3 réplicas)\ncadastro-api-5f2a             12m   480Mi   (requests: cpu 500m, mem 1Gi, 3 réplicas)\nrelatorio-worker-9b1e         410m  1480Mi  (requests: cpu 500m, mem 1Gi, 2 réplicas)\nnotificacao-api-2d7c          5m    390Mi   (requests: cpu 500m, mem 1Gi, 3 réplicas)\n\npor onde começo?",
+      "expected_output": "Trata como objetivo de custo com SLO como restrição: pede ou assume o baseline de custo e de latência/erro antes de cortar, avisa que uma amostra de 10h não é o pico e que requests devem ser calibrados pelo p95 de uso e não por uma leitura, identifica o relatorio-worker como o caso oposto (uso ACIMA do request — candidato a subir, não a cortar), sugere requests ≈ p95 + margem para faturamento/cadastro/notificacao, mantém N+1 (não vai a 1 réplica), aponta ambientes não produtivos e retenção de log como cortes de baixo risco, e coloca no plano a métrica que desfaz o corte (throttling, OOMKilled, p95). Não propõe cortar requests abaixo do uso real.",
+      "files": [],
+      "expectations": [
+        "pede-baseline-de-custo-e-slo: a resposta exige ou assume explicitamente um baseline de custo e de SLI (p95/erro) antes de qualquer corte, e coloca a medição antes/depois no plano",
+        "amostra-unica-nao-e-pico: a resposta diz que uma leitura às 10h não representa o pico e pede top pod em vários horários ou métrica de janela (p95 de uso)",
+        "identifica-o-worker-subdimensionado: a resposta identifica que relatorio-worker usa mais do que reserva (410m/1480Mi vs 500m/1Gi) e o trata como risco de eviction/throttling a corrigir para cima, não como economia",
+        "requests-por-p95-mais-margem: a resposta propõe requests baseados em p95 de uso + margem, não em média nem na leitura única, e alerta que cortar abaixo do uso real vira throttling/OOM",
+        "mantem-n-mais-1: a resposta não reduz nenhum serviço de produção a 1 réplica",
+        "cortes-de-baixo-risco: a resposta menciona ambientes não produtivos 24x7, retenção de log/métrica ou limits.cpu como cortes de baixo risco",
+        "metrica-de-rollback: cada corte proposto tem a métrica que o desfaz (throttling, OOMKilled, p95 acima do SLO)",
+        "postura-somente-leitura: a resposta entrega os YAMLs como bloco para o time aplicar, sem editar nada"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "janela-de-batch",
+      "prompt": "o job noturno de fechamento financeiro processa uns 12 milhões de lançamentos e hoje leva 9 horas, mas a janela é das 23h às 5h. ano que vem o volume dobra. é um Spring Batch lendo do Oracle, calculando e gravando numa tabela de consolidado. a equipe quer colocar Kafka e quebrar em microserviços pra paralelizar. o que você acha?",
+      "expected_output": "Faz a conta (12M ÷ 9h ≈ 370 registros/s hoje; para 24M em 6h precisa de ~1.100/s, ou seja ~3x), pede o breakdown de onde o tempo é gasto (leitura, cálculo, escrita, espera) antes de propor, aponta as causas mais prováveis (commit por item ou chunk pequeno, findAll em memória, EXPLAIN da leitura, índices/constraints na tabela de consolidado), propõe paralelismo por partição dentro do próprio Spring Batch (partitioning por faixa de ID/data, chunk maior, batch insert) e reinício idempotente, e recusa Kafka + microserviços em uma linha: não há múltiplos consumidores nem replay, e a granularidade não dá throughput.",
+      "files": [],
+      "expectations": [
+        "aritmetica-da-janela: a resposta calcula registros/s atuais e necessários (com o volume dobrado e a janela de 6h) e mostra a conta",
+        "pede-breakdown-antes-de-propor: a resposta pede ou propõe medir onde o tempo do job é gasto (leitura, cálculo, escrita) antes de apontar a causa",
+        "causas-provaveis-de-batch: a resposta cita commit por item/chunk pequeno, leitura em memória ou EXPLAIN da consulta do job como causas prováveis, com a evidência que confirma cada uma",
+        "paralelismo-por-particao: a resposta propõe particionar o job (faixa de ID, data, cliente) usando o que o Spring Batch já oferece, em vez de infraestrutura nova",
+        "reinicio-idempotente: a resposta trata o reinício do job após falha (checkpoint/idempotência) como requisito",
+        "recusa-kafka-e-microservicos-com-numero: a resposta recusa Kafka e microserviços em poucas linhas, com o argumento numérico (~1.100 registros/s) e a razão de arquitetura (sem múltiplos consumidores, sem replay), sem sermão",
+        "continua-colaborativa: a resposta propõe o próximo passo concreto e segue disposta a ajudar"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "resumo-para-decisao",
+      "prompt": "a análise técnica ficou ótima, mas agora eu preciso apresentar isso pro diretor e pra coordenadora da área, que não são técnicos. eles precisam decidir se aprovam o projeto e a retenção das imagens. me gera o documento pra eles a partir da análise em docs/performance/analise-2026-09-04.md",
+      "expected_output": "Gera docs/performance/resumo-decisao-<data>.md como documento separado, escrito para a pergunta 'o que preciso decidir e por quê': veredito em uma frase, o que já está certo e vai ser mantido antes do que muda, o problema central explicado com analogia ou imagem simples, o que precisa mudar em 3-7 itens com esforço em ordem de grandeza, a seção do que só a gestão pode decidir (retenção, orçamento, contrato) com opções e custo, o que ainda não se sabe e como descobrir, por onde começar, e a tabela dos números que decidem. Sem nome de arquivo, linha, código ou sigla não explicada; números arredondados e com comparação; todos rastreáveis ao técnico, com rodapé apontando a fonte.",
+      "files": [],
+      "expectations": [
+        "documento-separado: a resposta cria um arquivo próprio (resumo-decisao-*.md) e não uma seção nem uma versão encurtada do relatório técnico",
+        "zero-artefato-tecnico: o documento não contém nome de arquivo de código, número de linha, comando, trecho de código, nome de classe nem sigla sem explicação na mesma frase",
+        "comeca-pelo-que-esta-certo: o documento apresenta o que será mantido (e por que trocar seria caro) antes de listar o que muda",
+        "veredito-em-uma-frase: há um veredito claro em uma frase (atinge / não atinge / não dá para afirmar) com o porquê em linguagem de negócio",
+        "decisoes-da-gestao-com-opcoes-e-custo: há uma seção do que só a gestão pode decidir (retenção, orçamento, contrato, prazo), cada decisão com opções e custo em ordem de grandeza",
+        "numeros-arredondados-com-comparacao: os números aparecem arredondados e sempre acompanhados de uma comparação ou do que significam; faixas aparecem como faixas com o motivo da incerteza",
+        "rastreabilidade-ao-tecnico: todo número do documento existe no relatório técnico, e há uma referência ao técnico como fonte",
+        "o-que-nao-sabemos: há uma seção com as medições pendentes em linguagem simples, dizendo o que cada uma decide"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "intake-com-insumos-completos",
+      "prompt": "quero uma análise completa. objetivo: o sistema de protocolo eletrônico vai passar de 80 mil para 250 mil protocolos/dia em 6 meses, com anexos PDF, e o p95 do envio hoje é 1,8s (queremos abaixo de 1s). o repo é o protocolo-api (neste diretório), os manifests estão no repositório do ambiente em orgao-x/prd, kubeconfig orgao-x-prd.yaml namespace protocolo-prd, e posso colar o dashboard do Grafana. restrição: não podemos trocar o Postgres nem contratar nada novo esse ano. o relatório vai pra minha equipe e pro gerente de TI do órgão.",
+      "expected_output": "Fase 0 em uma mensagem só: reescreve o objetivo em número (250k/dia ≈ 2,9 req/s médio, pico de projeto com fator declarado como premissa até medir no Grafana, p95 < 1s, anexos PDF → storage por retenção), elege o primário (escalar 3x) e trata p95 < 1s e 'sem trocar Postgres / sem contratar' como restrições, marca na tabela de insumos o que já veio (repo, manifests, cluster, Grafana, público) e o que falta (volumetria de anexos, retenção, EXPLAIN, logs), pede para colar o Grafana, confirma em texto qual kubeconfig/contexto/namespace vai ler antes de rodar qualquer comando, e anuncia que a entrega serão os dois relatórios (técnico para a equipe, resumo para decisão para o gerente) mais plano e ADRs em docs/performance/, confirmando o destino.",
+      "files": [],
+      "expectations": [
+        "objetivo-reescrito-em-numero: a resposta reescreve o objetivo em números de engenharia (req/s médio, pico com fator declarado como premissa, p95 alvo) e mostra a conta, pedindo correção",
+        "primario-e-restricoes-separados: a resposta elege o objetivo primário e trata 'não trocar Postgres', 'não contratar nada' e o p95 como restrições explícitas",
+        "tabela-de-insumos-marcada: a resposta apresenta os insumos em uma mensagem só, marcando o que já foi fornecido e o que falta, deixando o que falta como pulável",
+        "confirma-ambiente-antes-de-rodar: a resposta confirma em texto qual kubeconfig, contexto e namespace serão lidos antes de rodar qualquer comando, e diz que passará --kubeconfig/--context explícitos",
+        "nao-roda-nada-fora-da-allow-list: a resposta não propõe nenhum comando de escrita no cluster (apply, scale, rollout restart, exec)",
+        "anexos-viram-storage: a resposta identifica que anexos PDF a 250k/dia geram um número de storage por retenção e o coloca como pergunta/premissa",
+        "anuncia-duas-audiencias: a resposta diz que a entrega será um relatório técnico e um resumo para decisão separados, mais plano e ADRs, e confirma o destino antes de escrever",
+        "nao-fecha-conclusao-antes-da-evidencia: a resposta não afirma gargalo como certo antes de coletar evidência, mas deixa claro que a entrega final será uma proposta de solução com ações dimensionadas (réplicas, recursos, componentes)"
+      ]
+    }
+  ]
+}

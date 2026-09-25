@@ -1,0 +1,41 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  REGISTRY_PASSWORD: "Sup3rS3cr3t!"
+  IMAGE: registry.example.com/api-protocolo
+
+build:
+  stage: build
+  image: node:20
+  script:
+    - npm install
+    - npm run build
+  cache:
+    paths:
+      - dist/
+      - node_modules/
+  only:
+    - branches
+
+test:
+  stage: test
+  image: node:20
+  script:
+    - npm install
+    - npm test
+  only:
+    - branches
+
+deploy_prod:
+  stage: deploy
+  image: bitnami/kubectl:latest
+  script:
+    - echo "$REGISTRY_PASSWORD" | docker login -u deploy --password-stdin registry.example.com
+    - docker build -t $IMAGE:latest .
+    - docker push $IMAGE:latest
+    - kubectl set image deploy/api-protocolo api=$IMAGE:latest -n protocolo
+  except:
+    - tags
