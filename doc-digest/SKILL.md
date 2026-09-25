@@ -42,18 +42,22 @@ inside the translated heading, and Mermaid `classDef` names stay in English.
 
 ## Procedure
 
-1. **Get the source as a file**; every cited line refers to it.
+1. **Get the source as a file**; every cited line refers to it. Everything
+   this skill writes goes to the output folder `<out>`, never into a
+   repository, because a digest is disposable: `~/.doc-digest/<project>/`,
+   where `<project>` is the name of the repository containing the document
+   (`basename "$(git -C <doc-dir> rev-parse --show-toplevel)"`) or of the
+   current one for text; outside a repository, `~/.doc-digest/` itself.
+   `<name>` is the original file name without extension. Create `<out>`.
    - Local path: use it directly.
    - PR/MR by number or URL: save title and description to a file.
      ```bash
-     gh pr view <n> --json title,body -q '"# " + .title + "\n\n" + .body' > docs/digests/<name>.md
-     glab mr view <n> > docs/digests/<name>.md
+     gh pr view <n> --json title,body -q '"# " + .title + "\n\n" + .body' > <out>/<name>.md
+     glab mr view <n> > <out>/<name>.md
      ```
    - Pasted text, or a reply from this conversation ("your last answer"):
-     write it verbatim, with nothing added or trimmed, to
-     `docs/digests/<name>.md` at the root of the current repository
-     (`git rev-parse --show-toplevel`), or in the current directory outside
-     one. `<name>` is 3 to 5 kebab-case words naming its subject.
+     write it verbatim, with nothing added or trimmed, to `<out>/<name>.md`,
+     where `<name>` is 3 to 5 kebab-case words naming its subject.
 2. **Map the headings with exact line numbers**, ignoring anything inside code
    blocks, and note the total line count N (`wc -l <doc>`):
    ````bash
@@ -91,20 +95,16 @@ inside the translated heading, and Mermaid `classDef` names stay in English.
    fragile dependency > decision without justification > the rest. Whatever
    is left out is dropped, not moved to an appendix.
 6. **Write the digest** using the template below, within budget, and save it to
-   `docs/digests/<name>-digest.md` (create the folder), where `<name>` is the
-   original file name without extension and `docs/digests/` sits at the root of
-   the repository containing the document
-   (`git -C <doc-dir> rev-parse --show-toplevel`). Outside a repository, save
-   it next to the original.
+   `<out>/<name>-digest.md`.
 7. **Verify before showing**, with the script in this skill's folder:
    ```bash
-   <skill-folder>/scripts/verify-digest.sh docs/digests/<name>-digest.md <doc>
+   <skill-folder>/scripts/verify-digest.sh <out>/<name>-digest.md <doc>
    ```
    Fix every `ERROR` and re-run until it exits with code 0. Only then proceed.
    If the output contains `SKIPPED`, the diagram was not validated: relay those
    script lines, with the install commands, to the user in chat.
 8. **In chat, show only the generated path, the TL;DR and the Anti-Vibe-Coding
-   Box:** the path relative to the repository root on one line, then the two
+   Box:** the digest's absolute path on one line, then the two
    sections copied verbatim from the file. Mermaid does not render in a
    terminal; the file is the visual output.
 
@@ -136,7 +136,7 @@ order, and translate its headings and labels as described in Language.
 ````markdown
 # Digest: <document title>
 
-- **Source:** [<name>.md](<path relative to the digest file>) · <N> lines · <commit>
+- **Source:** [<name>.md](<absolute path of the original>) · <N> lines · <commit>
 - **Type:** <type> · **Mode:** <evolution | greenfield | in-place>
 
 ## TL;DR
