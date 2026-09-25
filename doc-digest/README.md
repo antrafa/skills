@@ -40,7 +40,9 @@ The digest contains:
 3. **Visual overview** in Mermaid, shaped by the document type: components
    marked existing, new or modified (SDD, spec, PR/MR), options with the
    chosen one highlighted (ADR), or phases in order with the irreversible
-   steps marked (plan).
+   steps marked (plan). For anything else the diagram follows the reader's
+   question: mind map for what is settled and what is open, Ishikawa for why
+   something happened, concept map, quadrant, sequence or state diagram.
 4. **Decision and change matrix**, with columns by type: what changes and what
    does NOT change (SDD), options for and against (ADR), dependencies and way
    back (plan), risk and how to validate (PR/MR).
@@ -94,12 +96,14 @@ diagram shows the error on screen.
 
 ## Evals
 
-`evals/evals.json` contains four cases with the documents in `evals/files/`: a
+`evals/evals.json` contains six cases with the documents in `evals/files/`: a
 77-line ADR (options diagram with the chosen one highlighted), an SDD in
 evolution mode with a contract inconsistency the Box must catch, a 900-line
-greenfield plan with `--html`, and an agent reply pasted as text, with a
-contradiction between cache TTL and freshness the Box must catch. All four
-sources are in Portuguese, which also covers the rule that the digest keeps
+greenfield plan with `--html`, and three agent replies pasted as text: a cache
+proposal whose TTL contradicts freshness, a concept round drawn as a mind map
+whose synchronous export cannot fit the gateway timeout, and an incident
+analysis drawn as an Ishikawa whose stated root cause contradicts its own
+evidence. All six sources are in Portuguese, which also covers the rule that the digest keeps
 the document's language while the skill itself is in English.
 Format compatible with Anthropic's
 [skill-creator](https://github.com/anthropics/skills).
