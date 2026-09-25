@@ -42,7 +42,8 @@ The digest contains:
    chosen one highlighted (ADR), or phases in order with the irreversible
    steps marked (plan). For anything else the diagram follows the reader's
    question: mind map for what is settled and what is open, Ishikawa for why
-   something happened, concept map, quadrant, sequence or state diagram.
+   something happened, timeline for what happened when, concept map,
+   quadrant, sequence or state diagram.
 4. **Decision and change matrix**, with columns by type: what changes and what
    does NOT change (SDD), options for and against (ADR), dependencies and way
    back (plan), risk and how to validate (PR/MR).
