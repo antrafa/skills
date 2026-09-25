@@ -130,8 +130,9 @@ The count includes tables, headings and the legend: a full matrix and index eat
 half the budget, so write short cells from the first draft. For a short
 document the ceiling becomes the size of the original itself.
 
-Short document (under ~60 lines): omit diagram and matrix, unless it describes
-a flow with four or more steps. TL;DR, Box and index are enough.
+Short text (under ~300 words, `wc -w`; lines mislead, since a prose paragraph
+is one line): omit diagram and matrix, unless it describes a flow with four
+or more steps. TL;DR, Box and index are enough.
 
 ## Digest template
 
@@ -229,9 +230,20 @@ the mode only goes in the metadata.
 
 ## Diagram rules
 
-- Choose by content: data/process flow → `flowchart LR|TD`; interaction between
-  services/layers → `sequenceDiagram`; lifecycle → `stateDiagram-v2`;
-  modules/architecture → `flowchart TB` with `subgraph`.
+- The per-type table fixes the diagram for an ADR and a plan; for the other
+  types, choose by the question the reader brings to the text. Skeletons for
+  the last four rows are in [references/diagrams.md](references/diagrams.md).
+
+  | The reader asks | Diagram |
+  |---|---|
+  | What happens, in what order? | `flowchart LR\|TD` |
+  | Who calls whom, in what order? | `sequenceDiagram` |
+  | What states can it be in? | `stateDiagram-v2` |
+  | How is it organized? | `flowchart TB` with `subgraph`, one zoom level per diagram: system context, containers or components (C4) |
+  | What is settled, what is still open? | mind map |
+  | Why did it happen? | Ishikawa |
+  | How do these ideas relate? | concept map |
+  | Which option wins on two criteria? | quadrant |
 - Existing vs. new vs. modified convention in `flowchart`:
   ```
   classDef new stroke-dasharray: 5 5
