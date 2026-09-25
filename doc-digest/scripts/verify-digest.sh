@@ -26,20 +26,23 @@ done
 
 # --- 2. Budget (words outside the Mermaid block). Section headings are matched
 #        by language-agnostic stems: the digest follows the document's language.
-read -r tldr blocks bullets_max matrix idx words <<<"$(awk '
+read -r bl tldr blocks bullets_max matrix idx words <<<"$(awk '
   /^```mermaid/ { inm=1; next }
   inm && /^```/ { inm=0; next }
   inm { next }
   /^## / { sec=$0 }
   { words += NF }
+  !sec && /^\*\*[^*]+:\*\* / && !bl { bl = NF }
   sec ~ /TL;DR/ && !/^## / { tldr += NF }
   sec ~ /Vibe/ && /^> \[!/ { blocks++ }
   sec ~ /Vibe/ && /^> - / { b[blocks]++; if (b[blocks] > max) max = b[blocks] }
   sec ~ /[Mm]atri/ && /^\|/ { matrix++ }
   sec ~ /ndice|[Ii]ndex/ && /^\|/ { idx++ }
-  END { printf "%d %d %d %d %d %d", tldr, blocks, max, matrix-2, idx-2, words }
+  END { printf "%d %d %d %d %d %d %d", bl, tldr, blocks, max, matrix-2, idx-2, words }
 ' "$digest")"
 
+if [ "$bl" -eq 0 ]; then err "no bottom line (**<label>:** before the first section)"
+else [ "$bl" -le 30 ] && ok "Bottom line with $bl words (max. 30)" || err "Bottom line with $bl words (max. 30)"; fi
 [ "$tldr" -le 70 ]        && ok "TL;DR with $tldr words (max. 70)"            || err "TL;DR with $tldr words (max. 70)"
 [ "$bullets_max" -le 3 ]  && ok "Box: up to $bullets_max items per block (max. 3)" || err "Box: block with $bullets_max items (max. 3)"
 [ "$matrix" -le 6 ]       && ok "Matrix with $matrix rows (max. 6)"           || err "Matrix with $matrix rows (max. 6)"

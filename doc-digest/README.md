@@ -33,26 +33,30 @@ outside a repository the file goes straight into `~/.doc-digest/`). Pasted text
 is first saved verbatim next to it, so line references have a file to point at.
 The digest contains:
 
-1. **TL;DR** in a single paragraph of up to 70 words.
-2. **Visual overview** in Mermaid, shaped by the document type: components
+1. **Bottom line** in one sentence of up to 30 words: what the text asks you
+   to accept and its most damaging problem. Readable in ten seconds.
+2. **TL;DR** in a single paragraph of up to 70 words, in SCQA order
+   (situation, complication, answer), every acronym explained on first use.
+3. **Visual overview** in Mermaid, shaped by the document type: components
    marked existing, new or modified (SDD, spec, PR/MR), options with the
    chosen one highlighted (ADR), or phases in order with the irreversible
    steps marked (plan).
-3. **Decision and change matrix**, with columns by type: what changes and what
+4. **Decision and change matrix**, with columns by type: what changes and what
    does NOT change (SDD), options for and against (ADR), dependencies and way
    back (plan), risk and how to validate (PR/MR).
-4. **Anti-Vibe-Coding Box**: the 3 most damaging assumptions, decisions and
+5. **Anti-Vibe-Coding Box**: the 3 most damaging assumptions, decisions and
    gaps, each citing a line in the original.
-5. **Quick reference index** with the exact line number of each section.
+6. **Quick reference index** with the exact line number of each section.
 
 The header pins the original's commit hash, so a digest whose line numbers no
-longer match a revised document is easy to spot. TL;DR, diagram and Box are
-the one-minute read. Matrix and index are reference.
+longer match a revised document is easy to spot. The bottom line is the
+ten-second read; TL;DR, diagram and Box are the one-minute read. Matrix and index are reference.
 The whole digest fits in 600 words excluding the diagram and is always smaller
 than the original; a short document comes out without a diagram or a matrix.
 
-Chat shows only the absolute file path, the TL;DR and the Box. Mermaid does
-not render in a terminal; open the `.md` in VS Code or use `--html`.
+Chat shows only the absolute file path, the bottom line, the TL;DR and the
+Box. Mermaid does not render in a terminal; open the `.md` in VS Code or use
+`--html`.
 
 With `--html` the skill also generates `<name>-digest.html` in the same folder,
 standalone, with Mermaid.js from a CDN, ready for `xdg-open` (Linux) or `open`
