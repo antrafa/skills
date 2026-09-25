@@ -97,7 +97,7 @@ no context at all. Subcommands and persona names are English-only.
 | Deep technical audit of a repository / codebase | `project-analyser [<module>]` | 360° sweep: architecture, OWASP, tests, business rules, debt. | [playbook-project-analyser.md](references/playbook-project-analyser.md) |
 | Refine a raw idea into a viable, testable proposal | `idea [<idea>]` | Four phases via `lapida` (EXPLORE, CHALLENGE, REFINE, FIT), inline without it; ends in go, pivot or stop. | [playbook-idea.md](references/playbook-idea.md) |
 | Create a complete, working local web application | `local-app <idea>` | 100% local scaffolding, from stack choice to a running app. | [playbook-local-app.md](references/playbook-local-app.md) |
-| Summarize and visualize an AI technical doc (SDD, ADR, Plan) | `digest [<target>]` | One-minute visual digest via `doc-digest`, inline without it. | [playbook-digest.md](references/playbook-digest.md) |
+| Summarize and visualize an AI technical doc or long reply (SDD, ADR, plan, concept round) | `digest [<target>]` | One-minute visual digest via `doc-digest`, inline without it. | [playbook-digest.md](references/playbook-digest.md) |
 | Write or review a skill, AGENTS.md, a doc an agent reads | `skill [<target>]` | Diagnose by the `writing-for-agents` bar, pointer first. | [playbook-skill.md](references/playbook-skill.md) |
 | Investigate an incident (SRE) | `sre <symptom>` | Measure before conjecturing; fast mitigation, clear rollback. | [playbook-troubleshooting.md](references/playbook-troubleshooting.md) |
 | Calibrate the developer's profile | `setup` | Interview or ingest a résumé; save to Mentat, else `~/.alterego/`. | [onboarding.md](references/onboarding.md) |
