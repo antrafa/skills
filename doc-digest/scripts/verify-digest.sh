@@ -36,7 +36,7 @@ read -r bl tldr blocks bullets_max matrix idx words move asked questions <<<"$(a
   sec ~ /TL;DR/ && !/^## / { tldr += NF }
   sec ~ /Vibe/ && /^> \[!/ { blocks++ }
   sec ~ /Vibe/ && /^> - / { b[blocks]++; if (b[blocks] > max) max = b[blocks] }
-  sec ~ /[Mm]atri/ && /^\|/ { matrix++ }
+  sec ~ /[Mm]atri|mudou|[Cc]hanged/ && /^\|/ { matrix++ }
   /^## / && /[Ss]ua vez|[Yy]our move/ { move=1 }
   sec ~ /[Ss]ua vez|[Yy]our move/ && /^\*\*[^*]+:\*\*/ { asked=1 }
   sec ~ /[Ss]ua vez|[Yy]our move/ && /^[0-9]+\. / { questions++ }

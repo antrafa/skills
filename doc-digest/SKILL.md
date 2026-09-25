@@ -64,6 +64,10 @@ inside the translated heading, and Mermaid `classDef` names stay in English.
    - Pasted text, or a reply from this conversation ("your last answer"):
      write it verbatim, with nothing added or trimmed, to `<out>/<name>.md`,
      where `<name>` is 3 to 5 kebab-case words naming its subject.
+   - A previous version or round of the same text also given (`--since
+     <previous>`, "what changed since the last round"): this is a **delta**;
+     follow [references/delta.md](references/delta.md), which changes steps
+     1, 5 and 6.
 2. **Map the headings with exact line numbers**, ignoring anything inside code
    blocks, and note the total line count N (`wc -l <doc>`):
    ````bash
