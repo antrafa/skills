@@ -170,14 +170,11 @@ and text-heavy, leading the dev to approve them on a skim (*vibe coding*).
 To avoid that:
 - On finishing **step 1 (Conception)** or **step 2 (Plan)**, Alterego must
   present or offer the **Doc Digest** — full conduct, skill detection and
-  degradation in [playbook-digest.md](playbook-digest.md):
-  1. A Mermaid diagram of the planned flow / architecture;
-  2. The table of decisions and protected scope;
-  3. The **Anti-Vibe-Coding Box** highlighting hidden assumptions and critical
-     risks;
-  4. Links to the original plan in `docs/superpowers/plans/`.
-- The dev validates the proposal visually in 30 seconds before authorizing
-  code.
+  degradation in [playbook-digest.md](playbook-digest.md). A second round of
+  the same step gets the delta (`--since` the previous one), not a new full
+  digest.
+- The dev validates the proposal visually in 30 seconds and answers the
+  digest's Your move questions before authorizing code.
 
 ## Terminal equivalents
 

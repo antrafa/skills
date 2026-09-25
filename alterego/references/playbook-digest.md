@@ -1,7 +1,8 @@
 # Playbook: Visual Digest of a Technical Document (`/alterego digest`)
 
-A dense AI-generated document — SDD, ADR, implementation plan, spec, RFC, MR
-description — gets approved on sight with dangerous frequency. This playbook
+A dense AI-generated text — SDD, ADR, implementation plan, spec, RFC, MR
+description, a long agent reply or concept round — gets approved on sight
+with dangerous frequency. This playbook
 exists so that the decision to go ahead with the document is a conscious one:
 the developer understands what changes, what does **not** change and where the
 AI assumed, in 30 to 60 seconds.
@@ -11,9 +12,10 @@ AI assumed, in 30 to 60 seconds.
 ## Invocation modes
 
 ```
-/alterego digest <doc-path>              (digest in markdown, in the chat)
-/alterego digest <path> --html           (standalone page in docs/digests/)
-/alterego digest                         (assumes the obvious doc from context)
+/alterego digest <doc-path>                  (digest in markdown, in the chat)
+/alterego digest <path> --html               (also a standalone page, next to the markdown)
+/alterego digest <path> --since <previous>   (only what changed since the previous round)
+/alterego digest                             (assumes the obvious doc or reply from context)
 ```
 
 In Codex:
@@ -23,7 +25,8 @@ $alterego digest <doc-path>
 
 **No target does not turn into a generic question.** Assume the obvious document
 from context — the plan just saved in `docs/superpowers/plans/`, the ADR under
-discussion, the open file — and **say which one you assumed**. Only ask when
+discussion, the open file, the agent's last long reply — and **say which one
+you assumed**. Only ask when
 there is no context at all.
 
 ---
@@ -37,6 +40,8 @@ it does not reimplement. Detect it and follow the rule in
 **Installed:** invoke it with the resolved target (the `Skill` tool when it
 exists) and pass `--html` along when the user asks for it. The output contract
 is the skill's; do not duplicate the template here or rewrite the result.
+`--since` goes along too, as does a request phrased as "what changed since
+the last round".
 
 **Not installed:** produce the degraded digest from section 2 **in the same
 reply** and only then offer the installation, once per session:
@@ -58,17 +63,25 @@ Same discipline, lean format, straight in the chat:
 
 1. **Read the whole document.** Never digest from an excerpt or the summary. A
    large document is read in parts; it is not sampled.
-2. **TL;DR in up to 3 lines** — the decision the document asks for, not what it
-   describes.
-3. **One Mermaid diagram** of the flow, architecture or sequence, contrasting
-   what exists today with what comes to exist.
+2. **Bottom line first, in one sentence:** what the text asks you to accept
+   and its single most damaging problem. Then a **TL;DR in up to 3 lines**.
+3. **One Mermaid diagram** answering the reader's question: the flow or
+   architecture contrasting what exists today with what comes to exist, or a
+   mind map of decided, open and discarded for a concept round.
 4. **Decision matrix:** what changes | what does **not** change (protected
    scope) | why | where in the doc (`file:line`).
 5. **Anti-Vibe-Coding box:** premise the AI assumed without the document
    backing it, the most fragile dependency, what can break in production. An
    absence becomes a declared gap, never a filled-in assumption.
-6. **Quick-lookup index:** section → line in the original, so the dev can go
-   back to the exact spot.
+6. **Your move:** what the text waits on from the dev (approve, choose,
+   answer), and up to 3 questions that resolve the box, each one standing
+   alone so it can be pasted straight back to the agent.
+7. **Quick-lookup index**, only for 100 lines or more: section → line in the
+   original, so the dev can go back to the exact spot.
+
+**Delta (`--since`):** replace the matrix with a table of what was decided
+now, changed, reopened or vanished since the previous round. An open question
+that vanished without an answer goes first in the box and in Your move.
 
 Stop there. A digest that takes more than 60 seconds to read has failed its
 purpose — table and diagram in place of paragraphs.
