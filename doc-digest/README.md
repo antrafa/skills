@@ -91,12 +91,12 @@ diagram shows the error on screen.
 ## Evals
 
 `evals/evals.json` contains four cases with the documents in `evals/files/`: a
-short ADR (digest with no diagram), an SDD in evolution mode with a contract
-inconsistency the Box must catch, a 900-line greenfield plan with `--html`, and
-an agent reply pasted as text, with a contradiction between cache TTL and
-freshness the Box must catch. All four sources are in Portuguese, which also
-covers the rule that the digest keeps the document's language while the skill
-itself is in English.
+77-line ADR (options diagram with the chosen one highlighted), an SDD in
+evolution mode with a contract inconsistency the Box must catch, a 900-line
+greenfield plan with `--html`, and an agent reply pasted as text, with a
+contradiction between cache TTL and freshness the Box must catch. All four
+sources are in Portuguese, which also covers the rule that the digest keeps
+the document's language while the skill itself is in English.
 Format compatible with Anthropic's
 [skill-creator](https://github.com/anthropics/skills).
 

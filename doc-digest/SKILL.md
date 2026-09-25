@@ -28,6 +28,8 @@ document-language content are a defect. For a Portuguese document:
 
 | Template (English) | Portuguese |
 |---|---|
+| `# Digest:` | `# Resumo:` |
+| `Implementation Plan` / `Reply` (types; SDD, ADR, Spec/RFC, PR/MR stay) | `Plano de implementação` / `Resposta` |
 | `Source` · `Type` · `Mode` | `Origem` · `Tipo` · `Modo` |
 | `evolution` / `greenfield` / `in-place` | `evolução` / `greenfield` / `in-place` |
 | `## Visual overview` | `## Visão visual` |
@@ -199,7 +201,7 @@ Filling rules:
 |---|---|---|
 | SDD, Spec/RFC | components and the flow between them, marked by mode | Component / Area · What changes · How it changes (technique) · What does NOT change (protected scope) |
 | ADR | `flowchart LR`: the problem → each option considered, the chosen one with class `chosen`, the deciding criterion on its edge | Option · In favor · Against · Why chosen or dropped |
-| Implementation Plan | `flowchart LR` of phases in execution order, edges = dependencies; a step with no way back (delete, migrate data, publish) gets class `irreversible` | Phase · Delivers · Depends on · Way back (rollback) |
+| Implementation Plan | `flowchart LR` of phases in execution order, edges = dependencies; a phase with no way back gets class `irreversible`: one that deletes, migrates data or publishes, or that delivers code doing so when run | Phase · Delivers · Depends on · Way back (rollback) |
 | PR/MR | areas touched and the flow they affect, marked by mode | Area · What changes · What it may break · How to validate |
 | Reply | chosen by content (see Diagram rules); none when the text has no flow, structure or comparison | Point · Conclusion · Based on · Still open |
 
