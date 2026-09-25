@@ -27,6 +27,8 @@
       "expectations": [
         "The skill triggered from natural language in Portuguese, without /doc-digest, even though the skill is written in English",
         "The classified mode is evolution",
+        "Below the metadata, an '**Em uma linha:**' line of at most 30 words states what the text asks to accept and its most damaging problem",
+        "The TL;DR follows situation, problem, proposal order, and every acronym it uses is explained on first use",
         "The diagram uses classDef new and classDef modified and marks ConfiguracaoRadio or Parceiros as modified",
         "The Box states that the /api/app/publicidades contract does not return posicionamento",
         "TL;DR has at most 70 words",
@@ -65,12 +67,14 @@
         "The pasted text was saved verbatim (diff against evals/files/resposta-agente-cache.md shows at most whitespace at the end) under ~/.doc-digest/skills/",
         "The digest was saved as ~/.doc-digest/skills/<name>-digest.md, and nothing was written inside the repository",
         "The classified type is Reply and the mode is evolution",
+        "Below the metadata, an '**Em uma linha:**' line of at most 30 words states what the text asks to accept and its most damaging problem",
+        "The TL;DR follows situation, problem, proposal order, and every acronym it uses is explained on first use",
         "The Box states that the 24h TTL contradicts the requirement of seeing each new court entry as soon as it is published",
         "The Box points out that a local in-memory cache on 3 replicas serves different data per pod or cannot be invalidated across them",
         "Every L<n> reference points to the saved copy of the text",
         "The digest is written in Portuguese, like the source text",
         "scripts/verify-digest.sh exits with code 0",
-        "Chat shows the absolute path of the digest, the TL;DR and the Box"
+        "Chat shows the absolute path of the digest, the bottom line, the TL;DR and the Box"
       ]
     }
   ]

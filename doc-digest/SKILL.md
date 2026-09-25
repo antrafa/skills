@@ -29,6 +29,7 @@ document-language content are a defect. For a Portuguese document:
 | Template (English) | Portuguese |
 |---|---|
 | `# Digest:` | `# Resumo:` |
+| `**Bottom line:**` | `**Em uma linha:**` |
 | `Implementation Plan` / `Reply` (types; SDD, ADR, Spec/RFC, PR/MR stay) | `Plano de implementação` / `Resposta` |
 | `Source` · `Type` · `Mode` | `Origem` · `Tipo` · `Modo` |
 | `evolution` / `greenfield` / `in-place` | `evolução` / `greenfield` / `in-place` |
@@ -105,18 +106,20 @@ inside the translated heading, and Mermaid `classDef` names stay in English.
    Fix every `ERROR` and re-run until it exits with code 0. Only then proceed.
    If the output contains `SKIPPED`, the diagram was not validated: relay those
    script lines, with the install commands, to the user in chat.
-8. **In chat, show only the generated path, the TL;DR and the Anti-Vibe-Coding
-   Box:** the digest's absolute path on one line, then the two
-   sections copied verbatim from the file. Mermaid does not render in a
+8. **In chat, show only the generated path, the bottom line, the TL;DR and
+   the Anti-Vibe-Coding Box:** the digest's absolute path on one line, then
+   those three copied verbatim from the file. Mermaid does not render in a
    terminal; the file is the visual output.
 
 ## Budget
 
-The digest is read in about a minute: TL;DR, diagram and Box are the reading;
-matrix and index are reference. The step 7 script enforces these limits:
+The digest is read in layers: the bottom line in ten seconds; TL;DR, diagram
+and Box in a minute; matrix and index are reference. The step 7 script
+enforces these limits:
 
 | Block | Limit |
 |---|---|
+| Bottom line | 30 words |
 | TL;DR | 70 words |
 | Anti-Vibe-Coding Box | 3 items per block, 1 sentence each |
 | Matrix | 6 rows |
@@ -141,8 +144,12 @@ order, and translate its headings and labels as described in Language.
 - **Source:** [<name>.md](<absolute path of the original>) · <N> lines · <commit>
 - **Type:** <type> · **Mode:** <evolution | greenfield | in-place>
 
+**Bottom line:** <what the text asks you to accept, and its single most damaging
+problem from the Box>
+
 ## TL;DR
-<1 paragraph: what it proposes, for whom, why. No jargon.>
+<1 paragraph in SCQA order: what exists today, the problem or pressure, what
+the text proposes, and for whom.>
 
 ## Visual overview
 ```mermaid
@@ -181,6 +188,11 @@ Filling rules:
   `git -C <doc-dir> log -1 --format=%h -- <doc>`, followed by `+ local edits`
   when `git status --porcelain <doc>` is not empty. Outside a repository or
   for a file never committed, omit it.
+- **The bottom line is the conclusion, not an introduction:** a reader who
+  stops there knows what is being asked and what could go wrong with it.
+- **Explain every acronym and term of art on first use**, in plain words
+  (`TTL (how long a cached entry lives)`); a reader outside the project
+  understands the TL;DR without opening the original.
 - **Never invent what the document does not say.** An absence becomes a gap in
   `[!CAUTION]`, not a guess.
 - **Every matrix row and every assumption and decision item cites `(L<n>)` or
