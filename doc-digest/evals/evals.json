@@ -4,18 +4,19 @@
     {
       "id": 1,
       "prompt": "/doc-digest evals/files/adr-next-primeiro.md",
-      "expected_output": "Short digest of a 77-line ADR: TL;DR, Anti-Vibe-Coding Box and index. No diagram and no matrix, because the document is short and describes no flow. Smaller than the original. Written in Portuguese, matching the source document.",
+      "expected_output": "Digest of a 77-line ADR, above the short-document threshold: TL;DR, an options diagram with the chosen one highlighted, a matrix with the ADR columns, Anti-Vibe-Coding Box and index. Smaller than the original. Written in Portuguese, matching the source document, title prefix included.",
       "files": ["evals/files/adr-next-primeiro.md"],
       "expectations": [
         "The file ~/.doc-digest/skills/adr-next-primeiro-digest.md was written and nothing was written inside the repository",
-        "The digest contains no ```mermaid block and no matrix section",
+        "The diagram is a flowchart LR of the options with classDef chosen on the chosen one, and the matrix uses the ADR columns: option, in favor, against, why chosen or dropped",
         "The digest has fewer words than the original",
         "Each Anti-Vibe-Coding Box block has at most 3 items",
         "Every Box item cites a line (L<n>) that exists in the original",
         "The classified type is ADR",
         "The digest is written in Portuguese, like the source document, with translated section headings and no English section titles",
         "scripts/verify-digest.sh exits with code 0",
-        "Chat shows only the path, the TL;DR and the Box"
+        "Chat shows only the path, the TL;DR and the Box",
+        "The title starts with '# Resumo:' and the type label is not in English"
       ]
     },
     {
