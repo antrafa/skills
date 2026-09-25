@@ -26,7 +26,7 @@ done
 
 # --- 2. Budget (words outside the Mermaid block). Section headings are matched
 #        by language-agnostic stems: the digest follows the document's language.
-read -r bl tldr blocks bullets_max matrix idx words <<<"$(awk '
+read -r bl tldr blocks bullets_max matrix idx words move asked questions <<<"$(awk '
   /^```mermaid/ { inm=1; next }
   inm && /^```/ { inm=0; next }
   inm { next }
@@ -37,14 +37,20 @@ read -r bl tldr blocks bullets_max matrix idx words <<<"$(awk '
   sec ~ /Vibe/ && /^> \[!/ { blocks++ }
   sec ~ /Vibe/ && /^> - / { b[blocks]++; if (b[blocks] > max) max = b[blocks] }
   sec ~ /[Mm]atri/ && /^\|/ { matrix++ }
+  /^## / && /[Ss]ua vez|[Yy]our move/ { move=1 }
+  sec ~ /[Ss]ua vez|[Yy]our move/ && /^\*\*[^*]+:\*\*/ { asked=1 }
+  sec ~ /[Ss]ua vez|[Yy]our move/ && /^[0-9]+\. / { questions++ }
   sec ~ /ndice|[Ii]ndex/ && /^\|/ { idx++ }
-  END { printf "%d %d %d %d %d %d %d", bl, tldr, blocks, max, matrix-2, idx-2, words }
+  END { printf "%d %d %d %d %d %d %d %d %d %d", bl, tldr, blocks, max, (matrix ? matrix-2 : 0), (idx ? idx-2 : 0), words, move, asked, questions }
 ' "$digest")"
 
 if [ "$bl" -eq 0 ]; then err "no bottom line (**<label>:** before the first section)"
 else [ "$bl" -le 30 ] && ok "Bottom line with $bl words (max. 30)" || err "Bottom line with $bl words (max. 30)"; fi
 [ "$tldr" -le 70 ]        && ok "TL;DR with $tldr words (max. 70)"            || err "TL;DR with $tldr words (max. 70)"
 [ "$bullets_max" -le 3 ]  && ok "Box: up to $bullets_max items per block (max. 3)" || err "Box: block with $bullets_max items (max. 3)"
+if [ "$move" -eq 0 ]; then err "no Your move section (## Your move / ## Sua vez)"
+elif [ "$asked" -eq 0 ]; then err "Your move without the asked line (**<label>:**)"
+else [ "$questions" -le 3 ] && ok "Your move with $questions questions (max. 3)" || err "Your move with $questions questions (max. 3)"; fi
 [ "$matrix" -le 6 ]       && ok "Matrix with $matrix rows (max. 6)"           || err "Matrix with $matrix rows (max. 6)"
 [ "$idx" -le 10 ]         && ok "Index with $idx rows (max. 10)"              || err "Index with $idx rows (max. 10)"
 [ "$words" -le 600 ]      && ok "Digest with $words words (max. 600)"         || err "Digest with $words words (max. 600)"
