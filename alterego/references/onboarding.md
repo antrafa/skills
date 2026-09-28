@@ -117,7 +117,6 @@ channel. When offering, show the link and the command for the harness in use.
 | Skill / plugin | What it solves | Origin | Installation |
 |---|---|---|---|
 | `writing-for-agents` | Writing bar for skills, `AGENTS.md` and any doc an agent reads | [github.com/mattpocock/skills](https://github.com/mattpocock/skills) (skill by Matt Pocock, in `skills/productivity/writing-for-agents`) | Claude Code: `/plugin install mattpocock-skills`. Codex and others: `npx skills@latest add mattpocock/skills` and pick `writing-for-agents` |
-| `superpowers` | Dev Pipeline: brainstorming, plan, worktree, TDD, review, verify, finish | [github.com/obra/superpowers](https://github.com/obra/superpowers) (plugin by Jesse Vincent) | Claude Code: `/plugin install superpowers@claude-plugins-official`. Codex: `/plugins` and search for Superpowers. Gemini/Antigravity: `gemini extensions install https://github.com/obra/superpowers` |
 
 ### Public fallback for the internal skills
 

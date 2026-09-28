@@ -1,42 +1,26 @@
 # Playbook — Guided Development Pipeline (`/alterego dev`)
 
 Orchestrates a piece of work end to end in seven steps, each with an exit gate
-that needs evidence before moving on. The persona is the tech lead who drives;
-the discipline of each step comes from the **Superpowers** plugin, which is not
-reimplemented here.
+that needs evidence before moving on. The persona is the tech lead who drives.
 
-## Premise: Superpowers as the foundation
+## Premise: the discipline travels with the skill
 
-Alterego **does not invent its own engineering rules** for the pipeline. When
-Superpowers is available, the step is driven by its corresponding skill. When it
-is not, the persona runs the ritual in the chat with the same exit gate and says
-once, in one line, that the executable discipline is missing.
+Steps 1 to 6 each have a discipline file in [`dev/`](dev/), read in full when
+the step starts: [conception.md](dev/conception.md), [plan.md](dev/plan.md),
+[worktree.md](dev/worktree.md), [tdd.md](dev/tdd.md),
+[review.md](dev/review.md) and [verify.md](dev/verify.md). Besides the rule,
+each one lists the excuses the agent gives to skip it and the answer to each —
+that is what holds the gate when the change looks too obvious to need it.
+Step 7 follows its golden rule.
 
-### How to detect and invoke it, per harness
+Together, steps 1 and 2 are the spec-driven part: the spec carries numbered
+acceptance criteria, each plan task cites the ones it covers, and the TDD cycle
+turns them into tests.
 
-The plugin lives in different places depending on the agent that is running.
-Detect it in the first step of the session and do not assume any path:
-
-| Harness | Where to look | How to use the skill |
-|---|---|---|
-| Claude Code | `~/.claude/plugins/cache/*/superpowers/*/skills/<name>/` | `Skill` tool with `superpowers:<name>` |
-| Antigravity (`agy`) | `~/.gemini/config/plugins/superpowers/skills/<name>/SKILL.md` | read the `SKILL.md` and apply it |
-| Codex and harness-agnostic | `~/.codex/skills/<name>/` or `~/.agents/skills/<name>/` | read the `SKILL.md` and apply it |
-
-```bash
-# one line per harness; the first one that exists sets the path
-ls -d ~/.claude/plugins/cache/*/superpowers/*/skills 2>/dev/null | head -1
-ls -d ~/.gemini/config/plugins/superpowers/skills 2>/dev/null
-ls -d ~/.codex/skills/brainstorming ~/.agents/skills/brainstorming 2>/dev/null
-```
-
-Nothing found? Degrade gracefully and say: *"Superpowers not detected in this
-environment; I'll run the pipeline in the chat with the same gates."* Do not
-treat the absence as a blocker. At the end, once per session, offer the
-installation with the link
-([github.com/obra/superpowers](https://github.com/obra/superpowers)) and the
-command for the harness in use, as in
-[onboarding.md](onboarding.md#third-party-skills-and-plugins).
+The disciplines are condensed from [Superpowers](https://github.com/obra/superpowers)
+(MIT, Jesse Vincent). The plugin is not needed; when it is installed, its skills
+may trigger on their own, and inside the pipeline the step's discipline here is
+the one that governs.
 
 ---
 
@@ -53,15 +37,15 @@ between the plan's version and the lockfile's is a finding for step 5.
 
 ## The seven steps
 
-| # | Step | Subcommand | Superpowers skill | Golden rule | Exit gate |
+| # | Step | Subcommand | Discipline | Golden rule | Exit gate |
 |---|---|---|---|---|---|
-| 1 | Conception | `dev brainstorming` / `dev 1` | `brainstorming` | No plan or code before understanding the real pain, the constraints and 2 to 3 approaches with trade-offs. | Approach chosen with the rationale recorded. |
-| 2 | Plan | `dev plan` / `dev 2` | `writing-plans` | Atomic tasks, exact files, acceptance criteria per task. The first delivery is a **walking skeleton**: the thinnest slice that runs end to end, never the easiest layer. | Plan saved in `docs/superpowers/plans/` and approved by the user. |
-| 3 | Isolation | `dev worktree` / `dev 3` | `using-git-worktrees` | Never develop on the main branch. | Worktree or branch created **with name and base confirmed** and baseline build green. |
-| 4 | TDD | `dev tdd` / `dev 4` | `test-driven-development` | Test fails first, minimal code to pass, safe refactoring. | Suite green, no skipped test. |
-| 5 | Review | `dev review` / `dev 5` | `requesting-code-review` | Apply the [playbook-review.md](playbook-review.md) yardstick to the branch diff. | No critical or warning finding left open. |
-| 6 | Verification | `dev verify` / `dev 6` | `verification-before-completion` | Nothing is reported as working without the command's real output, and an architectural characteristic is only verified by a fitness function. | Build, lint, tests and the applicable fitness functions with exit code 0 shown in the handoff. |
-| 7 | Delivery | `dev finish` / `dev 7` | `finishing-a-development-branch` + `mentat` | Clean history, PR description with the why, learning recorded. | PR description ready and learning saved in Mentat. **Commit, push and opening the PR only with a yes for each one; merge is never the persona's action.** |
+| 1 | Conception | `dev brainstorming` / `dev 1` | [conception.md](dev/conception.md) | No plan or code before understanding the real pain, the constraints and 2 to 3 approaches with trade-offs. | Approach chosen with the rationale recorded; on the architectural path, spec in `docs/specs/` reviewed by the user. |
+| 2 | Plan | `dev plan` / `dev 2` | [plan.md](dev/plan.md) | Atomic tasks, exact files, acceptance criteria per task. The first delivery is a **walking skeleton**: the thinnest slice that runs end to end, never the easiest layer. | Plan saved in `docs/plans/` and approved by the user. |
+| 3 | Isolation | `dev worktree` / `dev 3` | [worktree.md](dev/worktree.md) | Never develop on the main branch. | Worktree or branch created **with name and base confirmed** and baseline build green. |
+| 4 | TDD | `dev tdd` / `dev 4` | [tdd.md](dev/tdd.md) | Test fails first, minimal code to pass, safe refactoring. | Each behavior seen red then green; suite green, no skipped test. |
+| 5 | Review | `dev review` / `dev 5` | [review.md](dev/review.md) | A fresh reviewer applies the [playbook-review.md](playbook-review.md) yardstick to the branch diff. | No critical or warning finding left open. |
+| 6 | Verification | `dev verify` / `dev 6` | [verify.md](dev/verify.md) | Nothing is reported as working without the command's real output, and an architectural characteristic is only verified by a fitness function. | Build, lint, tests and the applicable fitness functions with exit code 0 shown in the handoff. |
+| 7 | Delivery | `dev finish` / `dev 7` | `mentat` | Clean history, PR description with the why, learning recorded. The drafts come out even when the why is unknown: the best reading of the diff, marked as an assumption, with the question beside it. | PR description ready and learning saved in Mentat. **Commit, push and opening the PR only with a yes for each one; merge is never the persona's action.** |
 
 ### Step 4 and the change that spills over
 
@@ -103,14 +87,17 @@ the next action.
 
 - **`/alterego dev` with no argument:** show the map of the seven steps in a
   short table, detect which one the current work seems to be in (branch,
-  existing plan in `docs/superpowers/plans/`, red tests) and propose the step.
+  existing plan in `docs/plans/`, red tests) and propose the step.
   If there is no context, ask once what the task is.
-- **`/alterego dev <step>`:** take over that step. Invoke or read the
-  Superpowers skill per the harness table, execute, and only declare the step
+- **`/alterego dev <step>`:** take over that step. Read its discipline file,
+  when it has one, in full; execute, and only declare the step
   closed when the exit gate has real evidence.
 - **Skipping a step** is the user's decision, not the persona's. If they ask
   for `dev tdd` with no plan, go ahead, but record in the handoff that steps 1
-  and 2 did not happen.
+  and 2 did not happen. The step's artifact still comes out: a gap found along
+  the way — a skipped step, an untested boundary — goes into the artifact and
+  the handoff as a note, and the only question left at the end is the yes the
+  step already requires.
 
 ---
 
@@ -143,8 +130,8 @@ is already persisted on disk.
 
 ### When to announce a Safe Context-Clear:
 
-1. **On finishing step 1 (Conception):** approach and rationale saved (or `CONTEXT.md` updated).
-2. **On finishing step 2 (Plan):** plan saved in `docs/superpowers/plans/*.md` or tickets defined.
+1. **On finishing step 1 (Conception):** approach and rationale saved (the spec in `docs/specs/`, or `CONTEXT.md` updated).
+2. **On finishing step 2 (Plan):** plan saved in `docs/plans/*.md` or tickets defined.
 3. **On finishing step 4 (TDD):** minimal code and green suite committed in the worktree.
 4. **On finishing step 6 (Verification):** build, lint and tests validated with exit code 0.
 

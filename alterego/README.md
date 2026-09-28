@@ -49,7 +49,6 @@ ln -s "$SKILL_SRC" ~/.gemini/config/skills/alterego   # Antigravity (agy)
 | Memory across sessions | the [mentat](https://github.com/antrafa/mentat) skill |
 | `/alterego digest` with the visual template | the [doc-digest](https://github.com/antrafa/doc-digest) skill |
 | `/alterego idea` with the idea file | the [lapida](https://github.com/antrafa/lapida) skill |
-| The full Dev Pipeline | the [Superpowers](https://github.com/obra/superpowers) plugin, by Jesse Vincent |
 | `/alterego skill` with the full yardstick | the [writing-for-agents](https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents) skill, by Matt Pocock |
 | Docs for the current version of libraries | the `context7` plugin/MCP |
 
@@ -80,7 +79,7 @@ Full guide, with examples and what each one returns: [`COMMANDS.md`](COMMANDS.md
 | Command | What it does |
 |---|---|
 | `/alterego start [<persona>]` | Opens the session: arms `guardrails` and asks which persona lens to use (or `none`). |
-| `/alterego dev [<step>]` | 7-step Dev Pipeline on top of Superpowers (brainstorming, plan, worktree, TDD, review, verify, finish). |
+| `/alterego dev [<step>]` | 7-step Dev Pipeline with its own discipline per step (brainstorming, plan, worktree, TDD, review, verify, finish). |
 | `/alterego refactor <goal>` | Structural refactor by the Mikado Method: discovers the prerequisites by attempting and reverting, leaves first, tree green at every commit. |
 | `/alterego daily` | Organizes the day in 2 minutes: stability > unblocking the team > architecture > feature. |
 | `/alterego wrap [<notes>]` | Closes the day by the evidence: done, left over, learned, open risk; records what is pending in Mentat with your yes. |
@@ -148,7 +147,6 @@ delivers the degraded version and offers the installation once per session.
 | `lapida` | Refining a raw idea into a viable, testable proposal | [github.com/antrafa/lapida](https://github.com/antrafa/lapida) |
 | `forja` | Scaffolding and architectural templates | [github.com/antrafa/forja](https://github.com/antrafa/forja) |
 | `writing-for-agents` | Yardstick for writing skills and `AGENTS.md` | [github.com/mattpocock/skills](https://github.com/mattpocock/skills), a skill by Matt Pocock |
-| `superpowers` | Dev Pipeline | [github.com/obra/superpowers](https://github.com/obra/superpowers), a plugin by Jesse Vincent |
 | `cluster-analyzer`, `devops-expert`, `performance-architect`, `guardrails` | Evidence on infra, pipeline, performance and security | internal to your organization, if they exist; without them, the [public fallbacks from skills.sh](references/onboarding.md#public-fallback-for-the-internal-skills) |
 
 The full map of evidence per skill, with the degradation column, is in
@@ -190,7 +188,7 @@ scripts/run-evals.sh                                        # whole suite, befor
 ```
 
 Each run is isolated: no other skill, memory or config of yours loads, so every
-partner skill (Mentat, doc-digest, lapida, guardrails, Superpowers) is absent and the
+partner skill (Mentat, doc-digest, lapida, guardrails) is absent and the
 cases check the degraded branch. Shell commands run in the OS sandbox, which on
 Linux needs `bubblewrap` and `socat`.
 

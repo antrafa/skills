@@ -404,9 +404,12 @@ For the full catalog and execution rules, see [playbook-persona.md](references/p
 
 ## 5. `/alterego dev` — the Guided Development Pipeline
 
-Seven steps with an exit gate, with the **Superpowers** plugin as the discipline of
-each one. It is for work that deserves a ritual: a new feature, a structural
-refactor, anything you do not want to do straight on the main branch.
+Seven steps with an exit gate. Steps 1 to 6 carry their own discipline, with the
+excuses the agent tends to give and the answer to each. Conception sorts the work
+into spike, bounded or architectural, and the architectural path writes a spec with
+numbered acceptance criteria that the plan and the tests follow. It is for work that
+deserves a ritual: a new feature, a structural refactor, anything you do not want to
+do straight on the main branch.
 
 ```
 /alterego dev                          (shows the map of the 7 steps)
@@ -415,15 +418,15 @@ refactor, anything you do not want to do straight on the main branch.
 /alterego dev tdd                      (runs step 4, by name)
 ```
 
-| # | Step | Subcommand | Superpowers skill | Exit gate |
-|---|---|---|---|---|
-| 1 | Conception | `dev brainstorming` / `dev 1` | `brainstorming` | Approach chosen with recorded rationale |
-| 2 | Plan | `dev plan` / `dev 2` | `writing-plans` | Plan in `docs/superpowers/plans/` approved by you |
-| 3 | Isolation | `dev worktree` / `dev 3` | `using-git-worktrees` | Worktree created with confirmed name and base, baseline build green |
-| 4 | TDD | `dev tdd` / `dev 4` | `test-driven-development` | Suite green, no skipped test |
-| 5 | Review | `dev review` / `dev 5` | `requesting-code-review` | No critical or attention-level finding left open |
-| 6 | Verification | `dev verify` / `dev 6` | `verification-before-completion` | Build, lint and tests with exit code 0 in the handoff |
-| 7 | Delivery | `dev finish` / `dev 7` | `finishing-a-development-branch` | PR description ready and learning saved in Mentat |
+| # | Step | Subcommand | Exit gate |
+|---|---|---|---|
+| 1 | Conception | `dev brainstorming` / `dev 1` | Approach chosen with recorded rationale; spec in `docs/specs/` on the architectural path |
+| 2 | Plan | `dev plan` / `dev 2` | Plan in `docs/plans/` approved by you |
+| 3 | Isolation | `dev worktree` / `dev 3` | Worktree created with confirmed name and base, baseline build green |
+| 4 | TDD | `dev tdd` / `dev 4` | Each behavior seen red then green, suite green, no skipped test |
+| 5 | Review | `dev review` / `dev 5` | Review by a fresh reviewer, no critical or warning finding left open |
+| 6 | Verification | `dev verify` / `dev 6` | Build, lint and tests with exit code 0 in the handoff |
+| 7 | Delivery | `dev finish` / `dev 7` | PR description ready and learning saved in Mentat |
 
 You do not have to walk the seven in order. Going straight to `dev tdd` on a task
 that already has a plan is normal use.
@@ -432,7 +435,7 @@ that already has a plan is normal use.
 On every interaction of the `dev` pipeline, the persona displays the **Roadmap
 Widget** showing:
 - **Current step** and **next step** with progress icons (`✅`, `⏳`, `⏹️`).
-- **Safe Context-Clear Point:** when an artifact is saved to disk (plan in `docs/superpowers/plans/`, green suite committed or verification finished), the persona actively tells you that you can `/clear` or open a new session, and gives the exact command to resume without carrying polluted history.
+- **Safe Context-Clear Point:** when an artifact is saved to disk (plan in `docs/plans/`, green suite committed or verification finished), the persona actively tells you that you can `/clear` or open a new session, and gives the exact command to resume without carrying polluted history.
 
 **In step 7:** commit, push and opening the PR each require a "yes". Merge is
 never an action of the persona.
@@ -445,7 +448,7 @@ Turns dense AI-generated documents (SDDs, ADRs, implementation plans, specs) int
 **30-to-60-second visual digests**, using the partner skill `doc-digest`:
 
 ```
-/alterego digest docs/superpowers/plans/2026-09-19-feature.md
+/alterego digest docs/plans/2026-09-19-feature.md
 /alterego digest docs/specs/sdd-payments.md --html
 ```
 
@@ -687,7 +690,6 @@ ln -s "$SKILL_SRC" ~/.gemini/config/skills/alterego   # Antigravity (agy)
 Then run `/alterego setup` to calibrate the profile.
 
 Optional: `glab` or `gh` authenticated (for `/alterego mr`), the
-[`mentat`](https://github.com/antrafa/mentat) skill (for memory across sessions),
-the [Superpowers](https://github.com/obra/superpowers) plugin (for the Dev
-Pipeline) and the [`writing-for-agents`](https://github.com/mattpocock/skills)
+[`mentat`](https://github.com/antrafa/mentat) skill (for memory across sessions)
+and the [`writing-for-agents`](https://github.com/mattpocock/skills)
 skill by Matt Pocock (for `/alterego skill`).

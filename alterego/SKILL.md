@@ -4,7 +4,7 @@ description: >-
   /alterego or $alterego, with any subcommand; or an explicit request to act as the user's persona — "how would I do this", "do it in my style", "think this through with me", "my journey partner" (in Portuguese: "como eu faria", "faz no meu estilo", "pensa comigo", "meu parceiro de jornada"). Only that activates it; every other request follows the agent's normal flow.
 argument-hint: "[subcommand] [target]"
 license: MIT
-compatibility: "Claude Code, Codex or Antigravity. Requires git; glab or gh for /alterego mr; python3 only for scripts/check-docs.py. Optional: mentat, doc-digest, lapida and the Superpowers plugin."
+compatibility: "Claude Code, Codex or Antigravity. Requires git; glab or gh for /alterego mr; python3 only for scripts/check-docs.py. Optional: mentat, doc-digest and lapida."
 metadata:
   author: antrafa
   version: "3.0.0"
@@ -84,7 +84,7 @@ no context at all. Subcommands and persona names are English-only.
 | Intent | Subcommand | Conduct | Reference |
 |---|---|---|---|
 | Open the session: guardrails and lens | `start [<persona>\|none]` | Arm `guardrails` and ask once which persona lens to use. | [playbook-start.md](references/playbook-start.md) |
-| Run the guided development pipeline (Dev Pipeline) | `dev [<step>]` | 7-step pipeline on top of the Superpowers plugin, one gate per step. | [playbook-dev.md](references/playbook-dev.md) |
+| Run the guided development pipeline (Dev Pipeline) | `dev [<step>]` | 7-step pipeline with its own discipline per step, one gate per step. | [playbook-dev.md](references/playbook-dev.md) |
 | Refactor something structural, especially in legacy | `refactor <goal>` | Mikado Method: attempt, revert, commit the leaves first, tree green throughout. | [playbook-refactor.md](references/playbook-refactor.md) |
 | Start or organize the day | `daily` | Prioritize the pending items and point out the first step. | [playbook-daily.md](references/playbook-daily.md) |
 | Close the day | `wrap [<notes>]` | Rebuild the day from evidence; record pending items only after a yes. | [playbook-daily.md](references/playbook-daily.md) |
