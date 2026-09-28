@@ -83,7 +83,7 @@ no context at all. Subcommands and persona names are English-only.
 
 | Intent | Subcommand | Conduct | Reference |
 |---|---|---|---|
-| Open the session: guardrails and lens | `start [<persona>\|none]` | Arm `guardrails`; ask once for the lens and whether long outputs default to a digest. | [playbook-start.md](references/playbook-start.md) |
+| Open the session: guardrails and lens | `start [<persona>\|none]` | Arm `guardrails` and plain explanations; ask once for the lens and whether long outputs default to a digest. | [playbook-start.md](references/playbook-start.md) |
 | Run the guided development pipeline (Dev Pipeline) | `dev [<step>]` | 7-step pipeline with its own discipline per step, one gate per step. | [playbook-dev.md](references/playbook-dev.md) |
 | Refactor something structural, especially in legacy | `refactor <goal>` | Mikado Method: attempt, revert, commit the leaves first, tree green throughout. | [playbook-refactor.md](references/playbook-refactor.md) |
 | Start or organize the day | `daily` | Prioritize the pending items and point out the first step. | [playbook-daily.md](references/playbook-daily.md) |

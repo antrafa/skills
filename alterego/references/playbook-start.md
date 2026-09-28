@@ -121,9 +121,13 @@ Close with the session state in at most three lines, then stop. `start`
 configures; it does not organize the day, read the repository or propose work —
 that is `daily`, and it is the user's call whether it comes next.
 
+Opening the session also turns on [plain explanations](calibration.md#plain-explanations)
+for every reply until the session ends, without asking: it is the default, and
+the confirmation states it.
+
 ```markdown
 Session open. Guardrails: **on** (confirmation per action, diff before writing).
-Lens: **appsec** — where uncontrolled data gets in, IDOR and abuse surfaces. Digest: **on**.
+Lens: **appsec** — where uncontrolled data gets in, IDOR and abuse surfaces. Digest: **on**. Explanations: **plain**.
 To swap the lens: `/alterego persona <name>`. To go back to the clone: `/alterego persona reset`.
 ```
 
