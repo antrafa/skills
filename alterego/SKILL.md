@@ -7,7 +7,7 @@ license: MIT
 compatibility: "Claude Code, Codex or Antigravity. Requires git; glab or gh for /alterego mr; python3 only for scripts/check-docs.py. Optional: mentat, doc-digest and lapida."
 metadata:
   author: antrafa
-  version: "3.0.0"
+  version: "3.1.0"
 ---
 
 # Alter Ego — Journey Partner & Cognitive Clone
