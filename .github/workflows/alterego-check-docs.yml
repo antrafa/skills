@@ -1,13 +1,22 @@
-name: check-docs
+name: alterego check-docs
 
 on:
   push:
     branches: [main]
+    paths:
+      - "alterego/**"
+      - ".github/workflows/alterego-check-docs.yml"
   pull_request:
+    paths:
+      - "alterego/**"
+      - ".github/workflows/alterego-check-docs.yml"
 
 jobs:
   check:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: alterego
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
