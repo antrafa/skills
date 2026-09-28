@@ -6,6 +6,10 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 
 ## [Unreleased]
 
+## [3.1.0] - 2026-09-28
+
+The Dev Pipeline runs on its own discipline, with no plugin, and the session opens in plain language.
+
 ### Added
 - `/alterego idea`: refines a raw idea — a business, an internal tool, a personal project — through the four phases of the partner skill [lapida](https://github.com/antrafa/lapida) (EXPLORE, CHALLENGE, REFINE, FIT), ending in a go, pivot or stop tied to the cheapest next test. CHALLENGE runs through the `devils-advocate` lens; without the skill, the same phases run inline in the chat and the installation is offered once. Eval 38 covers the degraded branch.
 - Digest session mode: `/alterego digest on | off`, or `yes` to the new digest question in `start`. While on, long outputs — plan, SDD, ADR, spec, MR description, analysis report, or any reply past ~80 lines — are written in full to a file and reach the chat as their digest, with the path. Code, diffs, commit messages, the handoff and short replies are left as they are. Off by default.
@@ -17,6 +21,9 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 
 ### Removed
 - Detection of the Superpowers plugin per harness and its installation offer.
+
+### Fixed
+- `scripts/check-docs.py` now runs on GitHub Actions, from `.github/workflows/alterego-check-docs.yml` at the repository root, whenever `alterego/` changes; the workflow used to sit inside `alterego/.github/`, where GitHub never reads it. The pre-commit hook finds the script from its own location and is enabled with `git config core.hooksPath alterego/.githooks`.
 
 ## [3.0.0] - 2026-09-22
 
