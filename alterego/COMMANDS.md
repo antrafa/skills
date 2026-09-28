@@ -69,7 +69,7 @@ read as a free-form request and routed by intent.
 | `/alterego project-analyser` | `[<module>]` | 360° technical audit of the codebase |
 | `/alterego idea` | `[<idea>\|<file>]` | Refine a raw idea into a viable, testable proposal |
 | `/alterego local-app` | `<idea>` | Complete, 100% local web application |
-| `/alterego digest` | `[<target>]` | Visual digest of an AI-generated doc (SDD, ADR, plan) |
+| `/alterego digest` | `[<target>\|on\|off]` | Visual digest of an AI-generated doc (SDD, ADR, plan); `on`/`off` sets it as the session default for long outputs |
 | `/alterego skill` | `[<target>]` | Write or review a skill or a doc an agent reads |
 | `/alterego sre` | `<symptom>` | Investigate an incident by measurement |
 | `/alterego study` | `<topic>` | Guided study with the Socratic method |
@@ -92,12 +92,13 @@ chosen lens instead of both defaulting in silence.
 /alterego start none               (arms them and keeps the default clone)
 ```
 
-**What you get:** two things set and confirmed in three lines. The `guardrails`
+**What you get:** the session set and confirmed in three lines. The `guardrails`
 mode on — confirmation per individual action that does not generalize to the
 next, diff shown before writing to a sensitive file, dependency change confirmed
-— and the active persona, picked by number or by name from a numbered list
+— the active persona, picked by number or by name from a numbered list
 (catalog, then your own personas in `~/.alterego/personas/`), created on the
-spot, or none at all (`0`).
+spot, or none at all (`0`), and whether long outputs reach you as a digest
+(answer `yes` on the same line, e.g. `3 yes`; the default is no).
 
 It configures and gets out of the way: it does not organize the day, does not
 read the repository, does not propose work. If `guardrails` is not in the
@@ -460,6 +461,13 @@ Turns dense AI-generated documents (SDDs, ADRs, implementation plans, specs) int
 **With no target** (`/alterego digest`), it assumes the obvious document from
 context (the plan just written, the ADR under discussion) and says which it
 assumed.
+
+**Session mode** (`/alterego digest on`, or `yes` to the digest question in
+`start`): until `/alterego digest off` or the end of the session, every long
+output — plan, SDD, ADR, spec, MR description, analysis report, or any reply
+past ~80 lines — is written in full to a file, and the chat carries its digest
+with the path. Code, diffs, commit messages, the execution handoff and short
+replies go out as they are.
 
 **Optional prerequisite:** the `doc-digest` skill. Without it, the digest comes
 out inline in the chat with the same content (minus `--html`, which belongs to

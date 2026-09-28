@@ -1,8 +1,9 @@
 # Playbook: Opening the Session (`/alterego start`)
 
-Two things are decided once per session and shape every answer after it: **how
-much friction stands between the agent and an irreversible action**, and **which
-lens it thinks through**. Both default silently if nobody sets them. This
+Three things are decided once per session and shape every answer after it: **how
+much friction stands between the agent and an irreversible action**, **which
+lens it thinks through**, and **whether long outputs reach the user as a
+digest**. All three default silently if nobody sets them. This
 playbook makes them an explicit, ten-second choice at the top of the session.
 
 It is not profile calibration — that is `/alterego setup`, and it happens once
@@ -73,7 +74,8 @@ in the same session.
 If `~/.alterego/personas/` has files, continue the same numbering into a second
 short block, **Yours**, with the `description` from each frontmatter.
 
-Close with the two ways out that are not numbered, in this order:
+Close with the two ways out that are not numbered, in this order, and the
+digest question as the last line of the same prompt:
 
 ```markdown
 Which lens for this session? Answer with a number or a name.
@@ -87,6 +89,8 @@ Yours
 
   0  none          the default clone (pragmatic Dev + Architect + Person)
      new <name>    a lens that is not here yet
+
+Digest long outputs by default (plans, SDDs, analyses)? yes / no (default: no)
 ```
 
 - **A number, or a catalog/user name** → resolve the number against the list
@@ -100,8 +104,13 @@ Yours
   [playbook-persona.md](playbook-persona.md#f-create-your-own-persona-alterego-persona-new-name)
   and activate the result.
 
+- **Digest: `yes`** (alone or next to the lens, e.g. `3 yes`, `appsec, digest`)
+  → turn on the session mode defined in
+  [playbook-digest.md](playbook-digest.md#4-session-mode-digest-by-default).
+  Anything else, including silence, leaves it off.
+
 **Ask once.** No answer, or an answer that skips the question and goes straight to
-a task, means `none`: open the session with the default clone, say so in the same
+a task, means `none` and digest off: open the session with the default clone, say so in the same
 line, and do the task. Asking twice turns a ten-second opening into a form.
 
 ---
@@ -114,7 +123,7 @@ that is `daily`, and it is the user's call whether it comes next.
 
 ```markdown
 Session open. Guardrails: **on** (confirmation per action, diff before writing).
-Lens: **appsec** — where uncontrolled data gets in, IDOR and abuse surfaces.
+Lens: **appsec** — where uncontrolled data gets in, IDOR and abuse surfaces. Digest: **on**.
 To swap the lens: `/alterego persona <name>`. To go back to the clone: `/alterego persona reset`.
 ```
 
@@ -130,6 +139,7 @@ limits: commit, push and external actions each need their own yes.
 ## 4. Running it twice
 
 `start` in a session that already has it does not reset anything silently. Show
-the current state and ask what to change — the lens, the guardrails or nothing.
+the current state and ask what to change — the lens, the guardrails, the digest
+or nothing.
 A user who types `start` again usually wants to swap the lens, and the shortcut
 for that is `/alterego persona <name>`; say so.

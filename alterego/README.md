@@ -78,7 +78,7 @@ Full guide, with examples and what each one returns: [`COMMANDS.md`](COMMANDS.md
 
 | Command | What it does |
 |---|---|
-| `/alterego start [<persona>]` | Opens the session: arms `guardrails` and asks which persona lens to use (or `none`). |
+| `/alterego start [<persona>]` | Opens the session: arms `guardrails`, asks which persona lens to use (or `none`) and whether long outputs default to a digest. |
 | `/alterego dev [<step>]` | 7-step Dev Pipeline with its own discipline per step (brainstorming, plan, worktree, TDD, review, verify, finish). |
 | `/alterego refactor <goal>` | Structural refactor by the Mikado Method: discovers the prerequisites by attempting and reverting, leaves first, tree green at every commit. |
 | `/alterego daily` | Organizes the day in 2 minutes: stability > unblocking the team > architecture > feature. |
@@ -93,7 +93,7 @@ Full guide, with examples and what each one returns: [`COMMANDS.md`](COMMANDS.md
 | `/alterego project-analyser [<module>]` | 360° audit: architecture, OWASP, tests, business rules, debt. |
 | `/alterego idea [<idea>]` | Refines a raw idea in four phases (EXPLORE, CHALLENGE, REFINE, FIT) into a go / pivot / stop tied to the cheapest next test. |
 | `/alterego local-app <idea>` | Complete, 100% local web application (Next.js or Vite, dark/light). |
-| `/alterego digest [<target>]` | 30-60s visual digest of an SDD, ADR or plan: Mermaid, decisions, risks. |
+| `/alterego digest [<target>\|on\|off]` | 30-60s visual digest of an SDD, ADR or plan: Mermaid, decisions, risks. `on` makes it the session default for long outputs. |
 | `/alterego skill [<target>]` | Writes or reviews a skill, `AGENTS.md` or any doc an agent reads, by the `writing-for-agents` yardstick. |
 | `/alterego sre <symptom>` | Incident by measurement (cgroups, runtime dumps, GC), quick mitigation and clear rollback. |
 | `/alterego setup` | Creates or recalibrates your profile in Mentat, or in `~/.alterego/profile.md` without Mentat. |
