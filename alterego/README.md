@@ -173,8 +173,8 @@ this README and of `COMMANDS.md`, with a case in `evals/`. Before
 opening a PR:
 
 ```bash
-python3 scripts/check-docs.py        # exit 0 = consistent; also runs in CI
-git config core.hooksPath .githooks  # optional: runs before every commit
+python3 scripts/check-docs.py                 # exit 0 = consistent; also runs in CI on alterego/ changes
+git config core.hooksPath alterego/.githooks  # optional, from the repository root: runs before every commit
 ```
 
 The evals run by hand, when you choose: every case is a real Claude session on
