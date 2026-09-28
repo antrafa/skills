@@ -1,6 +1,6 @@
 schema_version: '1.1'
 name: 01-dev-map
-description: Seven-step map, Superpowers absence stated once, no code.
+description: Seven-step map with no external plugin, no code.
 tags:
 - dev
 execution:
@@ -37,8 +37,6 @@ graders:
 
     fits the context or asks once what the task is.
 
-    PASS also requires that it says in one line that Superpowers was not detected and
+    FAIL if it writes code, creates files, or says a plugin must be detected or
 
-    the pipeline runs in the chat with the same gates (the plugin is absent here).
-
-    FAIL if it writes code, creates files, or treats the missing plugin as a blocker.'
+    installed to run the pipeline.'

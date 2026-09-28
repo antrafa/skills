@@ -6,7 +6,7 @@ tags:
 context:
   scaffold_script: fixture.sh
 execution:
-  prompt: /alterego digest docs/superpowers/plans/2026-09-19-feature.md
+  prompt: /alterego digest docs/plans/2026-09-19-feature.md
   max_turns: 25
   allowed_tools:
   - Read

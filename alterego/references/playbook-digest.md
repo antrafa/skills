@@ -24,7 +24,7 @@ $alterego digest <doc-path>
 ```
 
 **No target does not turn into a generic question.** Assume the obvious document
-from context — the plan just saved in `docs/superpowers/plans/`, the ADR under
+from context — the plan just saved in `docs/plans/`, the ADR under
 discussion, the open file, the agent's last long reply — and **say which one
 you assumed**. Only ask when
 there is no context at all.

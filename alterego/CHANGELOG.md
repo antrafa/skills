@@ -11,6 +11,10 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 
 ### Changed
 - The free-form intent "think together" now reads "evaluate a technical proposal", so a raw idea routes to `idea` instead of competing with it.
+- `/alterego dev` no longer depends on the Superpowers plugin: conception, plan, isolation, TDD, review and verification carry their own discipline in `references/dev/`, condensed from Superpowers (MIT, Jesse Vincent), with the excuses the agent tends to give and the answer to each. Conception sorts the work into spike, bounded or architectural; the architectural path writes a spec in `docs/specs/` with numbered acceptance criteria that plan tasks cite. Review now runs in a fresh subagent, and plans are saved in `docs/plans/`. Same seven steps, subcommands and gates.
+
+### Removed
+- Detection of the Superpowers plugin per harness and its installation offer.
 
 ## [3.0.0] - 2026-09-22
 

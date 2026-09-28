@@ -3,8 +3,8 @@ set -eu
 git init -q -b main
 git config user.email dev@example.com
 git config user.name "Dev"
-mkdir -p docs/superpowers/plans docs/adr
-cat > docs/superpowers/plans/2026-09-19-feature.md <<'MD'
+mkdir -p docs/plans docs/adr
+cat > docs/plans/2026-09-19-feature.md <<'MD'
 # Plan: export invoices as CSV
 
 ## Context
