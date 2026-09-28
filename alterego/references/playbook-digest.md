@@ -16,6 +16,7 @@ AI assumed, in 30 to 60 seconds.
 /alterego digest <path> --html               (also a standalone page, next to the markdown)
 /alterego digest <path> --since <previous>   (only what changed since the previous round)
 /alterego digest                             (assumes the obvious doc or reply from context)
+/alterego digest on | off                    (turns the session mode in section 4 on or off)
 ```
 
 In Codex:
@@ -101,7 +102,30 @@ purpose — table and diagram in place of paragraphs.
 
 ---
 
-## 4. Where it comes in on its own
+## 4. Session mode: digest by default
+
+Turned on by the digest question in
+[playbook-start.md](playbook-start.md#2-choose-the-lens) or by
+`/alterego digest on`; `/alterego digest off` or the end of the session turns
+it off. Off is the default.
+
+While on, a **long output** — a plan, SDD, ADR, spec, MR description, analysis
+report, or any reply past ~80 lines — reaches the user as its digest:
+
+1. The full text goes to a file first: the document itself when the task
+   writes one, otherwise the scratchpad (or `~/.doc-digest/<project>/`).
+2. The chat carries the digest of that file, produced as in section 1 —
+   `doc-digest` when installed, section 2 otherwise — plus the path to the
+   full text.
+3. The digest replaces the "In short" block for that reply.
+
+Code, diffs, commit messages, the execution handoff and short replies go out
+as they are; digesting them adds reading instead of saving it. `--html` stays
+opt-in per request, as in section 3.
+
+---
+
+## 5. Where it comes in on its own
 
 Beyond direct invocation, the digest is offered at the end of **steps 1 and 2**
 of the Dev Pipeline — before the plan becomes code. See

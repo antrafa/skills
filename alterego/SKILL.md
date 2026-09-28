@@ -83,7 +83,7 @@ no context at all. Subcommands and persona names are English-only.
 
 | Intent | Subcommand | Conduct | Reference |
 |---|---|---|---|
-| Open the session: guardrails and lens | `start [<persona>\|none]` | Arm `guardrails` and ask once which persona lens to use. | [playbook-start.md](references/playbook-start.md) |
+| Open the session: guardrails and lens | `start [<persona>\|none]` | Arm `guardrails`; ask once for the lens and whether long outputs default to a digest. | [playbook-start.md](references/playbook-start.md) |
 | Run the guided development pipeline (Dev Pipeline) | `dev [<step>]` | 7-step pipeline with its own discipline per step, one gate per step. | [playbook-dev.md](references/playbook-dev.md) |
 | Refactor something structural, especially in legacy | `refactor <goal>` | Mikado Method: attempt, revert, commit the leaves first, tree green throughout. | [playbook-refactor.md](references/playbook-refactor.md) |
 | Start or organize the day | `daily` | Prioritize the pending items and point out the first step. | [playbook-daily.md](references/playbook-daily.md) |
@@ -97,7 +97,7 @@ no context at all. Subcommands and persona names are English-only.
 | Deep technical audit of a repository / codebase | `project-analyser [<module>]` | 360° sweep: architecture, OWASP, tests, business rules, debt. | [playbook-project-analyser.md](references/playbook-project-analyser.md) |
 | Refine a raw idea into a viable, testable proposal | `idea [<idea>]` | Four phases via `lapida` (EXPLORE, CHALLENGE, REFINE, FIT), inline without it; ends in go, pivot or stop. | [playbook-idea.md](references/playbook-idea.md) |
 | Create a complete, working local web application | `local-app <idea>` | 100% local scaffolding, from stack choice to a running app. | [playbook-local-app.md](references/playbook-local-app.md) |
-| Summarize and visualize an AI technical doc or long reply (SDD, ADR, plan, concept round) | `digest [<target>]` | One-minute visual digest via `doc-digest`, inline without it. | [playbook-digest.md](references/playbook-digest.md) |
+| Summarize and visualize an AI technical doc or long reply (SDD, ADR, plan, concept round) | `digest [<target>\|on\|off]` | One-minute visual digest via `doc-digest`, inline without it; `on` makes it the session default for long outputs. | [playbook-digest.md](references/playbook-digest.md) |
 | Write or review a skill, AGENTS.md, a doc an agent reads | `skill [<target>]` | Diagnose by the `writing-for-agents` bar, pointer first. | [playbook-skill.md](references/playbook-skill.md) |
 | Investigate an incident (SRE) | `sre <symptom>` | Measure before conjecturing; fast mitigation, clear rollback. | [playbook-troubleshooting.md](references/playbook-troubleshooting.md) |
 | Calibrate the developer's profile | `setup` | Interview or ingest a résumé; save to Mentat, else `~/.alterego/`. | [onboarding.md](references/onboarding.md) |

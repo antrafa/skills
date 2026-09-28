@@ -91,7 +91,7 @@ that map does not cover: the pair of commands that look alike and the criterion
 that tells one from the other. When building a command's Card, pull the "when
 to use" from the map and the "when NOT to use" from here.
 
-- **`start`** vs. `setup` / `daily`: sets the session's guardrails and lens, in seconds and once per session; calibrating who the user is happens once in a lifetime and is `setup`; organizing what to do today is `daily`.
+- **`start`** vs. `setup` / `daily`: sets the session's guardrails, lens and digest default, in seconds and once per session; calibrating who the user is happens once in a lifetime and is `setup`; organizing what to do today is `daily`.
 - **`dev`** vs. free-form request: the full ritual (plan, worktree, TDD, review) is for what deserves stages; a trivial 1-line fix does not go through the pipeline.
 - **`tour-project`** vs. `project-analyser`: the tour maps and teaches the architecture; it does not hunt vulnerabilities or technical debt in depth — that is `project-analyser`.
 - **`project-analyser`** vs. `review` / `mr`: audits the whole codebase or a module; for a single PR or file, `review` or `mr` are enough and come out faster.
