@@ -98,7 +98,10 @@ next, diff shown before writing to a sensitive file, dependency change confirmed
 — the active persona, picked by number or by name from a numbered list
 (catalog, then your own personas in `~/.alterego/personas/`), created on the
 spot, or none at all (`0`), and whether long outputs reach you as a digest
-(answer `yes` on the same line, e.g. `3 yes`; the default is no).
+(answer `yes` on the same line, e.g. `3 yes`; the default is no). It also turns
+on plain explanations for the session: a problem or result comes as where we
+are, a concrete situation, what it costs you, the proposal and the decision you
+need to make — numbers and tables only as support.
 
 It configures and gets out of the way: it does not organize the day, does not
 read the repository, does not propose work. If `guardrails` is not in the

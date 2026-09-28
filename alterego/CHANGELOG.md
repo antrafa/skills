@@ -9,6 +9,7 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 ### Added
 - `/alterego idea`: refines a raw idea — a business, an internal tool, a personal project — through the four phases of the partner skill [lapida](https://github.com/antrafa/lapida) (EXPLORE, CHALLENGE, REFINE, FIT), ending in a go, pivot or stop tied to the cheapest next test. CHALLENGE runs through the `devils-advocate` lens; without the skill, the same phases run inline in the chat and the installation is offered once. Eval 38 covers the degraded branch.
 - Digest session mode: `/alterego digest on | off`, or `yes` to the new digest question in `start`. While on, long outputs — plan, SDD, ADR, spec, MR description, analysis report, or any reply past ~80 lines — are written in full to a file and reach the chat as their digest, with the path. Code, diffs, commit messages, the handoff and short replies are left as they are. Off by default.
+- Plain explanations, turned on by `start` for the whole session: a reply that explains a problem, result or decision opens with where we are, describes the problem as a concrete situation with the before and after, says what it costs the user, proposes short numbered steps and closes with the one decision asked of the user. Numbers and tables come after, as support. Defined once in `references/calibration.md`.
 
 ### Changed
 - The free-form intent "think together" now reads "evaluate a technical proposal", so a raw idea routes to `idea` instead of competing with it.

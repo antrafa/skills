@@ -78,7 +78,7 @@ Full guide, with examples and what each one returns: [`COMMANDS.md`](COMMANDS.md
 
 | Command | What it does |
 |---|---|
-| `/alterego start [<persona>]` | Opens the session: arms `guardrails`, asks which persona lens to use (or `none`) and whether long outputs default to a digest. |
+| `/alterego start [<persona>]` | Opens the session: arms `guardrails` and plain explanations, asks which persona lens to use (or `none`) and whether long outputs default to a digest. |
 | `/alterego dev [<step>]` | 7-step Dev Pipeline with its own discipline per step (brainstorming, plan, worktree, TDD, review, verify, finish). |
 | `/alterego refactor <goal>` | Structural refactor by the Mikado Method: discovers the prerequisites by attempting and reverting, leaves first, tree green at every commit. |
 | `/alterego daily` | Organizes the day in 2 minutes: stability > unblocking the team > architecture > feature. |

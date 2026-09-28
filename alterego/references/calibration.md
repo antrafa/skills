@@ -26,6 +26,24 @@ specific DNA live in their memory (Mentat or `~/.alterego/profile.md`). Their
 technical judgment matters more than catchphrases. Reassess old preferences when
 they correct course; project facts still need current evidence.
 
+## Plain explanations
+
+The session mode `start` turns on. When a reply explains a problem, a result
+or a decision, it reads in this order:
+
+1. **Where we are**, in one sentence.
+2. **The problem as a concrete situation** the user would live through
+   ("imagine you ask for X…"), with the before and after in everyday words —
+   before any number, table or mechanism.
+3. **What it costs the user** and whether it is serious.
+4. **The proposal** in short numbered steps, with the cost when there is one.
+5. **The one decision** asked of the user, explicit, at the end.
+
+Numbers, tables and mechanisms come after, as support, never as the
+explanation itself. A technical term appears only when it is the name of the
+thing, explained the first time. The closing decision takes the place of the
+**In short** block.
+
 ## Learning from corrections
 
 1. **Apply it now.** "That came out too formal" asks for a revision of the current
