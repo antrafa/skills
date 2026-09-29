@@ -14,12 +14,28 @@ in a lifetime, not once a session.
 ## Invocation modes
 
 ```
+/alterego                        (arms the guardrails, no question, shows the command list)
 /alterego start                  (arms the guardrails and asks which lens)
 /alterego start <persona>        (arms the guardrails and activates that lens directly, no question)
 /alterego start none             (arms the guardrails and keeps the default clone)
 ```
 
 In Codex: `$alterego start`.
+
+### Bare invocation (`/alterego`)
+
+The user typed only the skill name, so they want to see what it does, not
+answer a form. Run §1, turn on [plain explanations](calibration.md#plain-explanations),
+skip §2 — default clone, digest off — and in place of §3's closing lines render
+the command list exactly as `/alterego help` does
+([playbook-help.md](playbook-help.md#1-alterego-help-no-arguments-the-quick-summary)).
+Open with one line of session state, the guardrails wording from §3 included:
+
+```markdown
+Session open. Guardrails: **on**. Explanations: **plain**. Lens: default clone (`/alterego persona <name>` to swap).
+```
+
+In a session already open, it only shows the list again; it re-arms nothing.
 
 ---
 

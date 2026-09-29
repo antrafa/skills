@@ -6,6 +6,9 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 
 ## [Unreleased]
 
+### Added
+- `/alterego` with no subcommand opens the session without asking anything: it arms `guardrails`, turns on plain explanations, keeps the default clone with digest off and shows the command list from `help`. In a session already open it only shows the list. Eval 39 covers it.
+
 ## [3.1.0] - 2026-09-28
 
 The Dev Pipeline runs on its own discipline, with no plugin, and the session opens in plain language.

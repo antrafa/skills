@@ -59,6 +59,7 @@ installation and only runs it after your "yes".
 
 ```
 /alterego setup                      # calibrates your profile (5 questions or a resume)
+/alterego                            # opens the session (guardrails, plain explanations) and lists the commands
 /alterego help                       # lists the commands
 /alterego daily                      # organizes the day
 /alterego review src/Billing.java    # Socratic review of a file
