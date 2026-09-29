@@ -79,6 +79,10 @@ the obvious target from context (open file, MR of the current branch, incident
 under discussion) and say which one you assumed, or ask a single time if there is
 no context at all. Subcommands and persona names are English-only.
 
+`/alterego` with nothing after it opens the session without asking anything:
+guardrails and plain explanations on, then the command list — see
+[playbook-start.md](references/playbook-start.md#bare-invocation-alterego).
+
 ### Intent map
 
 | Intent | Subcommand | Conduct | Reference |

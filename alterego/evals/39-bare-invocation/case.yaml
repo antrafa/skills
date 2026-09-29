@@ -1,0 +1,56 @@
+schema_version: '1.1'
+name: 39-bare-invocation
+description: Bare /alterego arms guardrails and plain explanations, asks nothing, lists the commands.
+tags:
+- start
+- help
+- smoke
+execution:
+  prompt: /alterego
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: guardrails-invoked
+  type: regex
+  target: trace
+  pattern: guardrails
+  flags: i
+- name: lists-dev
+  type: regex
+  target: last_message
+  pattern: '`?dev\b'
+  flags: i
+- name: lists-review
+  type: regex
+  target: last_message
+  pattern: '`?review\b'
+  flags: i
+- name: no-lens-question
+  type: regex
+  target: last_message
+  pattern: Which lens for this session
+  flags: i
+  match: not_contains
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if it opens with one line of session state — guardrails on (or, when
+
+    the skill is missing, saying what holds instead) and plain explanations on — then
+
+    lists the subcommands one line each with a help <cmd> tip, without asking which
+
+    lens or about the digest.
+
+    FAIL if it asks a question before showing the list, or treats the empty invocation
+
+    as a free-form request.'

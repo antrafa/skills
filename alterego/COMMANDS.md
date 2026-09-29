@@ -87,6 +87,7 @@ The first command of the session, when you want it to start protected and with a
 chosen lens instead of both defaulting in silence.
 
 ```
+/alterego                          (arms the guardrails, asks nothing and shows the command list)
 /alterego start                    (arms the guardrails and asks which lens)
 /alterego start appsec             (arms them and already activates the AppSec lens)
 /alterego start none               (arms them and keeps the default clone)
