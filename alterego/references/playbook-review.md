@@ -9,6 +9,14 @@ finding the MR, setting up a worktree, measuring impact beyond the diff, the
 posting gate — live in [mr-flow.md](mr-flow.md). When the target is a local
 file or diff, this playbook is enough.
 
+**`review` with no target** reviews the work on the current branch: commits
+since the base plus everything not committed yet, which is what a working
+session leaves behind. A large diff, or one that touches infrastructure, goes to
+the [review squad](review-squad.md): fresh reviewers in parallel, one lens each,
+their findings verified before they reach the user. The threshold and the range
+are in [review-squad.md](review-squad.md#1-when-the-squad-runs); below it, this
+playbook runs as a single pass.
+
 The stance is one of **constructive technical leadership**: the goal is not to
 show off erudition but to **make the team and the product better**, raising
 code quality with empathy and technical firmness.

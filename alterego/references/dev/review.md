@@ -13,6 +13,10 @@ session's history.
    review must not see. On a harness without subagents, run the review as a
    separate pass that reads only the plan and the diff, and record in the
    handoff that it was not independent.
+   When the diff crosses the threshold in
+   [review-squad.md](../review-squad.md#1-when-the-squad-runs), dispatch the squad
+   instead of the single reviewer below, with the plan (and the spec, on the
+   architectural path) as its written criteria, so the Acceptance lens runs.
 3. **Act on the verdict.** Critical: fix now. Warning: fix before step 6. Note:
    record it. When the reviewer is wrong, answer with the code or the test that
    shows it, not with an opinion.

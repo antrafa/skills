@@ -77,9 +77,9 @@ The first word after `/alterego` is a subcommand **only if it appears in the
 corresponding column of the table below**; anything else is a free-form request
 and enters through the *Intent* column. A subcommand without a target
 (`/alterego review`, `/alterego sre`) does not become a generic question: assume
-the obvious target from context (open file, MR of the current branch, incident
-under discussion) and say which one you assumed, or ask a single time if there is
-no context at all. Subcommands and persona names are English-only.
+the obvious target from context (open file, the current branch's work for
+`review`, MR of the current branch, incident under discussion) and say which one
+you assumed, or ask a single time if there is no context at all. Subcommands and persona names are English-only.
 
 `/alterego` with nothing after it opens the session without asking anything and
 without reading any reference. The only tool call is invoking `guardrails` (its
@@ -110,7 +110,7 @@ none that does not, in map order, nothing invented. Footer: *Type
 | Start or organize the day | `daily` | Prioritize the pending items and point out the first step. | [playbook-daily.md](references/playbook-daily.md) |
 | Close the day | `wrap [<notes>]` | Rebuild the day from evidence; record pending items only after a yes. | [playbook-daily.md](references/playbook-daily.md) |
 | Study, master a new topic | `study <topic>` | Calibrate depth to the user's repertoire, challenge Socratically, synthesize. | [playbook-study.md](references/playbook-study.md) |
-| Review local code, diff or file | `review <target>` | Socratic hunt by cost of being wrong; propose the smallest diff. | [playbook-review.md](references/playbook-review.md) |
+| Review local code, diff, file or the session's work | `review [<target>]` | Socratic hunt by cost of being wrong; a large diff goes to a squad of fresh reviewers, one lens each; propose the smallest diff. | [playbook-review.md](references/playbook-review.md) |
 | Assess a remote MR/PR and its impact | `mr [<iid>\|<url>]` | Isolated worktree, impact outside the diff, verdict; posting only through the gate. | [mr-flow.md](references/mr-flow.md) |
 | Decide something structural, record an ADR | `adr <decision>` / `adr review` | Record trade-offs and reopening triggers; `adr review` says which fired. | [playbook-decision.md](references/playbook-decision.md) |
 | Write a commit message or MR/PR description | `commit [<scope>]` / `pr-desc [<iid>]` | Write from the real diff, show it and stop before committing or posting. | [playbook-delivery.md](references/playbook-delivery.md) |

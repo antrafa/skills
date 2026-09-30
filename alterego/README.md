@@ -63,6 +63,7 @@ installation and only runs it after your "yes".
 /alterego help                       # lists the commands
 /alterego daily                      # organizes the day
 /alterego review src/Billing.java    # Socratic review of a file
+/alterego review                     # reviews what this session changed on the branch
 /alterego mr 42                      # MR verdict with impact beyond the diff
 /alterego idea a tool that opens deploy tickets for my team
 /alterego think with me: does this interface solve a real boundary?
@@ -85,7 +86,7 @@ Full guide, with examples and what each one returns: [`COMMANDS.md`](COMMANDS.md
 | `/alterego daily` | Organizes the day in 2 minutes: stability > unblocking the team > architecture > feature. |
 | `/alterego wrap [<notes>]` | Closes the day by the evidence: done, left over, learned, open risk; records what is pending in Mentat with your yes. |
 | `/alterego study <topic>` | Study Partner: mission, depth set by your repertoire, Socratic questions, "In short". |
-| `/alterego review <target>` | Socratic review of a file or local diff: concurrency, N+1, security, scope, smallest diff. |
+| `/alterego review [<target>]` | Socratic review of a file, a local diff or the session's work: concurrency, N+1, security, scope, smallest diff. A large diff goes to a squad of fresh reviewers in parallel, one lens each. |
 | `/alterego mr [<iid>\|<url>]` | Remote MR/PR in an isolated worktree, measuring what breaks outside the diff. Nothing is posted without confirmation. |
 | `/alterego adr <decision>` | Structural decision with context, trade-offs, discarded options and reopening triggers. `adr review` says which triggers fired. |
 | `/alterego commit [<scope>]` | Commit message from the real diff, one intent per commit, Conventional Commits. Does not commit without the yes. |
