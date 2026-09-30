@@ -15,11 +15,28 @@ session's history.
    handoff that it was not independent.
    When the diff crosses the threshold in
    [review-squad.md](../review-squad.md#1-when-the-squad-runs), dispatch the squad
-   instead of the single reviewer below, with the plan (and the spec, on the
-   architectural path) as its written criteria, so the Acceptance lens runs.
-3. **Act on the verdict.** Critical: fix now. Warning: fix before step 6. Note:
-   record it. When the reviewer is wrong, answer with the code or the test that
-   shows it, not with an opinion.
+   instead of the single reviewer below, with the written criteria — the plan
+   and the spec, or the bounded design from the chat — so the Acceptance lens
+   runs.
+3. **Act on the verdict** as in [Rework](#rework) below.
+
+## Rework
+
+A review that comes back is a list of findings, not a new task.
+
+1. **Critical and Warning are mandatory; Notes are optional** and go to the
+   handoff when left. A finding you think is wrong gets an answer with the code
+   or the test that shows it, never an opinion, and stays open until the user
+   agrees.
+2. **Fix only what the findings name.** No refactor, no improvement and no
+   renaming outside them, however tempting: they go to the handoff as notes. A
+   fix that changes behavior goes through step 4 — the failing test first.
+3. **Re-review only the fix.** Record `FIX_BASE=$(git rev-parse HEAD)` before
+   fixing; send `git diff $FIX_BASE` to the lenses that raised the findings,
+   with the findings attached, asking whether each one is closed.
+4. **Two rounds at most.** Findings still open after the second re-review stop
+   the loop: hand them to the user with what was tried. A third round of the
+   same argument is not progress.
 
 ## The reviewer's prompt
 
@@ -60,4 +77,5 @@ the risk and the fix, and one verdict from the table.
 ## Done when
 
 The reviewer's verdict is in the handoff, and no Critical or Warning finding is
-left open — each one fixed or answered with evidence.
+left open — each one fixed and re-reviewed, or answered with evidence — or the
+loop stopped at its second round and the open findings are with the user.
