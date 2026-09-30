@@ -6,6 +6,9 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 
 ## [Unreleased]
 
+### Changed
+- `study` suggests `forja` when the topic is "build X with Y" and `forja` is installed with a track for Y: you write the code, it guides and checks each Delivery. The catalog described `forja` as scaffolding and templates, the opposite of what it does; `sources.md`, the README and onboarding now describe it as mentorship tied to `study`.
+
 ## [3.2.0] - 2026-09-30
 
 Review goes to a squad of fresh reviewers, the session opens in one call, and working files live outside the repository.

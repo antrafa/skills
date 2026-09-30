@@ -328,7 +328,9 @@ difference between a diagnosis and a guess.
 **What you get:** first it aligns the mission (why you need this now), calibrates
 the depth by your repertoire, explains the mechanism without hermetic jargon,
 challenges you with Socratic questions to make it stick, and closes with
-**"In short"**.
+**"In short"**. When the topic is *"build X with Y"* and the partner skill
+`forja` is installed with a track for Y, it suggests that track once: you write
+the code, `forja` guides and checks.
 
 
 ---

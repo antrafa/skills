@@ -147,7 +147,7 @@ delivers the degraded version and offers the installation once per session.
 | `mentat` | Long-term memory across sessions | [github.com/antrafa/mentat](https://github.com/antrafa/mentat) |
 | `doc-digest` | Visual digest of AI-generated docs | [github.com/antrafa/doc-digest](https://github.com/antrafa/doc-digest) |
 | `lapida` | Refining a raw idea into a viable, testable proposal | [github.com/antrafa/lapida](https://github.com/antrafa/lapida) |
-| `forja` | Scaffolding and architectural templates | [github.com/antrafa/forja](https://github.com/antrafa/forja) |
+| `forja` | Mentorship to learn by building: you write the code, it guides (`study`) | [github.com/antrafa/forja](https://github.com/antrafa/forja) |
 | `writing-for-agents` | Yardstick for writing skills and `AGENTS.md` | [github.com/mattpocock/skills](https://github.com/mattpocock/skills), a skill by Matt Pocock |
 | `cluster-analyzer`, `devops-expert`, `performance-architect`, `guardrails` | Evidence on infra, pipeline, performance and security | internal to your organization, if they exist; without them, the [public fallbacks from skills.sh](references/onboarding.md#public-fallback-for-the-internal-skills) |
 

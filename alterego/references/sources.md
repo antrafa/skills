@@ -89,7 +89,7 @@ mapped in the catalog is not offered: mention it only if it is already present.
 | Durable history and profile: past decisions and preferences | `mentat` | `~/.mentat/entries/*.md`, `profile.md` | local fallback in `~/.alterego/` |
 | Strict security check, linter and guardrails | `guardrails` | compliance / linter reports | [public fallback](onboarding.md#public-fallback-for-the-internal-skills) for the git layer (hook); the rest is already a rule of this skill; manual check of patterns and diff |
 | Pedagogical structuring, ZPD and learning progression | `teach` *(if installed)* | `MISSION.md`, `lessons/*.html` | `references/playbook-study.md` inline |
-| Scaffolding, standardization and architectural templates | `forja` *(if installed)* | code skeletons / templates | manual creation from local patterns |
+| Learning a framework by building with it, the student writing the code (study) | `forja` *(if installed, with a matching track)* | `~/.forja/progress/<track>.md` | `references/playbook-study.md` inline |
 | Investigation and deep reading of RFCs, papers and docs | `research` *(subagent, if available)* | synthesized research report | web search or direct reading of the source |
 | Visual digest of SDDs, ADRs, plans and AI-generated docs | `doc-digest` *(or `/alterego digest`)* | visual digest with Mermaid and decision matrix (or `docs/digests/*.html`) | bullet summary and inline mermaid in the chat |
 | Refining a raw idea into a viable, testable proposal (problem, riskiest assumption, next test) | `lapida` *(or `/alterego idea`)* | `ideas/<slug>.md` with the four phases and a go / pivot / stop recommendation | the four phases inline in the chat, without the idea file ([playbook-idea.md](playbook-idea.md#2-degraded-path-without-the-skill)) |

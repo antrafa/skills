@@ -96,7 +96,7 @@ the "yes"** for that set. Never install on your own initiative.
 | Skill | What it solves | Repository |
 |---|---|---|
 | `mentat` | Long-term memory, decisions and preferences across sessions | [github.com/antrafa/mentat](https://github.com/antrafa/mentat) |
-| `forja` | Scaffolding, standardization and architectural templates | [github.com/antrafa/forja](https://github.com/antrafa/forja) |
+| `forja` | Mentorship to learn by building — the student writes the code, it guides (`study`) | [github.com/antrafa/forja](https://github.com/antrafa/forja) |
 | `doc-digest` | 30-60s visual digest of AI-generated docs (SDD, ADR, plans) | [github.com/antrafa/doc-digest](https://github.com/antrafa/doc-digest) |
 | `lapida` | Refines a raw idea into a viable, testable proposal (EXPLORE, CHALLENGE, REFINE, FIT) | [github.com/antrafa/lapida](https://github.com/antrafa/lapida) |
 | `cluster-analyzer` | Read-only diagnosis of Kubernetes/Rancher clusters | *(internal to your organization, if it exists)* |
@@ -152,7 +152,7 @@ installation list**: mention it only if it is already present in the environment
    ```text
    Partner skills to equip your environment:
    1. [✓ installed]  mentat                — long-term memory
-   2. [available]    forja                 — scaffolding and templates
+   2. [available]    forja                 — learn by building, you write the code
    3. [available]    doc-digest            — visual digest of AI-generated docs (30-60s)
    4. [available]    lapida                — refines a raw idea into a testable proposal
    5. [✓ installed]  cluster-analyzer      — K8s cluster diagnosis
