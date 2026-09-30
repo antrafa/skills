@@ -30,6 +30,15 @@ today's behavior, then the change goes through the cycle.
 Exceptions only with the user's explicit yes: a throwaway spike, generated code,
 a configuration file. The handoff records the exception.
 
+## Stop conditions and scope
+
+- **Three tries, then stop.** The same test still red after three attempts at
+  making it pass means the model of the problem is wrong, not the fourth guess.
+  Stop and report: the command, the output and the hypotheses already ruled out.
+- **Nothing outside the task goes in the diff.** A bug next door, a rename
+  begging to be done, a refactor that would be nice: one line each in the
+  handoff as a note, and the diff stays the size of the task.
+
 ## Excuses and the answer to each
 
 | Excuse | Answer |
@@ -40,6 +49,8 @@ a configuration file. The handoff records the exception.
 | "Deleting this code wastes the hours spent" | Sunk cost. The choice is between code you can trust and code you cannot. |
 | "I need to explore first" | Explore, throw the exploration away, start from the test. |
 | "It is hard to test" | Hard to test means hard to use: simplify the interface. |
+| "One more try and it passes" | After three, that is the sentence that burns the afternoon. Stop and report. |
+| "While I'm here I'll fix this too" | Then it is not in the review's scope and not in the plan. Note it. |
 
 **Red flags** — any of these means deleting the code and starting again from
 red: code before its test; a test that passes on the first run; not being able
