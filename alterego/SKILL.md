@@ -29,7 +29,9 @@ the conversation.
 
 ## Personal context and continuity
 
-On the first activation of the session, resolve the developer's profile in this order:
+The first time a task in the session needs the developer's criteria, resolve their
+profile in this order. `/alterego`, `start` and `help` only configure or list, so
+they do not read it; opening the session costs one tool call, not a profile load.
 1. `~/.mentat/profile.md` (and `~/.mentat/core-memory.md`), if Mentat is available;
 2. `~/.alterego/profile.md`, as the standalone local fallback;
 3. This skill's default criteria and DNA, if no profile is found.
@@ -79,9 +81,24 @@ the obvious target from context (open file, MR of the current branch, incident
 under discussion) and say which one you assumed, or ask a single time if there is
 no context at all. Subcommands and persona names are English-only.
 
-`/alterego` with nothing after it opens the session without asking anything:
-guardrails and plain explanations on, then the command list — see
-[playbook-start.md](references/playbook-start.md#bare-invocation-alterego).
+`/alterego` with nothing after it opens the session without asking anything and
+without reading any reference. The only tool call is invoking `guardrails` (its
+rules are in [playbook-start.md](references/playbook-start.md#1-arm-the-guardrails),
+read only if the skill is missing). Plain explanations go on, the lens stays the
+default clone and digest stays off. Then write the session line and the command
+list:
+
+```markdown
+Session open. Guardrails: **on**. Explanations: **plain**. Lens: default clone (`/alterego persona <name>` to swap).
+```
+
+In a session already open, it only shows the list again; it re-arms nothing.
+
+**The command list** (also what `help` shows) is rendered from the map below,
+already in context: three columns `Subcommand` | `Argument` | `What it does`,
+the *Conduct* column compressed to one line, every row that has a subcommand and
+none that does not, in map order, nothing invented. Footer: *Type
+`/alterego help <cmd>` to see full details of any command.*
 
 ### Intent map
 

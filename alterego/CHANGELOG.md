@@ -9,6 +9,9 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 ### Added
 - `/alterego` with no subcommand opens the session without asking anything: it arms `guardrails`, turns on plain explanations, keeps the default clone with digest off and shows the command list from `help`. In a session already open it only shows the list. Eval 39 covers it.
 
+### Changed
+- Opening the session is faster. `/alterego` and `/alterego help` answer from `SKILL.md` alone, where the command list rules now live, and their only tool call is invoking `guardrails`. `start` runs in one turn, with the `guardrails` call and the persona catalog read in parallel. The profile is resolved the first time a task needs it, not when the session opens.
+
 ## [3.1.0] - 2026-09-28
 
 The Dev Pipeline runs on its own discipline, with no plugin, and the session opens in plain language.
