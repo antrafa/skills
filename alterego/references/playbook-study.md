@@ -57,6 +57,18 @@ On receiving the command `/alterego study <topic>` or a learning intent ("I want
 Find out the motive and the familiarity with the topic in 1 or 2 short questions:
 > *"What got you studying [topic] today? Do you already have some familiarity with [base concept], or do we start straight from how it works under the hood?"*
 
+**Learning by building: suggest `forja`.** When the topic is shaped like *"build
+X with Y"* ("build an agent with Mastra", "learn the Vercel AI SDK by making a
+chatbot"), detect `forja` as in [sources.md](sources.md#missing-catalog-skill-degrade-deliver-offer)
+and list its `tracks/`. Suggest it in one line only if it is installed **and** a
+track covers Y — a track-less path has no tested acceptance bars:
+> *"There's a `forja` track for this: you write the code, it guides and checks each Delivery. Want `/forja <track>` instead?"*
+
+On a yes, hand off to `/forja <track>` and stop this playbook. On a no, or when
+the skill or the track is missing, go on here without mentioning it again this
+session. `forja` never writes the code; if the user wants the thing built for
+them, this is not a study session — take the *Do, fix, implement* route.
+
 ### Step 2: Short, Dense Conceptual Block
 Explain **a single key concept** at a time. Focus on the *mechanism*, the guarantees and the real trade-offs.
 - What does it solve?
