@@ -6,6 +6,10 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 
 ## [Unreleased]
 
+## [3.2.0] - 2026-09-30
+
+Review goes to a squad of fresh reviewers, the session opens in one call, and working files live outside the repository.
+
 ### Added
 - `/alterego` with no subcommand opens the session without asking anything: it arms `guardrails`, turns on plain explanations, keeps the default clone with digest off and shows the command list from `help`. In a session already open it only shows the list. Eval 39 covers it.
 - Review squad: `/alterego review` with no target reviews the work on the current branch, commits since the base plus what is not committed. A diff over ~150 lines or 5 files, or one that touches infrastructure, goes to up to five fresh reviewers in parallel, one lens each — correctness, conformance, security, state and rollback, tests, architecture, acceptance against a spec or plan. They see the diff and never the session, report only findings with confidence 75 or more, and every Critical and Warning is checked against the code before it is shown. `dev review` uses the squad on the same threshold. Lenses in `references/review-squad/`; the mechanisms (one closed scope per reviewer, confidence floor, self-validation, merge by file and line) are adapted from another review agents, rewritten. Eval 40 covers it.
