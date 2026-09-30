@@ -60,7 +60,7 @@ read as a free-form request and routed by intent.
 | `/alterego refactor` | `<goal>` | Structural refactor by the Mikado Method |
 | `/alterego daily` | `[<overview>]` | Organize the day and prioritize |
 | `/alterego wrap` | `[<notes>]` | Close the day and record what is pending |
-| `/alterego review` | `<file\|diff>` | Local code review |
+| `/alterego review` | `[<file\|diff>]` | Local code review; no target reviews the current branch's work, a large diff goes to the review squad |
 | `/alterego mr` | `[<iid>\|<url>]` | Evaluate a remote MR/PR and measure impact |
 | `/alterego adr` | `<decision>` \| `review` | Structural decision with recorded rationale, or a review of the triggers |
 | `/alterego commit` | `[<scope>]` | Commit message from the diff |
@@ -210,16 +210,28 @@ editing the MR on the remote is an external action: only with the "yes".
 
 ---
 
-### `/alterego review <target>` — local code review
+### `/alterego review [<target>]` — local code review
 
-For a file, a local diff or an implementation proposal. For a remote MR/PR, use
-`mr` (next section).
+For a file, a local diff, an implementation proposal, or the work a session left
+on the branch. For a remote MR/PR, use `mr` (next section).
 
 ```
 /alterego review src/services/BillingService.java
 /alterego review the diff of the current branch, focus on concurrency
-/alterego review                          (assumes the diff/file from context)
+/alterego review                          (the current branch's work: commits since the base + uncommitted)
+/alterego review with the squad           (forces the squad, whatever the size)
 ```
+
+**The review squad.** When the diff is large (more than ~150 lines or 5 files)
+or touches infrastructure — manifests, Helm, compose, Terraform, CI, deploy or
+database scripts — the review goes to fresh reviewers running in parallel, each
+with one lens: correctness, conformance with the repository's rules, security,
+state and rollback, tests, architecture, and acceptance against a spec or plan
+when there is one. They see only the diff, never the session, so they review
+what was written and not what was meant. Each finding is checked against the
+code before it reaches you, and the verdict says which lenses ran, which were
+left out and how many findings were dropped. Details in
+[review-squad.md](references/review-squad.md).
 
 **What you get:** a hunt for concurrency, N+1, ORM abuse, resource leaks,
 security and scope, with the smallest diff that solves it. If the code is clean,
@@ -429,7 +441,7 @@ do straight on the main branch.
 | 2 | Plan | `dev plan` / `dev 2` | Plan in `docs/plans/` approved by you |
 | 3 | Isolation | `dev worktree` / `dev 3` | Worktree created with confirmed name and base, baseline build green |
 | 4 | TDD | `dev tdd` / `dev 4` | Each behavior seen red then green, suite green, no skipped test |
-| 5 | Review | `dev review` / `dev 5` | Review by a fresh reviewer, no critical or warning finding left open |
+| 5 | Review | `dev review` / `dev 5` | Review by a fresh reviewer (the squad, for a large diff), no critical or warning finding left open |
 | 6 | Verification | `dev verify` / `dev 6` | Build, lint and tests with exit code 0 in the handoff |
 | 7 | Delivery | `dev finish` / `dev 7` | PR description ready and learning saved in Mentat |
 
