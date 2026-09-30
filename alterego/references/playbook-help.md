@@ -23,21 +23,10 @@ $alterego help <cmd>
 
 ## 1. `/alterego help` (No Arguments) — The Quick Summary
 
-When the user types just `/alterego help`, **render the
-Intent map from [SKILL.md](../SKILL.md)**, which is already in context, in three
-columns: `Subcommand` | `Argument` | `What it does`,
-compressing the map's *Conduct* column into one line each.
-
-Rendering rules:
-
-- **Every map row that has a subcommand goes in**, including `help`. A row without a subcommand (free-form request) stays out — the
-  user asked for the list of commands.
-- Map order, preserved. No invented command that is not there.
-
-The map is the skill's only list of commands. Keeping a second copy here
-guarantees that one of the two goes stale.
-
-*Footer tip:* Type `/alterego help <cmd>` to see full details of any command.
+Render the command list as defined in [SKILL.md](../SKILL.md#routing), from the
+Intent map already in context. The rendering rules live there, next to the map,
+so that `/alterego` and `/alterego help` answer without reading this file. The
+map is the skill's only list of commands; a second copy here would go stale.
 
 ---
 

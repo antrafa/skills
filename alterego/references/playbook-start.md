@@ -24,18 +24,20 @@ In Codex: `$alterego start`.
 
 ### Bare invocation (`/alterego`)
 
-The user typed only the skill name, so they want to see what it does, not
-answer a form. Run §1, turn on [plain explanations](calibration.md#plain-explanations),
-skip §2 — default clone, digest off — and in place of §3's closing lines render
-the command list exactly as `/alterego help` does
-([playbook-help.md](playbook-help.md#1-alterego-help-no-arguments-the-quick-summary)).
-Open with one line of session state, the guardrails wording from §3 included:
+Defined in [SKILL.md](../SKILL.md#routing), so it runs without opening this
+file: §1 below, no §2, the session line and the command list.
 
-```markdown
-Session open. Guardrails: **on**. Explanations: **plain**. Lens: default clone (`/alterego persona <name>` to swap).
-```
+## Speed: one turn, no extra reads
 
-In a session already open, it only shows the list again; it re-arms nothing.
+`start` is what the user waits on before any work, so it runs in a single turn
+with its calls in parallel:
+
+- the `Skill` call for `guardrails`;
+- the read of the catalog in [playbook-persona.md](playbook-persona.md#2-available-persona-catalog);
+- the listing of `~/.alterego/personas/`.
+
+It does not read the profile, the memory or the repository — nothing in §2 or §3
+depends on them. `start <persona>` and `start none` skip the catalog read.
 
 ---
 
@@ -48,7 +50,8 @@ that never generalizes to the next one, the diff shown before a sensitive file i
 written, dependency changes confirmed, and the consequence stated in the question
 itself rather than a bare "may I run X?".
 
-1. **Detect it** the same way as any catalog skill — the loop in
+1. **Detect it.** When the harness lists the available skills in context (Claude
+   Code does), look there: no read, no search. Otherwise use the loop in
    [sources.md](sources.md#missing-catalog-skill-degrade-deliver-offer).
 2. **Invoke it.** On Claude Code, the `Skill` tool with `guardrails`. On a
    harness with no skill tool, read its `SKILL.md` and apply it for the rest of
