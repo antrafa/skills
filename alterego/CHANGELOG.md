@@ -12,6 +12,7 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 
 ### Changed
 - Working files leave the repository. Specs, plans, Mikado graphs, tours and analyses go to `~/.alterego/work/<project>/`, where `<project>` is the main checkout's directory name, shared by its worktrees; they used to default to `docs/specs/`, `docs/plans/`, `docs/refactor/`, `docs/tour-project/` and `docs/project-analyser/` inside the repository. A path the user names still wins. No step needs an issue or a tracker.
+- `dev` conception asks less and pins more. Questions come in one numbered round grouped by scope, actors, constraints, and data and integrations, after a hypothesis of the impact and a check that nothing already answers them, with three rounds at most. The bounded path's design in the chat now has a fixed shape — current, expected, probable files, the test that goes red first and one to three acceptance criteria — so review's Acceptance lens has a contract on ordinary work too. The architectural spec gains current and expected behavior, scope in and out, probable files, risks and the sources actually read.
 - Opening the session is faster. `/alterego` and `/alterego help` answer from `SKILL.md` alone, where the command list rules now live, and their only tool call is invoking `guardrails`. `start` runs in one turn, with the `guardrails` call and the persona catalog read in parallel. The profile is resolved the first time a task needs it, not when the session opens.
 
 ## [3.1.0] - 2026-09-28
