@@ -7,6 +7,22 @@ Save it in `~/.alterego/work/<project>/plans/YYYY-MM-DD-<feature>.md`, outside t
 ([where and why](../archive.md#working-files-outside-the-repository-always)). A spec covering independent subsystems becomes one plan per subsystem,
 each producing working, testable software on its own.
 
+## Splitting a delivery
+
+**One plan covers one repository and one stack.** A change that needs the
+environment repository and the legacy application, or the back end and the front
+end of the same repository, becomes two plans. Each one carries:
+
+- **Contracts with its siblings** — endpoint, event, payload, file format,
+  environment variable, version — written the same way in both plans. A plan
+  that depends on a contract no plan defines is not ready.
+- **Only its own criteria**, by ID, from the spec; when none is specific to it,
+  the end-to-end happy path, marked as such.
+- **Order** — which plan has to land first, and what the other one runs against
+  until then.
+- **Out of scope** pointing to the sibling: "the new endpoint: see
+  `plans/2026-09-30-portal-api.md`".
+
 ## Structure
 
 **Header:**
