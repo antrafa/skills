@@ -3,8 +3,8 @@
 The plan is written for an engineer who knows the craft but not this codebase
 nor this problem. It argues from the spec, and the spec travels with it.
 
-Save it in `docs/plans/YYYY-MM-DD-<feature>.md` (the user's preferred location
-wins). A spec covering independent subsystems becomes one plan per subsystem,
+Save it in `~/.alterego/work/<project>/plans/YYYY-MM-DD-<feature>.md`, outside the repository
+([where and why](../archive.md#working-files-outside-the-repository-always)). A spec covering independent subsystems becomes one plan per subsystem,
 each producing working, testable software on its own.
 
 ## Structure

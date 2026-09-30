@@ -11,6 +11,13 @@ answer, six months later, *"why did we pick this?"* without rebuilding the reaso
 ├── profile.md                            # only without Mentat (see SKILL.md)
 ├── journal.md                            # only without Mentat: /alterego wrap closings, one section per date
 ├── personas/                             # custom personas, created by /alterego persona new
+├── work/                                 # working files, one folder per project (below)
+│   └── <project>/
+│       ├── specs/                        # dev step 1, architectural path
+│       ├── plans/                        # dev step 2
+│       ├── mikado/                       # refactor graphs
+│       ├── tours/                        # tour-project
+│       └── analyses/                     # project-analyser
 └── decisions/
     └── 2026-09-11-queue-notifications/
         ├── adr.md                        # the record (canonical)
@@ -33,6 +40,28 @@ decision that was never recorded.
 Describes **the decision**, not the problem. `queue-notifications`, not
 `slow-checkout`. You find a problem again by its text; you find a decision again
 by its name. Lowercase, hyphens, no accents.
+
+## Working files: outside the repository, always
+
+Specs, plans, Mikado graphs, tours and analyses are the developer's working
+material, not the project's. They go to `~/.alterego/work/<project>/`, never into
+the repository and never into a tracker: the developer opens a terminal and starts
+working, with no issue to create and nothing to clean out of the diff before the
+MR.
+
+- **`<project>`** is the name of the main checkout's directory, so every worktree
+  of the same repository shares one folder:
+  `basename "$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"`.
+  Outside a git repository, the name the user gives the work.
+- **File names** keep the date first: `specs/2026-09-30-<topic>-design.md`,
+  `plans/2026-09-30-<feature>.md`, `mikado/<slug>.md`, `tours/tour.md`,
+  `analyses/analysis.md`.
+- **A path the user names wins**, including one inside the repository. That is
+  their call; never the default.
+- Create the folders on the first write, without announcing it.
+- **The repository only receives** what the task changes on purpose: code,
+  tests, configuration, and a document the user asked for as part of the
+  delivery.
 
 ## ADR.md frontmatter
 

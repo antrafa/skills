@@ -79,7 +79,7 @@ breaks things **outside the file being changed**. Before starting:
 
 ## 2. The graph on disk
 
-Save it at `docs/refactor/<slug>-mikado.md` and update it **on every commit**,
+Save it at `~/.alterego/work/<project>/mikado/<slug>.md` ([outside the repository](archive.md#working-files-outside-the-repository-always)) and update it **on every commit**,
 so an interrupted session can be picked up without replaying the history:
 
 ```markdown

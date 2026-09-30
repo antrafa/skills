@@ -32,8 +32,8 @@ a path — stop and say so; nothing moves down.
    comparison as in [playbook-decision.md](../playbook-decision.md).
 4. **Design in sections** sized to their complexity — components, data flow,
    errors, tests — confirming each section before the next.
-5. **Write the spec** in `docs/specs/YYYY-MM-DD-<topic>-design.md` (the user's
-   preferred location wins). It carries the chosen approach and the discarded
+5. **Write the spec** in `~/.alterego/work/<project>/specs/YYYY-MM-DD-<topic>-design.md`, outside the
+   repository ([where and why](../archive.md#working-files-outside-the-repository-always)). It carries the chosen approach and the discarded
    ones, and the **acceptance criteria**, numbered and observable:
    `AC-01: given <context>, when <action>, then <result>`.
 6. **Self-review the spec:** any TBD or vague requirement, sections that

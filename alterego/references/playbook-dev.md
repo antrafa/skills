@@ -39,8 +39,8 @@ between the plan's version and the lockfile's is a finding for step 5.
 
 | # | Step | Subcommand | Discipline | Golden rule | Exit gate |
 |---|---|---|---|---|---|
-| 1 | Conception | `dev brainstorming` / `dev 1` | [conception.md](dev/conception.md) | No plan or code before understanding the real pain, the constraints and 2 to 3 approaches with trade-offs. | Approach chosen with the rationale recorded; on the architectural path, spec in `docs/specs/` reviewed by the user. |
-| 2 | Plan | `dev plan` / `dev 2` | [plan.md](dev/plan.md) | Atomic tasks, exact files, acceptance criteria per task. The first delivery is a **walking skeleton**: the thinnest slice that runs end to end, never the easiest layer. | Plan saved in `docs/plans/` and approved by the user. |
+| 1 | Conception | `dev brainstorming` / `dev 1` | [conception.md](dev/conception.md) | No plan or code before understanding the real pain, the constraints and 2 to 3 approaches with trade-offs. | Approach chosen with the rationale recorded; on the architectural path, spec in `~/.alterego/work/<project>/specs/` reviewed by the user. |
+| 2 | Plan | `dev plan` / `dev 2` | [plan.md](dev/plan.md) | Atomic tasks, exact files, acceptance criteria per task. The first delivery is a **walking skeleton**: the thinnest slice that runs end to end, never the easiest layer. | Plan saved in `~/.alterego/work/<project>/plans/` and approved by the user. |
 | 3 | Isolation | `dev worktree` / `dev 3` | [worktree.md](dev/worktree.md) | Never develop on the main branch. | Worktree or branch created **with name and base confirmed** and baseline build green. |
 | 4 | TDD | `dev tdd` / `dev 4` | [tdd.md](dev/tdd.md) | Test fails first, minimal code to pass, safe refactoring. | Each behavior seen red then green; suite green, no skipped test. |
 | 5 | Review | `dev review` / `dev 5` | [review.md](dev/review.md) | A fresh reviewer applies the [playbook-review.md](playbook-review.md) yardstick to the branch diff. | No critical or warning finding left open. |
@@ -87,7 +87,7 @@ the next action.
 
 - **`/alterego dev` with no argument:** show the map of the seven steps in a
   short table, detect which one the current work seems to be in (branch,
-  existing plan in `docs/plans/`, red tests) and propose the step.
+  existing plan in `~/.alterego/work/<project>/plans/`, red tests) and propose the step.
   If there is no context, ask once what the task is.
 - **`/alterego dev <step>`:** take over that step. Read its discipline file,
   when it has one, in full; execute, and only declare the step
@@ -130,8 +130,8 @@ is already persisted on disk.
 
 ### When to announce a Safe Context-Clear:
 
-1. **On finishing step 1 (Conception):** approach and rationale saved (the spec in `docs/specs/`, or `CONTEXT.md` updated).
-2. **On finishing step 2 (Plan):** plan saved in `docs/plans/*.md` or tickets defined.
+1. **On finishing step 1 (Conception):** approach and rationale saved (the spec in `~/.alterego/work/<project>/specs/`, or the design approved in the chat).
+2. **On finishing step 2 (Plan):** plan saved in `~/.alterego/work/<project>/plans/`.
 3. **On finishing step 4 (TDD):** minimal code and green suite committed in the worktree.
 4. **On finishing step 6 (Verification):** build, lint and tests validated with exit code 0.
 

@@ -123,7 +123,7 @@ Full flow in [playbook-start.md](references/playbook-start.md).
 
 **What you get:** the Mikado Method. The change is attempted in the most naive
 way, the breakage is collected, and the attempt is **reverted** — each error
-becomes a prerequisite in a graph saved at `docs/refactor/<slug>-mikado.md`.
+becomes a prerequisite in a graph saved at `~/.alterego/work/<project>/mikado/<slug>.md`.
 Then it goes from the leaves up: each one an independent `refactor:` commit with
 the suite green, and the behavior change only in the last commit.
 
@@ -437,8 +437,8 @@ do straight on the main branch.
 
 | # | Step | Subcommand | Exit gate |
 |---|---|---|---|
-| 1 | Conception | `dev brainstorming` / `dev 1` | Approach chosen with recorded rationale; spec in `docs/specs/` on the architectural path |
-| 2 | Plan | `dev plan` / `dev 2` | Plan in `docs/plans/` approved by you |
+| 1 | Conception | `dev brainstorming` / `dev 1` | Approach chosen with recorded rationale; spec in `~/.alterego/work/<project>/specs/` on the architectural path |
+| 2 | Plan | `dev plan` / `dev 2` | Plan in `~/.alterego/work/<project>/plans/` approved by you |
 | 3 | Isolation | `dev worktree` / `dev 3` | Worktree created with confirmed name and base, baseline build green |
 | 4 | TDD | `dev tdd` / `dev 4` | Each behavior seen red then green, suite green, no skipped test |
 | 5 | Review | `dev review` / `dev 5` | Review by a fresh reviewer (the squad, for a large diff), no critical or warning finding left open |
@@ -452,7 +452,7 @@ that already has a plan is normal use.
 On every interaction of the `dev` pipeline, the persona displays the **Roadmap
 Widget** showing:
 - **Current step** and **next step** with progress icons (`✅`, `⏳`, `⏹️`).
-- **Safe Context-Clear Point:** when an artifact is saved to disk (plan in `docs/plans/`, green suite committed or verification finished), the persona actively tells you that you can `/clear` or open a new session, and gives the exact command to resume without carrying polluted history.
+- **Safe Context-Clear Point:** when an artifact is saved to disk (plan in `~/.alterego/work/<project>/plans/`, green suite committed or verification finished), the persona actively tells you that you can `/clear` or open a new session, and gives the exact command to resume without carrying polluted history.
 
 **In step 7:** commit, push and opening the PR each require a "yes". Merge is
 never an action of the persona.
@@ -465,8 +465,8 @@ Turns dense AI-generated documents (SDDs, ADRs, implementation plans, specs) int
 **30-to-60-second visual digests**, using the partner skill `doc-digest`:
 
 ```
-/alterego digest docs/plans/2026-09-19-feature.md
-/alterego digest docs/specs/sdd-payments.md --html
+/alterego digest ~/.alterego/work/portal/plans/2026-09-19-feature.md
+/alterego digest ~/.alterego/work/payments/specs/2026-09-18-sdd-design.md --html
 ```
 
 - **Mermaid is mandatory:** draws a flowchart, sequence diagram or component architecture.
@@ -507,7 +507,7 @@ senior tech lead were sitting next to you explaining the system from scratch:
 - **Structure & Critical Points:** controllers, services, stores, queues, APIs and database, with clickable `file:///...` links.
 - **Flow in Mermaid:** visual diagram of the request end to end.
 - **Ideal study order:** numbered script from the 1st to the 7th file to master the project fast.
-- **Saving:** by default saves to `docs/tour-project/tour-[project].md` as the fallback, or wherever you ask.
+- **Saving:** by default saves to `~/.alterego/work/<project>/tours/tour.md`, outside the repository, or wherever you ask.
 
 ---
 
@@ -525,7 +525,7 @@ security, business rules, test quality and production risks:
 - **Business rule mapping:** decodes implicit and explicit rules from the code.
 - **Test diagnosis:** identifies gaps and "theatrical tests" (that mock everything and guarantee no real behavior).
 - **Manual test guide:** generates a complete step-by-step script with scenarios, preconditions and expected results.
-- **Full report:** lists findings with severity, impact and suggested fix, saving to `docs/project-analyser/analysis-[project].md` as the fallback (or wherever you indicate).
+- **Full report:** lists findings with severity, impact and suggested fix, saving to `~/.alterego/work/<project>/analyses/analysis.md`, outside the repository (or wherever you indicate).
 
 ---
 

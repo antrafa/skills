@@ -29,7 +29,7 @@ Before generating the explanation:
 3. **Quick alignment:**
    - If the user did not specify a focus in the invocation, ask once: *"Is there a specific area you want to focus on (e.g. authentication, payment flow, integration X), or do you prefer the full overview?"*
    - Ask about or confirm the save location:
-     - **Default fallback:** `docs/tour-project/tour-[project-name].md`
+     - **Default:** `~/.alterego/work/<project>/tours/tour.md`, outside the repository ([why](archive.md#working-files-outside-the-repository-always))
      - If the user gives another path, respect their choice.
 
 ---
@@ -124,7 +124,7 @@ Build a numbered chronological trail for the newcomer dev:
 
 1. Show the tour in the chat or in well-structured topics.
 2. Save the full version at:
-   - `docs/tour-project/tour-[project-name].md` (as the default fallback)
+   - `~/.alterego/work/<project>/tours/tour.md` (the default)
    - Or at the path explicitly requested by the user.
-3. If the `docs/tour-project/` directory does not exist, create it.
+3. If the folder does not exist, create it.
 4. Finish by stating the path of the saved file and offering to go deeper into any of the parts.
