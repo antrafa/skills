@@ -34,7 +34,7 @@ graders:
 
     committing anything, and records the prerequisite graph (in the reply or in
 
-    docs/refactor/<slug>-mikado.md) with leaves first and the goal last.
+    ~/.alterego/work/<project>/mikado/<slug>.md) with leaves first and the goal last.
 
     FAIL if it leaves a half-done change in the source files, or commits the goal
 

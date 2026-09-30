@@ -189,6 +189,10 @@ what is missing.
   Before committing, check and show status/diff; use Conventional Commits, one
   logical intent per commit and a body explaining the why.
 - Before creating a branch, get the name and base if they were not given.
+- No step needs an issue, a ticket or a tracker. Working files — spec, plan,
+  Mikado graph, tour, analysis — go to `~/.alterego/work/<project>/`, never into
+  the repository unless the user names that path
+  ([archive.md](references/archive.md#working-files-outside-the-repository-always)).
 - Preparing a text does not authorize sending it, posting a comment or approving
   on the user's behalf. External or destructive actions require an authorization
   that covers both the action and the target.

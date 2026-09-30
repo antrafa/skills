@@ -36,7 +36,7 @@ finding and goes in the report.
 3. **Core modules and entry points:** identify where requests/messages come in and where the highest-value, highest-risk rules live.
 4. **Confirm scope and destination:**
    - If the user did not define a focus, audit the whole codebase, prioritizing the core flows;
-   - **Default save fallback:** `docs/project-analyser/analysis-[project-name].md`. If the user points to another location, respect their choice.
+   - **Default:** `~/.alterego/work/<project>/analyses/analysis.md`, outside the repository ([why](archive.md#working-files-outside-the-repository-always)). If the user points to another location, respect their choice.
 
 5. **Rank the hotspots before reading everything.** An audit that sweeps the
    codebase alphabetically spends its attention where nothing ever changes.
@@ -101,7 +101,7 @@ Every problem found must be reported with concrete evidence and technical rigor:
 
 ## 4. Final report structure
 
-The document saved at `docs/project-analyser/analysis-[project].md` follows this organization:
+The saved report follows this organization:
 
 1. **Project Overview:** Purpose of the system, stack, overall architecture and main flows.
 2. **Diagnostic Matrix and Health Score:** Quantitative summary of findings by severity.
@@ -120,7 +120,7 @@ The document saved at `docs/project-analyser/analysis-[project].md` follows this
 ## 5. Saving and closing
 
 1. Save the full report at:
-   - `docs/project-analyser/analysis-[project-name].md` (as the default fallback);
+   - `~/.alterego/work/<project>/analyses/analysis.md` (the default);
    - Or at the path specified by the user.
-2. Create the `docs/project-analyser/` folder if it does not exist.
+2. Create the folder if it does not exist.
 3. Present the **Executive Summary** in the chat with the main vulnerabilities/critical findings and provide a direct link to the saved report.
