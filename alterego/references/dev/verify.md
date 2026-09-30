@@ -22,6 +22,23 @@ evidence.
 | A subagent finished | The diff in version control, checked | The subagent saying it succeeded |
 | Plan delivered | The plan reread, item by item | Green tests |
 
+## Criteria check, before any commit
+
+Green tests prove the code does what the tests say, not what was asked. Before
+committing, reread every acceptance criterion — from the spec, the plan or the
+bounded design in the chat — and point to the code and the test that meet it:
+
+```markdown
+| Criterion | Status | Evidence |
+|---|---|---|
+| AC-01 | met | `src/auth/Token.java:42`, `TokenTest.expiredReturns401` |
+| AC-02 | not met | expiry handled, the 401 body is not |
+```
+
+One criterion not met sends the work **back to step 4**, not forward. No
+criteria at all is itself the finding: say that the delivery had no contract to
+check against.
+
 The architectural characteristic is verified by a fitness function, never by the
 suite — see *Step 6 in detail* in [playbook-dev.md](../playbook-dev.md#step-6-in-detail-the-fitness-function).
 
@@ -40,6 +57,7 @@ report without looking at the diff.
 
 ## Done when
 
-Build, lint, tests and the applicable fitness functions ran in this reply, and
-the handoff shows each command with its exit code — or states which one could
+Build, lint, tests and the applicable fitness functions ran in this reply, every
+criterion is met in the table above, and the handoff shows each command with its
+exit code — or states which one could
 not run and why.
