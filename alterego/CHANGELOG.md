@@ -12,6 +12,7 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 - `references/report-design.md`: the default design for HTML reports. When the user has their own `DESIGN.md`, the skill asks once which to use and records the answer in the profile.
 
 ### Changed
+- `/alterego` and `start` look for an open control report — current folder, repository, global folder — in parallel with arming `guardrails`, and offer once to resume from the most recent. A hand-written report in the current folder counts if it has a handoff. Eval 41 covers it.
 - `study` suggests `forja` when the topic is "build X with Y" and `forja` is installed with a track for Y: you write the code, it guides and checks each Delivery. The catalog described `forja` as scaffolding and templates, the opposite of what it does; `sources.md`, the README and onboarding now describe it as mentorship tied to `study`.
 
 ## [3.2.0] - 2026-09-30
