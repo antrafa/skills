@@ -6,6 +6,11 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 
 ## [Unreleased]
 
+### Added
+- `/alterego control [<goal>|<path>]`: one HTML control report per piece of work, updated in place — a handoff on top that a fresh session resumes from, the activities with state and evidence below. On creation it asks where to save: the repository's `.alterego/reports/` (kept out of git through `.git/info/exclude`) or `~/.alterego/work/<project>/reports/`, the default with no answer. Once it exists, `dev` updates it at each Safe Context-Clear point and `refactor` after each leaf. Eval 42 covers it.
+- `/alterego clear`: saves the handoff (asking whether to keep a report) and tells the user to type `/clear` and `/alterego`. Clearing is the harness's command; a skill cannot run it.
+- `references/report-design.md`: the default design for HTML reports. When the user has their own `DESIGN.md`, the skill asks once which to use and records the answer in the profile.
+
 ### Changed
 - `study` suggests `forja` when the topic is "build X with Y" and `forja` is installed with a track for Y: you write the code, it guides and checks each Delivery. The catalog described `forja` as scaffolding and templates, the opposite of what it does; `sources.md`, the README and onboarding now describe it as mentorship tied to `study`.
 

@@ -17,7 +17,8 @@ answer, six months later, *"why did we pick this?"* without rebuilding the reaso
 │       ├── plans/                        # dev step 2
 │       ├── mikado/                       # refactor graphs
 │       ├── tours/                        # tour-project
-│       └── analyses/                     # project-analyser
+│       ├── analyses/                     # project-analyser
+│       └── reports/                      # control reports (playbook-control.md)
 └── decisions/
     └── 2026-09-11-queue-notifications/
         ├── adr.md                        # the record (canonical)
@@ -55,7 +56,7 @@ MR.
   Outside a git repository, the name the user gives the work.
 - **File names** keep the date first: `specs/2026-09-30-<topic>-design.md`,
   `plans/2026-09-30-<feature>.md`, `mikado/<slug>.md`, `tours/tour.md`,
-  `analyses/analysis.md`.
+  `analyses/analysis.md`, `reports/2026-09-30-<slug>.html`.
 - **A path the user names wins**, including one inside the repository. That is
   their call; never the default.
 - Create the folders on the first write, without announcing it.

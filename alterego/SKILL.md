@@ -107,6 +107,8 @@ none that does not, in map order, nothing invented. Footer: *Type
 | Open the session: guardrails and lens | `start [<persona>\|none]` | Arm `guardrails` and plain explanations; ask once for the lens and whether long outputs default to a digest. | [playbook-start.md](references/playbook-start.md) |
 | Run the guided development pipeline (Dev Pipeline) | `dev [<step>]` | 7-step pipeline with its own discipline per step, one gate per step. | [playbook-dev.md](references/playbook-dev.md) |
 | Refactor something structural, especially in legacy | `refactor <goal>` | Mikado Method: attempt, revert, commit the leaves first, tree green throughout. | [playbook-refactor.md](references/playbook-refactor.md) |
+| Keep a control report across sessions: handoff on top, status of the activities | `control [<goal>\|<path>]` | Create (asking where to save) or update the work's HTML report from evidence; `dev` and `refactor` keep an existing one current. | [playbook-control.md](references/playbook-control.md) |
+| Hand the work over to a fresh session | `clear` | Update the report's handoff (asking whether to keep one), then tell the user to type `/clear` and `/alterego`. | [playbook-control.md](references/playbook-control.md#6-alterego-clear) |
 | Start or organize the day | `daily` | Prioritize the pending items and point out the first step. | [playbook-daily.md](references/playbook-daily.md) |
 | Close the day | `wrap [<notes>]` | Rebuild the day from evidence; record pending items only after a yes. | [playbook-daily.md](references/playbook-daily.md) |
 | Study, master a new topic | `study <topic>` | Calibrate depth to the user's repertoire, challenge Socratically, synthesize. | [playbook-study.md](references/playbook-study.md) |

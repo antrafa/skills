@@ -137,7 +137,9 @@ is already persisted on disk.
 
 ### Format of the clear notice:
 
-Whenever one of these milestones is reached, the persona **must** include:
+Whenever one of these milestones is reached, update the work's control report
+first, if it has one ([playbook-control.md](playbook-control.md#4-updating-it)),
+and the persona **must** include:
 
 ```markdown
 🧹 **Safe Context-Clear point:**
@@ -146,6 +148,10 @@ Whenever one of these milestones is reached, the persona **must** include:
 > To pick up exactly where we left off without loading heavy history:
 > `/alterego dev <next-step>`
 ```
+
+With a control report, the last two lines become: *Type `/clear`, then
+`/alterego` — it finds the report at `<path>` and offers to resume.* Without
+one, offer `/alterego control` once per pipeline, in one line.
 
 ---
 
