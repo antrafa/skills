@@ -81,18 +81,32 @@ the obvious target from context (open file, the current branch's work for
 `review`, MR of the current branch, incident under discussion) and say which one
 you assumed, or ask a single time if there is no context at all. Subcommands and persona names are English-only.
 
-`/alterego` with nothing after it opens the session without asking anything and
-without reading any reference. The only tool call is invoking `guardrails` (its
-rules are in [playbook-start.md](references/playbook-start.md#1-arm-the-guardrails),
-read only if the skill is missing). Plain explanations go on, the lens stays the
-default clone and digest stays off. Then write the session line and the command
-list:
+`/alterego` with nothing after it opens the session without reading any
+reference. Two tool calls, in parallel: invoking `guardrails` — mandatory on
+every opening; its rules are in
+[playbook-start.md](references/playbook-start.md#1-arm-the-guardrails), read
+only if the skill is missing — and the **report lookup** below. Plain
+explanations go on, the lens stays the default clone and digest stays off. Then
+write the session line, the command list and, last, the resume offer if the
+lookup found a report:
 
 ```markdown
 Session open. Guardrails: **on**. Explanations: **plain**. Lens: default clone (`/alterego persona <name>` to swap).
 ```
 
 In a session already open, it only shows the list again; it re-arms nothing.
+
+**Report lookup** (also run by `start`): find open control reports
+([playbook-control.md](references/playbook-control.md)) in, each folder once:
+`./.alterego/reports/*.html`; `./*.html` containing `handoff`, first level of
+the current folder only; `<repo root>/.alterego/reports/*.html`;
+`~/.alterego/work/<project>/reports/*.html`. Skip any whose
+`<meta name="alterego-status">` is `done`. Offer the most recent in one line —
+*Found the report \<slug\> (\<where it stopped\>, updated \<when\>). Resume from
+it?* — and cite the others by name. Yes → read only the block between
+`<!-- alterego:handoff -->` markers (the whole `<pre id="handoff">`, or the
+handoff section of an older report) and continue from its next step. No,
+silence or a task instead → open as usual. Ask once; nothing found, say nothing.
 
 **The command list** (also what `help` shows) is rendered from the map below,
 already in context: three columns `Subcommand` | `Argument` | `What it does`,

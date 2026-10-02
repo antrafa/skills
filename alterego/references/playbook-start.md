@@ -34,10 +34,12 @@ with its calls in parallel:
 
 - the `Skill` call for `guardrails`;
 - the read of the catalog in [playbook-persona.md](playbook-persona.md#2-available-persona-catalog);
-- the listing of `~/.alterego/personas/`.
+- the listing of `~/.alterego/personas/`;
+- the report lookup defined in [SKILL.md](../SKILL.md#routing).
 
 It does not read the profile, the memory or the repository — nothing in §2 or §3
-depends on them. `start <persona>` and `start none` skip the catalog read.
+depends on them; the lookup only lists folders. `start <persona>` and `start none`
+skip the catalog read.
 
 ---
 
@@ -149,6 +151,9 @@ Session open. Guardrails: **on** (confirmation per action, diff before writing).
 Lens: **appsec** — where uncontrolled data gets in, IDOR and abuse surfaces. Digest: **on**. Explanations: **plain**.
 To swap the lens: `/alterego persona <name>`. To go back to the clone: `/alterego persona reset`.
 ```
+
+If the lookup found an open report, its resume offer is the last line of this
+same message — one question, after the lens has been answered.
 
 Without the skill in the environment, the first line states what actually holds:
 

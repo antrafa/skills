@@ -1,0 +1,52 @@
+schema_version: '1.1'
+name: 41-bare-resumes-report
+description: Bare /alterego finds the open control report, skips the done one and offers to resume once.
+tags:
+- start
+- control
+execution:
+  prompt: /alterego
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Bash
+  - Skill
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: guardrails-invoked
+  type: regex
+  target: trace
+  pattern: guardrails
+  flags: i
+- name: no-write
+  type: tool_used
+  tool: Write
+  min: 0
+  max: 0
+- name: offers-open-report
+  type: regex
+  target: last_message
+  pattern: login-migration
+  flags: i
+- name: skips-done-report
+  type: regex
+  target: last_message
+  pattern: old-cache-cleanup
+  flags: i
+  match: not_contains
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if it opens the session (guardrails on, command list) and ends with a
+
+    single question offering to resume from the login-migration report, naming where it
+
+    stopped, without starting the work yet.
+
+    FAIL if it resumes without asking, offers the done report, or asks more than one question.'

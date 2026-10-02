@@ -107,7 +107,9 @@ are, a concrete situation, what it costs you, the proposal and the decision you
 need to make — numbers and tables only as support.
 
 It configures and gets out of the way: it does not organize the day, does not
-read the repository, does not propose work. If `guardrails` is not in the
+read the repository, does not propose work. The one thing it looks for is an
+open control report: if it finds one, the last line offers to resume from it
+(`/alterego` without a subcommand does the same). If `guardrails` is not in the
 environment, the session opens anyway and says what actually holds — this skill's
 own limits.
 
