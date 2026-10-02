@@ -109,7 +109,9 @@ the step is green and integrated.
 - **Work in a worktree**, per step 3 of [playbook-dev.md](playbook-dev.md).
   Mikado on a branch shared with someone else turns their day into a rebase.
 - **Report state in one line per interaction:** which node is open, how many
-  leaves are left, whether the tree is green.
+  leaves are left, whether the tree is green. If the work has a control report,
+  update it after each leaf committed
+  ([playbook-control.md](playbook-control.md#4-updating-it)).
 - **Stopping midway is legitimate and safe** — every leaf already committed is
   a standalone improvement. Say so explicitly when handing back: a graph with
   the goal still open is not an unfinished delivery, it is a smaller delivery.

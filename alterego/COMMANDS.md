@@ -58,6 +58,8 @@ read as a free-form request and routed by intent.
 | `/alterego start` | `[<persona>\|none]` | Open the session: arm the guardrails and pick the lens |
 | `/alterego dev` | `[<step>]` | 7-step guided development pipeline |
 | `/alterego refactor` | `<goal>` | Structural refactor by the Mikado Method |
+| `/alterego control` | `[<goal>\|<path>]` | Control report: handoff to resume in a fresh session, status of the activities |
+| `/alterego clear` | — | Save the handoff, then `/clear` and `/alterego` to resume |
 | `/alterego daily` | `[<overview>]` | Organize the day and prioritize |
 | `/alterego wrap` | `[<notes>]` | Close the day and record what is pending |
 | `/alterego review` | `[<file\|diff>]` | Local code review; no target reviews the current branch's work, a large diff goes to the review squad |
@@ -131,6 +133,36 @@ the suite green, and the behavior change only in the last commit.
 a defeat — and every discard is announced before it runs. It also does not start
 without a safety net: with no test that fails when the behavior changes, the
 first leaf is a characterization test.
+
+---
+
+### `/alterego control [<goal>]` and `/alterego clear` — carry the work across sessions
+
+```
+/alterego control login migration to the new identity provider
+/alterego control                      (updates the current work's report)
+/alterego clear                        (saves the handoff before you clear)
+```
+
+**What you get:** one HTML report per piece of work, updated in place. At the
+top, a handoff with a copy button: goal, where it stopped, next step, decisions
+already taken, files that matter, how to verify. Below, the activities with
+their state and evidence, the decisions and an update log. On creation it asks
+where to save — the repository's `.alterego/reports/` (kept out of git through
+`.git/info/exclude`) or `~/.alterego/work/<project>/reports/`, the default when
+you do not answer. The design is the skill's default, or your own `DESIGN.md`
+if you have one and prefer it.
+
+Once the report exists, `dev` updates it at each safe point to clear and
+`refactor` after each leaf. `/alterego` and `/alterego start` look for an open
+report in the current folder, the repository and the global folder, and offer
+to resume from it.
+
+**What it does not do:** clear the session for you. `/clear` is the harness's
+command and only you can type it; `clear` saves the handoff and tells you to
+type `/clear` and then `/alterego`.
+
+Full flow in [playbook-control.md](references/playbook-control.md).
 
 ---
 

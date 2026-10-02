@@ -91,6 +91,8 @@ to use" from the map and the "when NOT to use" from here.
 - **`mr`** vs. `review`: remote MR/PR by number or URL; for something not yet committed, `review`.
 - **`adr`** vs. trivial decision: reserved for a structural choice that is expensive to reverse; a narrow-scope implementation detail does not need an ADR.
 - **`refactor`** vs. `dev` / free-form request: the change that breaks things outside the file being touched and needs a prerequisite graph; a refactor that fits in one green step is a free-form request, and a refactor that is part of a feature being built is step 4 of `dev`.
+- **`control`** vs. `digest` / `daily`: the living record of one piece of work across sessions, rewritten in place; `digest` is a one-off reading of a document already written, and `daily` organizes the whole day, not one work.
+- **`clear`** vs. the harness's `/clear`: `clear` saves the handoff first and tells you what to type; the harness's `/clear` is what actually empties the context, and only you can type it.
 - **`daily`** vs. execution: organizes and prioritizes; does not implement code.
 - **`study`** vs. `tour-project`: learning a technology or a general concept; to understand the current project's codebase, `tour-project`.
 - **`sre`** vs. `review` / `dev`: a production symptom that demands measurement and rollback; a logic bug with no availability impact goes through `review` or `dev`.

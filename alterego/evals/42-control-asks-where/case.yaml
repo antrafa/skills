@@ -1,0 +1,43 @@
+schema_version: '1.1'
+name: 42-control-asks-where
+description: control on a new piece of work asks where to save before writing, offering repository and global.
+tags:
+- control
+execution:
+  prompt: /alterego control migrate login to the new identity provider
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Bash
+  - Skill
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-write
+  type: tool_used
+  tool: Write
+  min: 0
+  max: 0
+- name: offers-repository
+  type: regex
+  target: last_message
+  pattern: \.alterego/reports
+- name: offers-global
+  type: regex
+  target: last_message
+  pattern: alterego/work/
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if, before writing any file, it asks once where to save the report,
+
+    offering the repository (.alterego/reports/) and the global folder
+
+    (~/.alterego/work/<project>/reports/), and says global is the default with no answer.
+
+    FAIL if it writes the report without asking, or offers only one place.'
