@@ -33,7 +33,10 @@ A review that comes back is a list of findings, not a new task.
    fix that changes behavior goes through step 4 — the failing test first.
 3. **Re-review only the fix.** Record `FIX_BASE=$(git rev-parse HEAD)` before
    fixing; send `git diff $FIX_BASE` to the lenses that raised the findings,
-   with the findings attached, asking whether each one is closed.
+   with the findings attached, asking whether each one is closed. The Security
+   lens gets the fix diff too whenever it touches what triggers that lens in
+   [review-squad.md](../review-squad.md#3-pick-the-lenses): a fix opens a hole
+   as easily as any other change.
 4. **Two rounds at most.** Findings still open after the second re-review stop
    the loop: hand them to the user with what was tried. A third round of the
    same argument is not progress.

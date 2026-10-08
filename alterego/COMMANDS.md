@@ -263,7 +263,10 @@ with one lens: correctness, conformance with the repository's rules, security,
 state and rollback, tests, architecture, approach (is there a simpler or more
 rooted way to solve it), and acceptance against a spec or plan
 when there is one. They see only the diff, never the session, so they review
-what was written and not what was meant. Each finding is checked against the
+what was written and not what was meant. Before they start, the security
+scanners you have installed (gitleaks, semgrep, the dependency audit) run on the
+change and their output goes to the security lens; one you do not have is listed,
+never installed. Each finding is checked against the
 code before it reaches you, and the verdict says which lenses ran, which were
 left out and how many findings were dropped. Details in
 [review-squad.md](references/review-squad.md).
@@ -479,7 +482,7 @@ do straight on the main branch.
 | 3 | Isolation | `dev worktree` / `dev 3` | Worktree created with confirmed name and base, baseline build green |
 | 4 | TDD | `dev tdd` / `dev 4` | Each behavior seen red then green, suite green, no skipped test |
 | 5 | Review | `dev review` / `dev 5` | Review by a fresh reviewer (the squad, for a large diff), no critical or warning finding left open |
-| 6 | Verification | `dev verify` / `dev 6` | Build, lint and tests with exit code 0 in the handoff |
+| 6 | Verification | `dev verify` / `dev 6` | Build, lint and tests with exit code 0 on a branch current with its base; handoff with what blocks and what needs your look |
 | 7 | Delivery | `dev finish` / `dev 7` | PR description ready and learning saved in Mentat |
 
 You do not have to walk the seven in order. Going straight to `dev tdd` on a task

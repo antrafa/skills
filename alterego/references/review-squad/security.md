@@ -23,6 +23,9 @@ and state (State and rollback), conventions (Conformance).
 
 ## Rules
 
+- **Scanner output is evidence, not a verdict.** Confirm each hit at its line,
+  set aside false positives with the reason, and hunt what scanners miss:
+  authorization, ownership, sensitive data in logs.
 - **Reachability first.** A flaw counts once you showed the path from outside to
   it. Unreachable code is a Note, not a Critical.
 - **Never repeat a secret's value.** Point to file and line, mask it (`***`), and

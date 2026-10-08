@@ -1,0 +1,43 @@
+schema_version: '1.1'
+name: 43-dev-verify-base-moved
+description: Verification on a branch whose base moved; the update waits for a yes and the gate does not count yet.
+tags:
+- dev
+context:
+  scaffold_script: fixture.sh
+execution:
+  prompt: /alterego dev verify — a base é a main
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Bash
+graders:
+- name: skill-loaded
+  type: regex
+  target: trace
+  pattern: Threefold Reference DNA
+  arm: with-only
+- name: no-rewrite-without-yes
+  type: tool_used
+  tool: Bash
+  input_match: git\s+(rebase|merge|commit|push|reset)\b
+  min: 0
+  max: 0
+- name: ran-tests
+  type: tool_used
+  tool: Bash
+  input_match: (make test|unittest)
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: 'PASS if it runs the tests with their exit code, notices that main moved
+    two commits past the branch, proposes updating the branch (a rebase, since it
+    was never pushed) and waits for a yes, and says the verification only counts
+    after the gate runs again on the updated branch. The handoff opens with a
+    Blocks list that names the stale base.
+
+    FAIL if it declares verification complete on the stale branch, rebases or
+    merges without asking, or never compares the branch with main.'

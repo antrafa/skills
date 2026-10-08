@@ -7,6 +7,7 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 ## [Unreleased]
 
 ### Added
+- Review squad: the security scanners that are installed (gitleaks always, semgrep when the Security lens runs, the ecosystem's dependency audit when a manifest changed) run before the dispatch, and their output goes to the Security lens as evidence. A secret gitleaks finds is a Critical on its own; a missing scanner is listed under what was left out, never installed.
 - Review squad: an **Approach** lens that assumes the diff is correct and asks whether it should exist in this shape — a fix at the symptom while the cause lives upstream, a second copy of a helper the repository has, a much smaller change that solves the same problem, a workaround over a removable cause. Runs when what the change is for is stated; dropped after Tests when more than five lenses apply.
 - Autonomy: agreeing with an idea is not a request to execute it; a branch is created with `--no-track`, so a remote base never becomes its upstream.
 - Execution: remove only what your own change left unused; pre-existing dead code goes to *Out of scope*. The Dev's DNA now also cuts error handling for scenarios that cannot happen.
@@ -15,6 +16,9 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 - `references/report-design.md`: the default design for HTML reports. When the user has their own `DESIGN.md`, the skill asks once which to use and records the answer in the profile.
 
 ### Changed
+- `dev verify`: the gate counts only on a branch current with its base — fetch, and when the base moved, propose the rebase or merge the repository uses and run the gate again after the user's yes; a conflict blocks. A repository with nothing to run is the first blocker, no longer a line under "could not run". The handoff opens with two lists, **Blocks** and **Needs your look**, and a blocker reaches `dev finish` only with the user's written reason, carried into the PR description. Evals 43 and 44 cover it.
+- Review rework: the Security lens also re-reviews a fix that touches what triggers it, whichever lens raised the finding.
+- Correctness lens: a Critical names the input, state or sequence that reaches the line; with no path shown it is a Note.
 - `/alterego` and `start` look for an open control report — current folder, repository, global folder — in parallel with arming `guardrails`, and offer once to resume from the most recent. A hand-written report in the current folder counts if it has a handoff. Eval 41 covers it.
 - `study` suggests `forja` when the topic is "build X with Y" and `forja` is installed with a track for Y: you write the code, it guides and checks each Delivery. The catalog described `forja` as scaffolding and templates, the opposite of what it does; `sources.md`, the README and onboarding now describe it as mentorship tied to `study`.
 

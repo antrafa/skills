@@ -38,7 +38,8 @@ Shell and CI code breaks in its own ways:
 
 ## Rules
 
-- Trace the path: show how the bad value gets there, not just that it could.
+- Trace the path first: a Critical names the input, state or sequence that
+  reaches the line and what goes wrong then. With no path shown, it is a Note.
 - A caller not updated counts only after you searched for callers (`grep`) and
   found one.
 - Style and naming are not correctness. Leave them out.

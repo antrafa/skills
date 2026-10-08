@@ -57,7 +57,25 @@ untracked files are part of the change: list them for the reviewers by path.
 extra lens finds. If more than five apply, drop Architecture first, then Tests, then Approach,
 and say which ones were left out.
 
-## 4. Dispatch
+## 4. Run the scanners that are installed
+
+Scanners read the code without running it, so you run them before the dispatch
+and hand their output to the Security lens as evidence. Each one runs when it is
+installed (`command -v <tool>`) and the change gives it something to read:
+
+| Scanner | Runs when | Command |
+|---|---|---|
+| gitleaks | Always: a secret lands in any kind of file | Commits: `gitleaks git --no-banner --redact --log-opts="$BASE..HEAD"`. Uncommitted and new files: `gitleaks dir --no-banner --redact <file>`. Before gitleaks 8.19 the two are `gitleaks detect`, the second with `--no-git --source <file>`. |
+| semgrep | The Security lens runs and code files changed | `semgrep scan --config p/default --metrics=off --quiet <changed code files>` |
+| Dependency audit | A manifest or lockfile changed | The one for the ecosystem: `npm audit --omit=dev --audit-level=high`, `pip-audit`, `govulncheck ./...` |
+
+- A secret gitleaks reports is a Critical with confidence 100, masked, with
+  rotation, and goes straight into the verdict whichever lenses ran.
+- A scanner that is missing, or that needs the network while offline, goes to
+  *what was left out* with how to install or run it. The user installs; you
+  report.
+
+## 5. Dispatch
 
 On Claude Code, one `Agent` call per lens, **all in the same message** so they
 run in parallel, each a fresh `general-purpose` subagent. Not a `fork`: a fork
@@ -83,6 +101,7 @@ Change: git diff {BASE} (committed and uncommitted), plus these new files:
 {UNTRACKED_FILES}
 What the change is for: {ONE_PARAGRAPH_FROM_THE_SESSION_OR_"not stated"}
 Written criteria, if any: {SPEC_OR_PLAN_PATH_OR_"none"}
+Scanner output for your lens, if any: {SCANNER_OUTPUT_OR_"none"}
 
 Your lens: read {LENS_FILE}. Look only for what it covers; the lines under
 "Not yours" belong to other reviewers, leave them alone.
@@ -108,7 +127,7 @@ Return only this JSON, nothing before or after it:
 }
 ```
 
-## 5. Consolidate
+## 6. Consolidate
 
 1. **Parse each reply.** A reply that is not the JSON above, or a reviewer that
    failed, counts as that lens *not run*; say so, do not fill the gap by guessing.
@@ -117,7 +136,7 @@ Return only this JSON, nothing before or after it:
 3. **Keep disagreements.** When two lenses contradict each other on the same
    line, show both sides; the user decides.
 
-## 6. Verify before showing
+## 7. Verify before showing
 
 The reviewers are fresh; you are not. Verification is where that matters
 again, so it has one job: **confirm the finding exists**, not argue it away.
@@ -134,13 +153,13 @@ the code says what the finding claims. Then:
 
 Notes are not re-verified one by one; keep the three most useful.
 
-## 7. Deliver
+## 8. Deliver
 
 The verdict format in [playbook-review.md](playbook-review.md#review-verdict-format),
 with one extra line on top:
 
 ```markdown
-Squad: correctness, conformance, security, infra-state (tests and architecture left out: no production code changed). Base: `main` (assumed). 14 findings reported, 11 after merge, 2 dropped in verification.
+Squad: correctness, conformance, security, infra-state (tests and architecture left out: no production code changed). Scanners: gitleaks clean, semgrep not installed. Base: `main` (assumed). 14 findings reported, 11 after merge, 2 dropped in verification.
 ```
 
 Then findings by severity, each tagged with the lens that found it, and the
