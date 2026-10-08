@@ -260,7 +260,8 @@ on the branch. For a remote MR/PR, use `mr` (next section).
 or touches infrastructure — manifests, Helm, compose, Terraform, CI, deploy or
 database scripts — the review goes to fresh reviewers running in parallel, each
 with one lens: correctness, conformance with the repository's rules, security,
-state and rollback, tests, architecture, and acceptance against a spec or plan
+state and rollback, tests, architecture, approach (is there a simpler or more
+rooted way to solve it), and acceptance against a spec or plan
 when there is one. They see only the diff, never the session, so they review
 what was written and not what was meant. Each finding is checked against the
 code before it reaches you, and the verdict says which lenses ran, which were

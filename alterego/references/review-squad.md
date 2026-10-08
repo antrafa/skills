@@ -50,10 +50,11 @@ untracked files are part of the change: list them for the reviewers by path.
 | State and rollback | Any infrastructure file, migration or script that changes a server, a cluster or a database | [infra-state.md](review-squad/infra-state.md) |
 | Tests | Production code changed in a repository that has tests | [tests.md](review-squad/tests.md) |
 | Architecture | New module or directory, new dependency, change to a shared or public contract, imports across layers | [architecture.md](review-squad/architecture.md) |
+| Approach | What the change is for is stated: a bug fix, a request from the session, a spec | [approach.md](review-squad/approach.md) |
 | Acceptance | There are written criteria: a spec or plan in `~/.alterego/work/<project>/`, the criteria of a bounded design, or requirements the user gave | [acceptance.md](review-squad/acceptance.md) |
 
 **At most five per run.** More than that and consolidation costs more than the
-extra lens finds. If more than five apply, drop Architecture first, then Tests,
+extra lens finds. If more than five apply, drop Architecture first, then Tests, then Approach,
 and say which ones were left out.
 
 ## 4. Dispatch
