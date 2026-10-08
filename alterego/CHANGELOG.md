@@ -7,6 +7,9 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 ## [Unreleased]
 
 ### Added
+- Review squad: an **Approach** lens that assumes the diff is correct and asks whether it should exist in this shape — a fix at the symptom while the cause lives upstream, a second copy of a helper the repository has, a much smaller change that solves the same problem, a workaround over a removable cause. Runs when what the change is for is stated; dropped after Tests when more than five lenses apply.
+- Autonomy: agreeing with an idea is not a request to execute it; a branch is created with `--no-track`, so a remote base never becomes its upstream.
+- Execution: remove only what your own change left unused; pre-existing dead code goes to *Out of scope*. The Dev's DNA now also cuts error handling for scenarios that cannot happen.
 - `/alterego control [<goal>|<path>]`: one HTML control report per piece of work, updated in place — a handoff on top that a fresh session resumes from, the activities with state and evidence below. On creation it asks where to save: the repository's `.alterego/reports/` (kept out of git through `.git/info/exclude`) or `~/.alterego/work/<project>/reports/`, the default with no answer. Once it exists, `dev` updates it at each Safe Context-Clear point and `refactor` after each leaf. Eval 42 covers it.
 - `/alterego clear`: saves the handoff (asking whether to keep a report) and tells the user to type `/clear` and `/alterego`. Clearing is the harness's command; a skill cannot run it.
 - `references/report-design.md`: the default design for HTML reports. When the user has their own `DESIGN.md`, the skill asks once which to use and records the answer in the profile.

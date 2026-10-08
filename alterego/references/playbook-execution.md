@@ -58,6 +58,9 @@ modules involved.
   neighboring code: same comment density, same naming, same language.
 - **One logical intent at a time.** An opportunistic refactor in the middle of
   a fix pollutes the diff and buries the change that matters in the noise.
+- **Clean up only your own mess.** Remove the imports, variables and functions
+  your change left unused; dead code that was already there goes to *Out of
+  scope*, not to the diff. The test: every changed line traces to the request.
 - **A reversible assumption does not block the work.** Assume, record it in
   the handoff and move on. Only stop to ask when the answer materially changes
   the result and is not in the code.
