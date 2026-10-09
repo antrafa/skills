@@ -11,6 +11,7 @@ answer, six months later, *"why did we pick this?"* without rebuilding the reaso
 ├── profile.md                            # only without Mentat (see SKILL.md)
 ├── journal.md                            # only without Mentat: /alterego wrap closings, one section per date
 ├── personas/                             # custom personas, created by /alterego persona new
+├── briefings/                            # /alterego daily pages, one per date (briefing.md)
 ├── work/                                 # working files, one folder per project (below)
 │   └── <project>/
 │       ├── specs/                        # dev step 1, architectural path

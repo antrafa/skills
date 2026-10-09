@@ -9,7 +9,7 @@ other playbooks.
 ## Invocation modes
 
 ```
-/alterego daily [<overview>]     (organizes the day; without an overview, uses profile and repository)
+/alterego daily [<overview>]     (organizes the day; without an overview, gathers it: calendar, mail, chat, pending items, news)
 /alterego wrap [<notes>]         (closes the day; without notes, rebuilds from the session and git)
 ```
 
@@ -20,7 +20,10 @@ In Codex: `$alterego daily`, `$alterego wrap`.
 ## 1. `daily`: opening the board
 
 The user dumps whatever is on the desk (meetings, bugs, PRs, designs, loose ends),
-without organizing it first. Organizing is the persona's job.
+without organizing it first. Organizing is the persona's job. With nothing
+dumped, gather the desk first, from the calendar, mail, chat, pending items and
+news, and end on a page instead of a chat reply:
+[briefing.md](briefing.md).
 
 1. **Separate noise from real priority.** Whatever has an owner, a deadline and a
    consequence stays; the rest becomes a waiting list, stated in one line.

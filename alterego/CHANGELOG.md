@@ -7,6 +7,7 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 ## [Unreleased]
 
 ### Added
+- `daily` with nothing given gathers the desk itself: today's calendar, mail and chat since the last briefing from whatever is connected, yesterday's pending items from Mentat, and news on the profile's topics. The same board runs on it and ends on a local page (`~/.alterego/briefings/`) with the first step on top. Read-only; credentials in messages never reach the page; a source with no connector is named as missing, never guessed (`references/briefing.md`).
 - Review squad: the security scanners that are installed (gitleaks always, semgrep when the Security lens runs, the ecosystem's dependency audit when a manifest changed) run before the dispatch, and their output goes to the Security lens as evidence. A secret gitleaks finds is a Critical on its own; a missing scanner is listed under what was left out, never installed.
 - Review squad: an **Approach** lens that assumes the diff is correct and asks whether it should exist in this shape — a fix at the symptom while the cause lives upstream, a second copy of a helper the repository has, a much smaller change that solves the same problem, a workaround over a removable cause. Runs when what the change is for is stated; dropped after Tests when more than five lenses apply.
 - Autonomy: agreeing with an idea is not a request to execute it; a branch is created with `--no-track`, so a remote base never becomes its upstream.

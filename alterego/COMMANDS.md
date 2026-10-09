@@ -184,9 +184,14 @@ yardstick: production stability before new fronts, unblocking a blocked colleagu
 is high priority, architecture and risk come before features when they compete.
 It comes with the day sliced into deliverables and a proposal for where to start.
 
-`/alterego daily` alone, with no context, organizes with what the persona already
-knows from your profile and the repository. If there is a `wrap` from yesterday in
-Mentat, its pending items enter the board without you having to remember.
+`/alterego daily` alone gathers the desk for you: today's calendar, mail and chat
+since the last briefing (whatever is connected: Microsoft 365, Google Workspace,
+Slack…), the pending items from yesterday's `wrap` in Mentat, and the news on the
+topics in your profile. It runs the same board on that, and opens a local page
+with the first step on top, who is waiting for you, the calendar, the tickets
+that ask for action and the news. It only reads: nothing is answered, sent or
+marked as read, and credentials in messages never reach the page. A source with
+no connector is named as missing instead of guessed.
 
 
 ---

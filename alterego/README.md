@@ -61,7 +61,7 @@ installation and only runs it after your "yes".
 /alterego setup                      # calibrates your profile (5 questions or a resume)
 /alterego                            # opens the session (guardrails, plain explanations) and lists the commands
 /alterego help                       # lists the commands
-/alterego daily                      # organizes the day
+/alterego daily                      # gathers calendar, mail, chat and news, and organizes the day
 /alterego review src/Billing.java    # Socratic review of a file
 /alterego review                     # reviews what this session changed on the branch
 /alterego mr 42                      # MR verdict with impact beyond the diff
@@ -85,7 +85,7 @@ Full guide, with examples and what each one returns: [`COMMANDS.md`](COMMANDS.md
 | `/alterego refactor <goal>` | Structural refactor by the Mikado Method: discovers the prerequisites by attempting and reverting, leaves first, tree green at every commit. |
 | `/alterego control [<goal>\|<path>]` | HTML control report for one piece of work: a handoff on top to resume in a fresh session, the status of the activities below. Saved in the repository (`.alterego/reports/`) or in `~/.alterego/work/<project>/reports/`; `/alterego` offers to resume it. |
 | `/alterego clear` | Updates the report's handoff and tells you to type `/clear` and `/alterego`, which picks up from it. |
-| `/alterego daily` | Organizes the day in 2 minutes: stability > unblocking the team > architecture > feature. |
+| `/alterego daily` | Organizes the day in 2 minutes: stability > unblocking the team > architecture > feature. With nothing given, gathers calendar, mail, chat and news first, into a local briefing page. |
 | `/alterego wrap [<notes>]` | Closes the day by the evidence: done, left over, learned, open risk; records what is pending in Mentat with your yes. |
 | `/alterego study <topic>` | Study Partner: mission, depth set by your repertoire, Socratic questions, "In short". |
 | `/alterego review [<target>]` | Socratic review of a file, a local diff or the session's work: concurrency, N+1, security, scope, smallest diff. A large diff goes to a squad of fresh reviewers in parallel, one lens each. |
