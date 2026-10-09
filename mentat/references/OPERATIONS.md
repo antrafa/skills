@@ -10,6 +10,7 @@ procedures.
 - [Groom](#groom) · [Restore](#restore) · [Audit](#audit) — scripted
 - [Consolidate](#consolidate) · [Merge](#merge) · [Split](#split) · [Forget](#forget) — judgment
 - [Export](#export) · [Import](#import) — backup
+- Setup and Sync — [SYNC.md](SYNC.md)
 
 ---
 

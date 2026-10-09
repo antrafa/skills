@@ -11,7 +11,8 @@ description: >-
   "what was that CORS fix?", "we already decided this", "how did I solve this
   last time", "didn't I write this down?" — or asks to remember, save, note or
   jot something down, to load project context or their profile, or to check
-  vault activity, health, grooming, auditing, merging or splitting entries.
+  vault activity, health, grooming, auditing, merging or splitting entries,
+  or to set the vault up for every agent or sync it across machines.
   Reach for it even when the user never says "mentat" or "vault": any request
   that depends on what happened in a past session is a recall, and any durable
   fact the user hands over is worth capturing.
@@ -44,7 +45,7 @@ or search — so resolve it deliberately instead of guessing.
 
 | Signal in the input | Operation |
 |---|---|
-| A leading keyword: `load`, `profile`, `review`, `status`, `amend`, `groom`, `restore`, `audit`, `merge`, `split`, `forget`, `export`, `import`, `consolidate` | That operation |
+| A leading keyword: `load`, `profile`, `review`, `status`, `amend`, `groom`, `restore`, `audit`, `merge`, `split`, `forget`, `export`, `import`, `consolidate`, `setup`, `sync`, `uninstall` | That operation |
 | Asserts something — "we fixed X", "decided on Y", "remember that Z", a pasted snippet, a postmortem | [Remember](#remember) |
 | Asks something, or is a bare topic — "what was the CORS fix?", "nginx cors", "did I note anything about retries?" | [Recall](#recall) |
 | Genuinely ambiguous | [Recall](#recall) first |
@@ -62,7 +63,11 @@ type you are writing, [TEMPLATES.md](references/TEMPLATES.md) — one section pe
 type, so read the one you need rather than all ten.
 
 For Groom, Restore, Audit, Merge, Split, Forget, Export, Import and Consolidate,
-read [OPERATIONS.md](references/OPERATIONS.md).
+read [OPERATIONS.md](references/OPERATIONS.md). For Setup (make the vault the
+main memory of the agents the person chooses, absorb what they remembered on
+their own, or back it out with Uninstall) and
+Sync (share the vault across machines through git), read
+[SYNC.md](references/SYNC.md).
 
 ## Three dynamics
 

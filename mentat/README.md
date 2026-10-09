@@ -47,24 +47,53 @@ Everything is stored in a flat directory structure at `~/.mentat/` that opens na
 
 ## 🚀 Installation
 
-Mentat works with CLI-based AI agents like **Antigravity**, **Claude Code**, or **Codex**.
+Mentat works with CLI-based AI agents like **Claude Code**, **Codex**, **Antigravity** or **OpenCode**, and one vault serves all of them.
 
-### 1. Clone & Link
-
-```bash
-# Symlink into your agent's skills directory
-ln -s /path/to/mentat ~/.agents/skills/mentat
-```
-
-### 2. Initialize the Vault
-
-The vault is created automatically on first invocation. To do it manually:
+### 1. Clone
 
 ```bash
-bash /path/to/mentat/scripts/init-vault.sh
+git clone <this repository> ~/workspace/skills   # anywhere you like
 ```
 
-The script is idempotent and repairs a partial vault — if a Map of Content or a directory goes missing, re-running restores just that piece.
+### 2. Run setup
+
+Ask any agent for `/mentat setup`, or run it yourself — preview first:
+
+```bash
+python3 /path/to/mentat/scripts/setup.py --dry-run
+python3 /path/to/mentat/scripts/setup.py                 # this machine only
+python3 /path/to/mentat/scripts/setup.py --remote git@github.com:you/mentat-memory.git
+python3 /path/to/mentat/scripts/setup.py --agents claude,codex   # main memory only for these
+python3 /path/to/mentat/scripts/setup.py --uninstall             # back out, vault kept
+```
+
+Mentat as the **main** memory is opt-in per agent. `--agents` (default `all`; also `none`, or any of `claude,codex,antigravity,opencode`) picks which agents get the pointer block and have their own memory absorbed; the others keep their own memory and can still consult the skill. Through `/mentat setup` the agent asks this before showing the plan.
+
+Setup is idempotent — re-run it whenever, it only fixes what drifted. It:
+
+- creates or repairs the vault at `~/.mentat` (or clones it from `--remote`);
+- adds a short pointer block to the global instructions of every chosen agent (`~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`, `~/.gemini/GEMINI.md`, `~/.config/opencode/AGENTS.md`), between `<!-- mentat:start -->` markers — around 100 tokens per agent, nothing else is loaded up front;
+- links the skill into each agent's skills directory where it is missing or broken;
+- with a remote, installs the merge rules and a timer (systemd on Linux, launchd on macOS) that syncs every 30 minutes;
+- lists what each chosen agent remembered on its own, so the agent can absorb it into the vault with your approval.
+
+`--uninstall` removes the pointer blocks, restores each `MEMORY.md` the absorb step redirected (from its `MEMORY.md.pre-mentat` copy) and removes the timer; the vault, its repository and the skill links stay. Combine with `--agents` to back out only some agents.
+
+`init-vault.sh` still exists for a bare vault without any of the above; it is idempotent and repairs a partial vault.
+
+## 🔄 Sharing the vault across machines
+
+Sync is optional. Without a git repository in `~/.mentat`, the vault is a single-machine memory and `sync` says so and changes nothing.
+
+With one, point every machine at the same **private** repository (`setup.py --remote <url>`), and `vault.py sync` — run by the timer, or `/mentat sync` on request — commits, merges, reconciles the indexes and pushes:
+
+| Changed on two machines | Result |
+|---|---|
+| New entries, index and daily bullets | Merged: both sides kept |
+| `salience`, `usage_count`, dates, `related` of the same entry | Merged by rule: stronger salience, uses from both sides, latest date, union of links |
+| An entry body, `profile.md` or `core-memory.md` | Sync stops and lists the files; the agent proposes the merged text and asks |
+
+The merge driver is defined per machine in `.git/config` (git never versions it), which is why each new machine runs setup instead of a bare `git clone`.
 
 ## 🛠 Usage & Commands
 
@@ -99,6 +128,8 @@ Trigger the skill with `/mentat` followed by your prompt. The skill also engages
 | `/mentat forget [query]` | **Forget** | Permanently deletes an entry after confirmation. Cleans up all references. |
 | `/mentat export` | **Export** | Creates a `.zip` backup of the entire vault. |
 | `/mentat import [path]` | **Import** | Restores from a backup. Supports replace or merge strategies. |
+| `/mentat setup` | **Setup** | Wires the vault into every installed agent, optionally shares it through git, and absorbs what agents remembered on their own. |
+| `/mentat sync` | **Sync** | Commits, merges and pushes the vault when it has a remote; does nothing otherwise. |
 
 ### Examples
 
@@ -132,6 +163,7 @@ scripts/vault.py reindex --slug nginx-strips-cors-header \
 scripts/vault.py groom --dry-run                    # preview the fade
 scripts/vault.py stats --json                       # health, machine-readable
 scripts/vault.py audit --fix                        # repair bookkeeping damage
+scripts/vault.py sync                               # share through git, if configured
 scripts/vault.py --selfcheck                        # verify decay and index editing
 ```
 

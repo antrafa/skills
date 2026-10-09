@@ -494,6 +494,56 @@ def eval_sync_two_machines() -> None:
     check(name, "prose edited on both machines stops the sync", stopped.returncode != 0 and "profile.md" in stopped.stdout, stopped.stdout + stopped.stderr)
 
 
+# --- setup-opt-in -------------------------------------------------------------
+
+
+def eval_setup_opt_in() -> None:
+    """Mentat becomes the main memory only where chosen, and uninstall undoes it.
+
+    The person's own instructions and the vault must survive both directions.
+    """
+    import tempfile
+
+    name = "setup-opt-in"
+    home = Path(tempfile.mkdtemp(prefix="mentat-home-"))
+    for d in (".claude/projects/p/memory", ".codex"):
+        (home / d).mkdir(parents=True)
+    own = "# my rules\n\n- keep this\n"
+    (home / ".codex/AGENTS.md").write_text(own, encoding="utf-8")
+    (home / ".claude/CLAUDE.md").write_text(own, encoding="utf-8")
+    memory = home / ".claude/projects/p/memory/MEMORY.md"
+    memory.write_text("- original index\n", encoding="utf-8")
+
+    def setup(*args: str) -> str:
+        done = subprocess.run(
+            [sys.executable, str(SKILL_DIR / "scripts/setup.py"), "--no-timer", *args],
+            env={**os.environ, "HOME": str(home), "MENTAT_VAULT": str(home / ".mentat")},
+            capture_output=True, text=True,
+        )
+        if done.returncode:
+            raise RuntimeError(f"setup.py {' '.join(args)} failed: {done.stderr.strip()}")
+        return done.stdout
+
+    setup("--agents", "codex")
+    codex, claude = (home / ".codex/AGENTS.md").read_text(), (home / ".claude/CLAUDE.md").read_text()
+    check(name, "chosen agent gets the pointer block", "mentat:start" in codex, codex)
+    check(name, "agent left out keeps its file untouched", claude == own, claude)
+    check(name, "agent left out still gets the skill to consult", (home / ".claude/skills/mentat").exists())
+
+    setup("--agents", "none")
+    check(name, "--agents none adds nothing", (home / ".claude/CLAUDE.md").read_text() == own)
+
+    setup()
+    memory.rename(memory.with_name("MEMORY.md.pre-mentat"))  # what Absorb leaves behind
+    memory.write_text("memory lives in the Mentat vault\n", encoding="utf-8")
+    setup("--uninstall")
+    check(name, "uninstall restores each file to exactly what it was",
+          all((home / f).read_text() == own for f in (".codex/AGENTS.md", ".claude/CLAUDE.md")),
+          (home / ".codex/AGENTS.md").read_text())
+    check(name, "uninstall restores the pre-Mentat MEMORY.md", memory.read_text() == "- original index\n", memory.read_text())
+    check(name, "uninstall keeps the vault", (home / ".mentat/entries").is_dir())
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("-v", "--verbose", action="store_true", help="show evidence for passes too")
@@ -504,6 +554,7 @@ def main() -> None:
         eval_remember_a_bug, eval_groom, eval_groom_cadence,
         eval_amend_preserves_identity, eval_stats, eval_orphan_prefix,
         eval_archive_round_trip, eval_prefix_collision, eval_sync_two_machines,
+        eval_setup_opt_in,
     ):
         try:
             runner()
