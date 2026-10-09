@@ -124,6 +124,7 @@ lang/*
 pattern/*
 estudos
 !cliente/*
+!core-memory.md
 ```
 
 1. **Ask** which subjects are fine on the remote, and which must never go
@@ -146,7 +147,10 @@ committed. A link in a shared entry's body reaches the remote as the text
 `.git/mentat-local` before committing and merges it back after pushing. A
 pre-commit hook refuses any commit that carries a local entry, so a commit
 made by hand, or by an editor plugin, cannot leak one. `profile.md` and
-`core-memory.md` always sync. Keep client details out of them.
+`core-memory.md` have no topics to match, so they sync unless named:
+`!core-memory.md` keeps that whole file on this machine, and each machine then
+has its own copy. Before turning the filter on, check both files for names
+that must not leave.
 
 Each sync applies the stricter of this machine's file and the remote's.
 Withdrawing a topic takes effect on the next sync everywhere. Allowing a new

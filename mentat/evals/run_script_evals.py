@@ -528,7 +528,8 @@ def eval_sync_topics() -> None:
     vault_py(first, "relate", "--slug", shared, "--related", private)
     entry = first / "entries" / f"{shared}.md"
     entry.write_text(entry.read_text() + f"\nSee [[{private}]].\n", encoding="utf-8")
-    (first / "sync-topics").write_text("estudos\n!cliente/*\n", encoding="utf-8")
+    (first / "sync-topics").write_text("estudos\n!cliente/*\n!core-memory.md\n", encoding="utf-8")
+    (first / "core-memory.md").write_text("# Core\n\n- contexto do cliente X\n", encoding="utf-8")
 
     sh("git", "add", "sync-topics", cwd=first)
     sh("git", "commit", "-q", "-m", "seed", cwd=first)
@@ -542,6 +543,8 @@ def eval_sync_topics() -> None:
     check(name, "the shared entry reaches the remote", f"entries/{shared}.md" in tree, tree)
     check(name, "no local entry file reaches the remote", private not in tree and denied not in tree, tree)
     check(name, "no slug or summary of a local entry reaches the remote", not leaked.stdout.strip(), leaked.stdout)
+    check(name, "a file named with ! stays off the remote and on disk",
+          "core-memory.md" not in tree and "cliente X" in (first / "core-memory.md").read_text(), tree)
 
     def whole(repo: Path) -> bool:
         text = "".join((repo / f).read_text() for f in ("maps/bugs.md", "index.md", f"entries/{shared}.md"))
@@ -578,7 +581,7 @@ def eval_sync_topics() -> None:
           manual.returncode != 0 and "refusing to commit" in manual.stderr, manual.stderr.strip())
     sh("git", "reset", "-q", cwd=first)
 
-    (first / "sync-topics").write_text("estudos\n!cliente/*\n!lang/*\n", encoding="utf-8")
+    (first / "sync-topics").write_text("estudos\n!cliente/*\n!core-memory.md\n!lang/*\n", encoding="utf-8")
     vault_py(first, "sync")
     out = vault_py(second, "sync")
     gone = sh("git", "ls-tree", "-r", "--name-only", "origin/main", cwd=first).stdout

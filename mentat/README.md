@@ -104,9 +104,10 @@ lang/*
 pattern/*
 estudos
 !cliente/*
+!core-memory.md
 ```
 
-`vault.py topics` previews the split before anything moves. A local entry stays whole on its own machine, but its file, index bullets and links never reach the remote, and a pre-commit hook refuses any commit that would carry one. Files already pushed stay in the repository history until you rewrite it. That is a separate, destructive step, described in [SYNC.md](references/SYNC.md#choosing-what-syncs).
+`profile.md` and `core-memory.md` have no tags, so they sync unless a `!` line names them. `vault.py topics` previews the split before anything moves. A local entry stays whole on its own machine, but its file, index bullets and links never reach the remote, and a pre-commit hook refuses any commit that would carry one. Files already pushed stay in the repository history until you rewrite it. That is a separate, destructive step, described in [SYNC.md](references/SYNC.md#choosing-what-syncs).
 
 ## 🛠 Usage & Commands
 

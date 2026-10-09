@@ -1121,6 +1121,16 @@ def local_slugs(rule_sets: list[tuple[list[str], list[str]]]) -> set[str]:
     }
 
 
+def local_files(rule_sets: list[tuple[list[str], list[str]]]) -> set[str]:
+    """Vault-root files a `!name.md` line keeps on this machine, like core-memory.md.
+
+    profile.md and core-memory.md are prose with no project or tags to match, so
+    they need naming to stay local: work context on a personal remote is exactly
+    what the topics exist to prevent.
+    """
+    return {p for _, deny in rule_sets for p in deny if p.endswith(".md") and "/" not in p}
+
+
 def shared_text(rel: str, text: str, local: set[str]) -> str:
     """`rel` as it may leave the machine: no bullet, link or slug of a local entry.
 
@@ -1149,19 +1159,20 @@ def snapshot_dir() -> Path:
     return VAULT / ".git" / _SNAPSHOT_DIR
 
 
-def write_exclude(local: set[str]) -> None:
-    """List the local entries in .git/info/exclude, which git reads but never shares."""
+def write_exclude(local: set[str], files: set[str]) -> None:
+    """List what stays local in .git/info/exclude, which git reads but never shares."""
     path = VAULT / ".git" / "info" / "exclude"
     text = path.read_text(encoding="utf-8") if path.exists() else ""
     kept = re.sub(rf"{_EXCLUDE_START}.*?{_EXCLUDE_END}\n?", "", text, flags=re.DOTALL).rstrip("\n")
-    if local:
+    if local or files:
         lines = "".join(f"/{d}{slug}.md\n" for slug in sorted(local) for d in _ENTRY_DIRS)
+        lines += "".join(f"/{name}\n" for name in sorted(files))
         kept = (kept + "\n" if kept else "") + f"{_EXCLUDE_START}\n{lines}{_EXCLUDE_END}"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(kept + "\n" if kept else "", encoding="utf-8")
 
 
-def hide_local(local: set[str]) -> int:
+def hide_local(local: set[str], files: set[str]) -> int:
     """Leave the local entries out of what git sees, keeping the full text aside.
 
     The full version of every file this strips goes to .git/mentat-local, next
@@ -1169,9 +1180,11 @@ def hide_local(local: set[str]) -> int:
     git rewrote the file. The first snapshot is kept: a later strip in the same
     sync must not lose what the first one set aside.
     """
-    write_exclude(local)
+    write_exclude(local, files)
     for slug in sorted(local):
         git("rm", "-q", "--cached", "--ignore-unmatch", *(f"{d}{slug}.md" for d in _ENTRY_DIRS))
+    for name in sorted(files):
+        git("rm", "-q", "--cached", "--ignore-unmatch", name)
     if not local:
         return 0
     hidden = 0
@@ -1252,6 +1265,8 @@ def cmd_topics(args: argparse.Namespace) -> None:
     local = local_slugs(sets)
     every = sorted(p.stem for d in (entries_dir(), archive_dir()) if d.exists() for p in d.glob("*.md"))
     print(f"{len(every) - len(local)} entries sync, {len(local)} stay on this machine")
+    for name in sorted(local_files(sets)):
+        print(f"  local  {name} (whole file)")
     for label, group in (("syncs", [s for s in every if s not in local]), ("local", sorted(local))):
         for slug in group:
             print(f"  {label:5}  {slug}")
@@ -1263,13 +1278,14 @@ def cmd_check_staged(args: argparse.Namespace) -> None:
     `sync` strips local entries before it commits; a commit made by hand, or by
     an editor plugin, does not, and would push their summaries and slugs.
     """
-    local = local_slugs(topic_rule_sets())
-    if not local:
+    sets = topic_rule_sets()
+    local, files = local_slugs(sets), local_files(sets)
+    if not local and not files:
         return
     leaks = []
     staged = git("diff", "--cached", "--name-only", "-z", "--diff-filter=ACMR").stdout
     for rel in filter(None, staged.split("\0")):
-        if rel.startswith(_ENTRY_DIRS) and Path(rel).stem in local:
+        if rel in files or rel.startswith(_ENTRY_DIRS) and Path(rel).stem in local:
             leaks.append(rel)
         elif rel.endswith(".md") and any(
             t.strip() in local for t in _WIKILINK_RE.findall(git("show", f":{rel}").stdout)
@@ -1286,7 +1302,8 @@ def cmd_check_staged(args: argparse.Namespace) -> None:
 def commit_all(message: str) -> bool:
     """Commit everything this machine may share; local entries are left out here,
     so no caller can commit without applying sync-topics."""
-    hide_local(local_slugs(topic_rule_sets()))
+    sets = topic_rule_sets()
+    hide_local(local_slugs(sets), local_files(sets))
     git("add", "-A", check=True)
     if not git("diff", "--cached", "--quiet").returncode:
         return False
