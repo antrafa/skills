@@ -41,6 +41,27 @@ ln -s "$SKILL_SRC" ~/.codex/skills/alterego           # Codex
 ln -s "$SKILL_SRC" ~/.gemini/config/skills/alterego   # Antigravity (agy)
 ```
 
+### Shell integration (CLI shortcuts)
+
+Install terminal functions for your agents (`cl-*` for Claude Code, `agy-*` for Antigravity, `cx-*` for Codex):
+
+```bash
+./scripts/install-aliases.sh
+```
+
+Then reload your shell (`source ~/.zshrc` or `source ~/.bashrc`). You can then launch AlterEgo commands directly from your terminal:
+
+```bash
+ae-help                                              # instant terminal cheatsheet (no AI call)
+cl-help                                              # open Claude with /alterego help
+cl-help sre                                          # explain /alterego sre in detail
+cl-sre "latency spike on checkout"                   # launch SRE incident investigation
+agy-daily                                            # organize the day in Antigravity
+cx-review src/Billing.java                           # code review in Codex
+cl-ae "think with me: should we split this table?"   # free-form request
+```
+
+
 ### Optional
 
 | For | You need |

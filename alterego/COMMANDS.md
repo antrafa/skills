@@ -650,6 +650,16 @@ Quick help center and detailed documentation for every Alterego command:
   - **Deliverable & Destination:** where it saves files to disk (default fallback);
   - **Practical examples** of use.
 
+### Invoking help from the terminal
+
+When shell integration is installed (`./scripts/install-aliases.sh`):
+
+- **`ae-help`** (or `alterego-help`): instant terminal cheatsheet listing all aliases and subcommands without calling an AI model.
+- **`cl-help [<cmd>]`**: opens Claude Code running `/alterego help [<cmd>]`.
+- **`agy-help [<cmd>]`**: opens Antigravity running `/alterego help [<cmd>]`.
+- **`cx-help [<cmd>]`**: opens Codex running `$alterego help [<cmd>]`.
+
+
 ---
 
 ## 12. Requests without a subcommand

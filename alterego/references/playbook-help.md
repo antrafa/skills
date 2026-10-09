@@ -19,6 +19,14 @@ $alterego help
 $alterego help <cmd>
 ```
 
+From the terminal (with shell integration installed):
+```bash
+ae-help                                  # instant cheatsheet in terminal (no LLM call)
+cl-help [<cmd>]                          # opens Claude Code with help
+agy-help [<cmd>]                         # opens Antigravity with help
+cx-help [<cmd>]                          # opens Codex with help
+```
+
 ---
 
 ## 1. `/alterego help` (No Arguments) — The Quick Summary
