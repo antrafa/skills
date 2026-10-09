@@ -424,6 +424,76 @@ def eval_prefix_collision() -> None:
 # --- runner ------------------------------------------------------------------
 
 
+# --- sync-two-machines -------------------------------------------------------
+
+
+def eval_sync_two_machines() -> None:
+    """Two clones of one remote write and touch concurrently, then both sync.
+
+    The bookkeeping must merge on its own; only a prose edit on both sides may
+    stop the sync, and a vault with no repository must be left alone.
+    """
+    import tempfile
+
+    name = "sync-two-machines"
+    root = Path(tempfile.mkdtemp(prefix="mentat-sync-"))
+    sh = lambda *a, cwd=root: subprocess.run(a, cwd=cwd, capture_output=True, text=True, check=True)
+
+    plain = build("empty")
+    out = vault_py(plain, "sync")
+    check(name, "a vault without git is left alone", out.startswith("sync off:") and not (plain / ".git").exists(), out.strip())
+
+    sh("git", "init", "-q", "--bare", "-b", "main", "remote.git")
+    first = build("cors")
+    sh("git", "init", "-q", "-b", "main", cwd=first)
+    sh("git", "remote", "add", "origin", str(root / "remote.git"), cwd=first)
+    for repo in (first,):
+        sh("git", "config", "user.email", "t@t", cwd=repo)
+        sh("git", "config", "user.name", "t", cwd=repo)
+    vault_py(first, "sync")  # no upstream yet: must refuse, not push
+    sh("git", "add", "-A", cwd=first)
+    sh("git", "commit", "-q", "-m", "seed", cwd=first)
+    sh("git", "push", "-q", "-u", "origin", "main", cwd=first)
+    vault_py(first, "sync")  # installs .gitattributes and the driver
+    second = root / "second"
+    sh("git", "clone", "-q", str(root / "remote.git"), str(second))
+    sh("git", "config", "user.email", "t@t", cwd=second)
+    sh("git", "config", "user.name", "t", cwd=second)
+
+    slug = next(p.stem for p in (first / "entries").glob("*.md") if "cors" in p.stem)
+    before = frontmatter(first / "entries" / f"{slug}.md")
+    vault_py(first, "touch", slug)
+    vault_py(second, "touch", slug)
+    vault_py(second, "touch", slug)
+    vault_py(first, "write", "--type", "note", "--slug", "from-first", "--summary", "first", stdin="- a\n")
+    vault_py(second, "write", "--type", "note", "--slug", "from-second", "--summary", "second", stdin="- b\n")
+
+    vault_py(first, "sync")
+    out = vault_py(second, "sync")
+    vault_py(first, "sync")
+    check(name, "concurrent touches and writes merge without stopping", "sync ok" in out, out.strip())
+
+    for label, repo in (("first", first), ("second", second)):
+        front = frontmatter(repo / "entries" / f"{slug}.md")
+        check(
+            name, f"{label}: usage_count counts all three touches",
+            int(front.get("usage_count", 0)) == int(before.get("usage_count", 0)) + 3,
+            f"before={before.get('usage_count')} after={front.get('usage_count')}",
+        )
+        notes = (repo / "maps" / "notes.md").read_text()
+        check(name, f"{label}: both new notes indexed once", notes.count("from-first]]") == 1 and notes.count("from-second]]") == 1, notes)
+        check(name, f"{label}: no conflict markers left", "<<<<<<<" not in "".join(p.read_text() for p in repo.rglob("*.md")))
+
+    (first / "profile.md").write_text("# Profile\n\n- first machine\n", encoding="utf-8")
+    (second / "profile.md").write_text("# Profile\n\n- second machine\n", encoding="utf-8")
+    vault_py(first, "sync")
+    stopped = subprocess.run(
+        [sys.executable, str(VAULT_PY), "sync"], env={**os.environ, "MENTAT_VAULT": str(second)},
+        capture_output=True, text=True,
+    )
+    check(name, "prose edited on both machines stops the sync", stopped.returncode != 0 and "profile.md" in stopped.stdout, stopped.stdout + stopped.stderr)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("-v", "--verbose", action="store_true", help="show evidence for passes too")
@@ -433,7 +503,7 @@ def main() -> None:
     for runner in (
         eval_remember_a_bug, eval_groom, eval_groom_cadence,
         eval_amend_preserves_identity, eval_stats, eval_orphan_prefix,
-        eval_archive_round_trip, eval_prefix_collision,
+        eval_archive_round_trip, eval_prefix_collision, eval_sync_two_machines,
     ):
         try:
             runner()

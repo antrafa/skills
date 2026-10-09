@@ -9,7 +9,7 @@ Every tunable number lives here and nowhere else — SKILL.md and OPERATIONS.md
 reference this file instead of restating values, so they cannot drift apart.
 
 Subcommands: write | search | touch | relate | reindex | groom | restore
-             | stats | tags | audit
+             | stats | tags | audit | sync | merge-entry
 Run `python3 vault.py --selfcheck` to verify the decay model and index editing.
 """
 
@@ -19,8 +19,10 @@ import argparse
 import datetime as dt
 import math
 import os
+import platform
 import re
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -879,6 +881,209 @@ def cmd_audit(args: argparse.Namespace) -> None:
         print(f"still needs a judgment call: {', '.join(manual)}.")
 
 
+# --- sync --------------------------------------------------------------------
+
+# Index files only ever gain bullets on each machine, so a git `union` merge
+# keeps both sides' lines instead of raising a conflict nobody needs to judge.
+# Entries go through `merge-entry`, which knows how to reconcile the counters
+# `touch` and `relate` change on every use. profile.md and core-memory.md are
+# prose: a real conflict there stops the sync and waits for a decision.
+GITATTRIBUTES = """\
+# Written by Mentat. The merge driver is defined per machine in .git/config.
+maps/*.md merge=union
+daily/*.md merge=union
+index.md merge=union
+entries/*.md merge=mentat-entry
+archive/*.md merge=mentat-entry
+"""
+ENTRY_DRIVER = "mentat-entry"
+_MAX_KEYS = ("salience",)
+_LATEST_KEYS = ("last_accessed", "decayed_at")
+
+
+def git(*args: str, check: bool = False) -> subprocess.CompletedProcess:
+    done = subprocess.run(["git", "-C", str(VAULT), *args], capture_output=True, text=True)
+    if check and done.returncode:
+        sys.exit(f"error: git {' '.join(args)} failed: {done.stderr.strip()}")
+    return done
+
+
+def sync_blocker() -> str | None:
+    """Why this vault cannot sync, or None when it can.
+
+    Mentat works fine as a single-machine memory, so a vault with no repository
+    is a supported setup, not an error: sync says so and changes nothing.
+    """
+    if not (VAULT / ".git").exists():
+        return f"{VAULT} is not a git repository — memory stays on this machine"
+    if not git("remote").stdout.strip():
+        return "the vault repository has no remote — nowhere to sync to"
+    if git("rev-parse", "--abbrev-ref", "@{u}").returncode:
+        branch = git("branch", "--show-current").stdout.strip() or "main"
+        return f"branch has no upstream — push it once with: git -C {VAULT} push -u origin {branch}"
+    return None
+
+
+def ensure_sync_config() -> list[str]:
+    """Install the merge rules. Returns what changed, empty when already in place.
+
+    `.gitattributes` travels with the repository, but git never versions the
+    driver it names — each clone needs `merge.mentat-entry.driver` in its own
+    config, or the attribute silently falls back to a plain text merge.
+    """
+    changed = []
+    attributes = VAULT / ".gitattributes"
+    if not attributes.exists() or "merge=mentat-entry" not in attributes.read_text(encoding="utf-8"):
+        attributes.write_text(GITATTRIBUTES, encoding="utf-8")
+        changed.append(".gitattributes")
+    driver = f'"{sys.executable}" "{Path(__file__).resolve()}" merge-entry %O %A %B'
+    if git("config", f"merge.{ENTRY_DRIVER}.driver").stdout.strip() != driver:
+        git("config", f"merge.{ENTRY_DRIVER}.name", "Mentat entry merge", check=True)
+        git("config", f"merge.{ENTRY_DRIVER}.driver", driver, check=True)
+        changed.append(f"merge.{ENTRY_DRIVER}.driver")
+    return changed
+
+
+def merge_front(base: dict, ours: dict, theirs: dict) -> tuple[dict, list[str]]:
+    """Three-way merge of entry frontmatter. Returns (merged, conflicting keys).
+
+    The counters have one right answer, so they never conflict: the stronger
+    salience, every use counted once from each side, the latest date and the
+    union of links. Any other field changed differently on both sides is a
+    real disagreement and is reported, not guessed.
+    """
+    merged, conflicts = dict(ours), []
+    for key in dict.fromkeys([*ours, *theirs]):
+        mine, other, old = ours.get(key), theirs.get(key), base.get(key)
+        if mine == other or other == old:
+            continue
+        if other is None and mine == old:
+            del merged[key]
+        elif mine == old or mine is None:
+            merged[key] = other
+        elif key in _MAX_KEYS:
+            merged[key] = str(max(read_int(ours, key), read_int(theirs, key)))
+        elif key == "usage_count":
+            merged[key] = str(read_int(ours, key) + read_int(theirs, key) - read_int(base, key))
+        elif key in _LATEST_KEYS:
+            merged[key] = max(read_str(ours, key), read_str(theirs, key))
+        elif key == "related":
+            links = _WIKILINK_RE.findall(mine) + _WIKILINK_RE.findall(other)
+            merged[key] = render_related(list(dict.fromkeys(t.strip() for t in links)))
+        else:
+            conflicts.append(key)
+    return merged, conflicts
+
+
+def cmd_merge_entry(args: argparse.Namespace) -> None:
+    """git merge driver: reconcile frontmatter by rule, bodies with merge-file.
+
+    Writes the result over %A and exits non-zero only when something needs a
+    person — git then reports the file as conflicted, markers included.
+    """
+    import tempfile
+
+    paths = [Path(args.base), Path(args.ours), Path(args.theirs)]
+    (base, base_body), (ours, our_body), (theirs, their_body) = (
+        parse_entry(p) if p.stat().st_size else ({}, "") for p in paths
+    )
+    if ours is None or theirs is None:
+        sys.exit(subprocess.run(["git", "merge-file", *map(str, (paths[1], paths[0], paths[2]))]).returncode)
+    merged, conflicts = merge_front(base or {}, ours, theirs)
+    if conflicts:
+        # Markers inside frontmatter break the YAML, so a field conflict falls
+        # back to a whole-file text merge the person can read and settle.
+        sys.exit(subprocess.run(["git", "merge-file", *map(str, (paths[1], paths[0], paths[2]))]).returncode)
+    with tempfile.TemporaryDirectory() as tmp:
+        files = []
+        for name, text in (("ours", our_body), ("base", base_body), ("theirs", their_body)):
+            files.append(Path(tmp) / name)
+            files[-1].write_text(text, encoding="utf-8")
+        body = subprocess.run(
+            ["git", "merge-file", "-p", *map(str, files)], capture_output=True, text=True,
+        )
+    dump_entry(paths[1], merged, body.stdout)
+    sys.exit(1 if body.returncode else 0)
+
+
+def dedupe_bullets(path: Path) -> bool:
+    """Drop repeated bullets for the same entry within one section.
+
+    A union merge keeps both sides' version of a bullet that `reindex` relabeled
+    on one machine, so the entry shows up twice under the same heading.
+    """
+    lines, out, seen, changed = _read_lines(path), [], set(), False
+    for line in lines:
+        if line.startswith("#"):
+            seen = set()
+        targets = _WIKILINK_RE.findall(line) if line.strip().startswith("- ") else []
+        if targets and _DATED_SLUG_RE.match(targets[0].strip()):
+            if targets[0].strip() in seen:
+                changed = True
+                continue
+            seen.add(targets[0].strip())
+        out.append(line)
+    if changed:
+        _write_lines(path, out)
+    return changed
+
+
+def reconcile_indexes() -> int:
+    """Undo what a union merge leaves behind: duplicate bullets, an overfull index."""
+    files = [VAULT / "index.md", *sorted((VAULT / "maps").glob("*.md")), *sorted((VAULT / "daily").glob("*.md"))]
+    fixed = sum(dedupe_bullets(p) for p in files if p.exists())
+    if (VAULT / "index.md").exists():
+        trim_under(VAULT / "index.md", "## Recent Entries", INDEX_RECENT_MAX)
+    return fixed
+
+
+def commit_all(message: str) -> bool:
+    git("add", "-A", check=True)
+    if not git("diff", "--cached", "--quiet").returncode:
+        return False
+    git("commit", "-q", "-m", message, check=True)
+    return True
+
+
+def cmd_sync(args: argparse.Namespace) -> None:
+    blocker = sync_blocker()
+    if blocker:
+        print(f"sync off: {blocker}")
+        return
+    if (VAULT / ".git" / "MERGE_HEAD").exists():
+        sys.exit("error: a previous sync left a merge to resolve — settle the conflicted "
+                 "files, `git commit`, then sync again")
+    for item in ensure_sync_config():
+        print(f"configured {item}")
+    host = platform.node() or "unknown-host"
+    if commit_all(f"chore(memoria): sync de {host}"):
+        print(f"committed local changes from {host}")
+
+    before = git("rev-parse", "HEAD").stdout.strip()
+    fetched = git("fetch", "--quiet")
+    if fetched.returncode:
+        sys.exit(f"error: fetch failed, local commits are safe: {fetched.stderr.strip()}")
+    pulled = git("merge", "--no-edit", "-m", "chore(memoria): mescla memória de outra máquina", "@{u}")
+    if pulled.returncode:
+        conflicted = git("diff", "--name-only", "--diff-filter=U").stdout.split()
+        if not conflicted:
+            sys.exit(f"error: merge failed, local commits are safe: {pulled.stderr.strip() or pulled.stdout.strip()}")
+        print("sync stopped: these files changed differently on two machines:")
+        for name in conflicted:
+            print(f"  - {name}")
+        sys.exit("resolve them, `git commit`, then sync again")
+
+    if git("rev-parse", "HEAD").stdout.strip() != before:
+        fixed = reconcile_indexes()
+        if commit_all("chore(memoria): reconcilia índices após sync"):
+            print(f"reconciled indexes after merge ({fixed} files deduplicated)")
+
+    pushed = git("push")
+    if pushed.returncode:
+        sys.exit(f"error: push failed, local commits are safe: {pushed.stderr.strip()}")
+    print("sync ok: vault matches the remote")
+
+
 # --- self-check --------------------------------------------------------------
 
 
@@ -924,6 +1129,7 @@ def selfcheck() -> None:
     check_index_editing()
     check_orphan_detection()
     check_stats_accounting()
+    check_front_merge()
     print(f"selfcheck ok (100 salience, 14 idle days: 1 run={single}, 2 runs={weekly}, 14 runs={daily})")
 
 
@@ -999,6 +1205,31 @@ def check_orphan_detection() -> None:
             assert orphans == ["2026-01-01-cors"], f"prefix collision hid an orphan: {orphans}"
         finally:
             VAULT = original
+
+
+def check_front_merge() -> None:
+    """Counters changed on two machines merge by rule; anything else is reported.
+
+    Without the rule every `touch` of the same entry on two machines was a
+    conflict, so sync would stop on bookkeeping no person should have to judge.
+    """
+    base = {"salience": "100", "usage_count": "2", "last_accessed": "2026-01-01",
+            "related": '["[[2026-01-01-a]]"]', "status": "open"}
+    ours = {**base, "salience": "110", "usage_count": "3", "last_accessed": "2026-01-05",
+            "related": '["[[2026-01-01-a]]", "[[2026-01-02-b]]"]'}
+    theirs = {**base, "salience": "120", "usage_count": "4", "last_accessed": "2026-01-03",
+              "related": '["[[2026-01-01-a]]", "[[2026-01-03-c]]"]'}
+    merged, conflicts = merge_front(base, ours, theirs)
+    assert not conflicts, conflicts
+    assert merged["salience"] == "120", "the stronger salience must win"
+    assert merged["usage_count"] == "5", "each side's uses must be counted once"
+    assert merged["last_accessed"] == "2026-01-05", "the latest access must win"
+    assert merged["related"] == '["[[2026-01-01-a]]", "[[2026-01-02-b]]", "[[2026-01-03-c]]"]'
+
+    _, conflicts = merge_front(base, {**base, "status": "resolved"}, {**base, "status": "superseded"})
+    assert conflicts == ["status"], "a field changed two ways must be reported, not guessed"
+    merged, _ = merge_front(base, base, {k: v for k, v in base.items() if k != "status"})
+    assert "status" not in merged, "a field removed on one side must not come back"
 
 
 def check_stats_accounting() -> None:
@@ -1111,6 +1342,15 @@ def main() -> None:
     audit = sub.add_parser("audit", help="integrity checks across entries, MOCs and daily notes")
     audit.add_argument("--fix", action="store_true")
     audit.set_defaults(func=cmd_audit)
+
+    sync = sub.add_parser("sync", help="commit, pull, merge and push the vault, when it has a remote")
+    sync.set_defaults(func=cmd_sync)
+
+    merge_entry = sub.add_parser("merge-entry", help="git merge driver for entries (called by git)")
+    merge_entry.add_argument("base")
+    merge_entry.add_argument("ours")
+    merge_entry.add_argument("theirs")
+    merge_entry.set_defaults(func=cmd_merge_entry)
 
     args = parser.parse_args()
     if args.selfcheck:
