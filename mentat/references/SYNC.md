@@ -5,7 +5,7 @@ scripts: `scripts/setup.py` wires this machine, and `scripts/vault.py sync`
 shares the vault through git. Your part is the consent and the judgment around
 them.
 
-- [Setup](#setup) · [Absorb](#absorb) · [Uninstall](#uninstall) · [Sync](#sync) · [Resolving a stopped sync](#resolving-a-stopped-sync)
+- [Setup](#setup) · [Absorb](#absorb) · [Uninstall](#uninstall) · [Sync](#sync) · [Choosing what syncs](#choosing-what-syncs) · [Resolving a stopped sync](#resolving-a-stopped-sync)
 
 ---
 
@@ -27,6 +27,8 @@ Make this machine's agents share one memory.
    want the vault in a private git repository so other machines can share it.
    Yes → ask for the URL of a repository they already created; you never create
    one on their behalf. No → carry on. Mentat works fully on one machine.
+   Yes → also ask which topics may leave this machine, and run
+   [Choosing what syncs](#choosing-what-syncs) before the first sync.
 4. **Run** on an explicit yes: `scripts/setup.py --agents <answer>`, with `--remote <url>` if they
    gave one and `--no-timer` if they want to sync only on request. Re-running is
    safe: a second run only fixes what drifted.
@@ -99,11 +101,56 @@ relay the message and offer [Setup](#setup) with a remote.
 
 What merges on its own: index, MOC and daily bullets from both sides; entry
 counters by rule (stronger salience, uses from both sides, latest dates, union of
-`related`). What stops: a body, `profile.md` or `core-memory.md` edited
+`related`). One gap: when two machines leave an entry byte-identical (the same
+single touch on the same day), git never calls the rule and that use counts
+once. What stops: a body, `profile.md` or `core-memory.md` edited
 differently on two machines, or an entry archived on one and changed on the
 other.
 
 Completion: `sync ok`, a `sync off` reason relayed, or a stop handled below.
+
+## Choosing what syncs
+
+`sync-topics` at the vault root decides which entries leave the machine.
+Without it, every entry syncs. With it, an entry syncs only when its `project`
+or one of its tags matches a line, and no `!` line matches; everything else
+stays local. Unmatched means local on purpose: forgetting to allow a topic
+costs one sync, while a client's name on a personal GitHub cannot be taken back.
+
+```text
+# Topics that sync; every other entry stays on this machine.
+# A line matches a project or a tag; * is a wildcard; ! keeps matches local.
+lang/*
+pattern/*
+estudos
+!cliente/*
+```
+
+1. **Ask** which subjects are fine on the remote, and which must never go
+   (clients, employer systems). Show `vault.py tags` so the answer uses the
+   vault's own vocabulary.
+2. **Write** the file from the answer and run `vault.py topics`. It lists every
+   entry as `syncs` or `local` and changes nothing. Show it and adjust until the
+   person agrees with the split.
+3. **Sync** on a yes. A topic that was shared before is removed from the
+   remote's current files and kept on disk here and on the other machines.
+4. **Say what is still out there.** Removing a file from the remote does not
+   remove it from the repository's history. Clearing that means rewriting the
+   history and force-pushing, which is destructive and a separate decision:
+   offer it, never run it on your own.
+
+What stays local is more than the entry file. Its index bullets, its slug in
+the `related` lists, and every link to it are left out of what gets
+committed. A link in a shared entry's body reaches the remote as the text
+`local entry`. This machine keeps the full text: sync sets it aside in
+`.git/mentat-local` before committing and merges it back after pushing. A
+pre-commit hook refuses any commit that carries a local entry, so a commit
+made by hand, or by an editor plugin, cannot leak one. `profile.md` and
+`core-memory.md` always sync. Keep client details out of them.
+
+Each sync applies the stricter of this machine's file and the remote's.
+Withdrawing a topic takes effect on the next sync everywhere. Allowing a new
+one takes two syncs, because it only counts once the remote has the new file.
 
 ## Resolving a stopped sync
 
@@ -114,7 +161,9 @@ run again until it is settled.
 2. **Propose** the merged text: keep every fact from both sides, and when they
    genuinely disagree, ask which is current rather than picking one.
 3. **Settle** on a yes: write the file, `git -C ~/.mentat add <file>`, then
-   `git -C ~/.mentat commit --no-edit`, then run `vault.py sync` again.
+   `git -C ~/.mentat commit --no-edit`, then run `vault.py sync` again. Lines of
+   local entries are missing from the files until that sync puts them back, so
+   do not re-add them by hand.
 
 An entry archived on one machine and touched on the other: keep the touched
 version in `entries/` and delete the archived copy, since being used is the

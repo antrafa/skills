@@ -45,7 +45,7 @@ or search — so resolve it deliberately instead of guessing.
 
 | Signal in the input | Operation |
 |---|---|
-| A leading keyword: `load`, `profile`, `review`, `status`, `amend`, `groom`, `restore`, `audit`, `merge`, `split`, `forget`, `export`, `import`, `consolidate`, `setup`, `sync`, `uninstall` | That operation |
+| A leading keyword: `load`, `profile`, `review`, `status`, `amend`, `groom`, `restore`, `audit`, `merge`, `split`, `forget`, `export`, `import`, `consolidate`, `setup`, `sync`, `topics`, `uninstall` | That operation |
 | Asserts something — "we fixed X", "decided on Y", "remember that Z", a pasted snippet, a postmortem | [Remember](#remember) |
 | Asks something, or is a bare topic — "what was the CORS fix?", "nginx cors", "did I note anything about retries?" | [Recall](#recall) |
 | Genuinely ambiguous | [Recall](#recall) first |
@@ -66,7 +66,8 @@ For Groom, Restore, Audit, Merge, Split, Forget, Export, Import and Consolidate,
 read [OPERATIONS.md](references/OPERATIONS.md). For Setup (make the vault the
 main memory of the agents the person chooses, absorb what they remembered on
 their own, or back it out with Uninstall) and
-Sync (share the vault across machines through git), read
+Sync (share the vault across machines through git, all of it or only the topics
+allowed in `sync-topics`), read
 [SYNC.md](references/SYNC.md).
 
 ## Three dynamics

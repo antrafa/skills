@@ -95,6 +95,19 @@ With one, point every machine at the same **private** repository (`setup.py --re
 
 The merge driver is defined per machine in `.git/config` (git never versions it), which is why each new machine runs setup instead of a bare `git clone`.
 
+### Syncing only some topics
+
+A work vault on a personal GitHub is a leak waiting to happen. Create `sync-topics` at the vault root and only entries whose project or tag it allows leave the machine. Everything else stays local:
+
+```text
+lang/*
+pattern/*
+estudos
+!cliente/*
+```
+
+`vault.py topics` previews the split before anything moves. A local entry stays whole on its own machine, but its file, index bullets and links never reach the remote, and a pre-commit hook refuses any commit that would carry one. Files already pushed stay in the repository history until you rewrite it. That is a separate, destructive step, described in [SYNC.md](references/SYNC.md#choosing-what-syncs).
+
 ## 🛠 Usage & Commands
 
 Trigger the skill with `/mentat` followed by your prompt. The skill also engages on its own when you lean on something from an earlier session ("what was that CORS fix?").
@@ -164,6 +177,7 @@ scripts/vault.py groom --dry-run                    # preview the fade
 scripts/vault.py stats --json                       # health, machine-readable
 scripts/vault.py audit --fix                        # repair bookkeeping damage
 scripts/vault.py sync                               # share through git, if configured
+scripts/vault.py topics                             # which entries sync-topics lets leave
 scripts/vault.py --selfcheck                        # verify decay and index editing
 ```
 

@@ -9,7 +9,7 @@ Every tunable number lives here and nowhere else — SKILL.md and OPERATIONS.md
 reference this file instead of restating values, so they cannot drift apart.
 
 Subcommands: write | search | touch | relate | reindex | groom | restore
-             | stats | tags | audit | sync | merge-entry
+             | stats | tags | audit | sync | topics | merge-entry | check-staged
 Run `python3 vault.py --selfcheck` to verify the decay model and index editing.
 """
 
@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import fnmatch
 import math
 import os
 import platform
@@ -62,7 +63,10 @@ def parse_entry(path: Path) -> tuple[dict[str, str] | None, str]:
     entry only changes the fields we touched — no reformatting churn, no lost
     keys we do not know about.
     """
-    text = path.read_text(encoding="utf-8")
+    return split_front(path.read_text(encoding="utf-8"))
+
+
+def split_front(text: str) -> tuple[dict[str, str] | None, str]:
     match = _FM_RE.match(text)
     if not match:
         return None, text
@@ -76,10 +80,14 @@ def parse_entry(path: Path) -> tuple[dict[str, str] | None, str]:
 
 
 def dump_entry(path: Path, front: dict[str, str], body: str) -> None:
+    path.write_text(render_entry(front, body), encoding="utf-8")
+
+
+def render_entry(front: dict[str, str], body: str) -> str:
     rendered = "\n".join(
         f"{key}: {value}" if value else f"{key}:" for key, value in front.items()
     )
-    path.write_text(f"---\n{rendered}\n---\n{body}", encoding="utf-8")
+    return f"---\n{rendered}\n---\n{body}"
 
 
 def read_int(front: dict[str, str], key: str, default: int = 0) -> int:
@@ -897,6 +905,11 @@ entries/*.md merge=mentat-entry
 archive/*.md merge=mentat-entry
 """
 ENTRY_DRIVER = "mentat-entry"
+PRE_COMMIT_HOOK = """\
+#!/bin/sh
+# Written by Mentat: refuses a commit that would carry a local-only entry off this machine.
+MENTAT_VAULT="$(git rev-parse --show-toplevel)" exec "{python}" "{vault_py}" check-staged
+"""
 _MAX_KEYS = ("salience",)
 _LATEST_KEYS = ("last_accessed", "decayed_at")
 
@@ -941,6 +954,14 @@ def ensure_sync_config() -> list[str]:
         git("config", f"merge.{ENTRY_DRIVER}.name", "Mentat entry merge", check=True)
         git("config", f"merge.{ENTRY_DRIVER}.driver", driver, check=True)
         changed.append(f"merge.{ENTRY_DRIVER}.driver")
+    hook = VAULT / ".git" / "hooks" / "pre-commit"
+    script = PRE_COMMIT_HOOK.format(python=sys.executable, vault_py=Path(__file__).resolve())
+    existing = hook.read_text(encoding="utf-8") if hook.exists() else ""
+    if existing != script and (not existing or "Written by Mentat" in existing):
+        hook.parent.mkdir(parents=True, exist_ok=True)
+        hook.write_text(script, encoding="utf-8")
+        hook.chmod(0o755)
+        changed.append("pre-commit hook")
     return changed
 
 
@@ -1039,7 +1060,233 @@ def reconcile_indexes() -> int:
     return fixed
 
 
+# --- selective sync ----------------------------------------------------------
+
+# Without this file every entry syncs, as before topics existed. With it, an
+# entry leaves the machine only when its project or one of its tags matches an
+# allow line and no `!` line; anything unmatched stays local. Forgetting to allow
+# a topic costs one sync; leaking one cannot be taken back.
+TOPICS_FILE = "sync-topics"
+LOCAL_LINK_TEXT = "local entry"
+_LINK_RE = re.compile(r"\[\[([^\]|#]+)[^\]]*\]\]")
+_SNAPSHOT_DIR = "mentat-local"  # under .git, so the full text never syncs
+_EXCLUDE_START, _EXCLUDE_END = "# mentat:local:start", "# mentat:local:end"
+_ENTRY_DIRS = ("entries/", "archive/")
+
+
+def parse_topic_rules(text: str) -> tuple[list[str], list[str]]:
+    lines = [l.strip() for l in text.splitlines() if l.strip() and not l.strip().startswith("#")]
+    allow = [l for l in lines if not l.startswith("!")]
+    deny = [l[1:].strip() for l in lines if l.startswith("!")]
+    return allow, deny
+
+
+def topic_rule_sets() -> list[tuple[list[str], list[str]]]:
+    """The rules in force: this machine's file and the one on the remote.
+
+    An entry syncs only when every set allows it. A topic the other machine
+    stopped sharing arrives as a deletion in the same merge as its new rules;
+    judged by the local file alone, this machine would still track the entry and
+    the merge would delete it from disk instead of leaving it local.
+    """
+    sets = []
+    if (VAULT / TOPICS_FILE).exists():
+        sets.append(parse_topic_rules((VAULT / TOPICS_FILE).read_text(encoding="utf-8")))
+    remote = git("show", f"@{{u}}:{TOPICS_FILE}")
+    if remote.returncode == 0:
+        sets.append(parse_topic_rules(remote.stdout))
+    return sets
+
+
+def entry_topics(front: dict[str, str]) -> list[str]:
+    tags = (t.strip().strip("\"'").lstrip("#") for t in front.get("tags", "").strip("[]").split(","))
+    return [t for t in (read_str(front, "project"), *tags) if t]
+
+
+def topics_allow(rules: tuple[list[str], list[str]], topics: list[str]) -> bool:
+    allow, deny = rules
+    matches = lambda patterns: any(fnmatch.fnmatchcase(t, p) for p in patterns for t in topics)
+    return matches(allow) and not matches(deny)
+
+
+def local_slugs(rule_sets: list[tuple[list[str], list[str]]]) -> set[str]:
+    """Entries that never leave this machine. An unparseable entry counts as local."""
+    if not rule_sets:
+        return set()
+    return {
+        path.stem
+        for directory in (entries_dir(), archive_dir())
+        for path, front, _ in iter_entries(directory)
+        if front is None or not all(topics_allow(r, entry_topics(front)) for r in rule_sets)
+    }
+
+
+def shared_text(rel: str, text: str, local: set[str]) -> str:
+    """`rel` as it may leave the machine: no bullet, link or slug of a local entry.
+
+    The summary of a local entry is in its index bullets and its slug is in every
+    link to it, so leaving only the entry file behind would still publish what it
+    is about.
+    """
+    if rel == "index.md" or rel.startswith(("maps/", "daily/")):
+        text = "".join(
+            line for line in text.splitlines(keepends=True)
+            if not (line.strip().startswith("- ") and any(t.strip() in local for t in _WIKILINK_RE.findall(line)))
+        )
+    match = _FM_RE.match(text) if rel.startswith(_ENTRY_DIRS) else None
+    if match:
+        def drop_local(found: re.Match) -> str:
+            targets = [t.strip() for t in _WIKILINK_RE.findall(found.group(0))]
+            if not any(t in local for t in targets):
+                return found.group(0)
+            return "related: " + render_related([t for t in targets if t not in local])
+
+        text = re.sub(r"(?m)^related:.*$", drop_local, match.group(0)) + text[match.end():]
+    return _LINK_RE.sub(lambda m: LOCAL_LINK_TEXT if m.group(1).strip() in local else m.group(0), text)
+
+
+def snapshot_dir() -> Path:
+    return VAULT / ".git" / _SNAPSHOT_DIR
+
+
+def write_exclude(local: set[str]) -> None:
+    """List the local entries in .git/info/exclude, which git reads but never shares."""
+    path = VAULT / ".git" / "info" / "exclude"
+    text = path.read_text(encoding="utf-8") if path.exists() else ""
+    kept = re.sub(rf"{_EXCLUDE_START}.*?{_EXCLUDE_END}\n?", "", text, flags=re.DOTALL).rstrip("\n")
+    if local:
+        lines = "".join(f"/{d}{slug}.md\n" for slug in sorted(local) for d in _ENTRY_DIRS)
+        kept = (kept + "\n" if kept else "") + f"{_EXCLUDE_START}\n{lines}{_EXCLUDE_END}"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(kept + "\n" if kept else "", encoding="utf-8")
+
+
+def hide_local(local: set[str]) -> int:
+    """Leave the local entries out of what git sees, keeping the full text aside.
+
+    The full version of every file this strips goes to .git/mentat-local, next
+    to the stripped one, so `restore_local` can merge the local lines back after
+    git rewrote the file. The first snapshot is kept: a later strip in the same
+    sync must not lose what the first one set aside.
+    """
+    write_exclude(local)
+    for slug in sorted(local):
+        git("rm", "-q", "--cached", "--ignore-unmatch", *(f"{d}{slug}.md" for d in _ENTRY_DIRS))
+    if not local:
+        return 0
+    hidden = 0
+    listed = git("ls-files", "-z", "--cached", "--others", "--exclude-standard", "--", "*.md", check=True)
+    for rel in filter(None, listed.stdout.split("\0")):
+        path = VAULT / rel
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8")
+        shared = shared_text(rel, text, local)
+        if shared == text:
+            continue
+        full = snapshot_dir() / rel
+        if not full.exists():
+            full.parent.mkdir(parents=True, exist_ok=True)
+            full.write_text(text, encoding="utf-8")
+            full.with_name(full.name + ".shared").write_text(shared, encoding="utf-8")
+        path.write_text(shared, encoding="utf-8")
+        hidden += 1
+    return hidden
+
+
+def merge_union(ours: str, base: str, theirs: str) -> str:
+    """Three-way text merge that keeps both sides where they overlap."""
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as tmp:
+        files = []
+        for name, text in (("ours", ours), ("base", base), ("theirs", theirs)):
+            files.append(Path(tmp) / name)
+            files[-1].write_text(text, encoding="utf-8")
+        return subprocess.run(
+            ["git", "merge-file", "-p", "--union", *map(str, files)], capture_output=True, text=True,
+        ).stdout
+
+
+def merge_back(rel: str, current: str, shared: str, full: str) -> str:
+    """Re-apply what `hide_local` stripped onto whatever git left in the file."""
+    if current == shared:
+        return full
+    if rel.startswith(_ENTRY_DIRS):
+        (now, now_body), (was, was_body), (old, old_body) = map(split_front, (current, full, shared))
+        if now is not None and was is not None and old is not None:
+            links = lambda front: [t.strip() for t in _WIKILINK_RE.findall(front.get("related", ""))]
+            hidden = [t for t in links(was) if t not in links(old)]
+            now["related"] = render_related(list(dict.fromkeys(links(now) + hidden)))
+            return render_entry(now, merge_union(now_body, old_body, was_body))
+    return merge_union(current, shared, full)
+
+
+def restore_local() -> int:
+    """Put the local entries' lines back into the files git holds without them."""
+    root = snapshot_dir()
+    if not root.exists():
+        return 0
+    restored = 0
+    for full in sorted(root.rglob("*.md")):
+        rel, path = full.relative_to(root).as_posix(), VAULT / full.relative_to(root)
+        shared = full.with_name(full.name + ".shared")
+        if path.exists() and shared.exists():
+            path.write_text(merge_back(rel, *(f.read_text(encoding="utf-8") for f in (path, shared, full))), encoding="utf-8")
+            restored += 1
+    shutil.rmtree(root)
+    if restored:
+        reconcile_indexes()
+    return restored
+
+
+def cmd_topics(args: argparse.Namespace) -> None:
+    """Show which entries sync and which stay local, before anything moves."""
+    sets = topic_rule_sets() if (VAULT / ".git").exists() else (
+        [parse_topic_rules((VAULT / TOPICS_FILE).read_text(encoding="utf-8"))]
+        if (VAULT / TOPICS_FILE).exists() else []
+    )
+    if not sets:
+        print(f"no {TOPICS_FILE} file: every entry syncs")
+        return
+    local = local_slugs(sets)
+    every = sorted(p.stem for d in (entries_dir(), archive_dir()) if d.exists() for p in d.glob("*.md"))
+    print(f"{len(every) - len(local)} entries sync, {len(local)} stay on this machine")
+    for label, group in (("syncs", [s for s in every if s not in local]), ("local", sorted(local))):
+        for slug in group:
+            print(f"  {label:5}  {slug}")
+
+
+def cmd_check_staged(args: argparse.Namespace) -> None:
+    """pre-commit hook: refuse a commit that would carry a local entry off the machine.
+
+    `sync` strips local entries before it commits; a commit made by hand, or by
+    an editor plugin, does not, and would push their summaries and slugs.
+    """
+    local = local_slugs(topic_rule_sets())
+    if not local:
+        return
+    leaks = []
+    staged = git("diff", "--cached", "--name-only", "-z", "--diff-filter=ACMR").stdout
+    for rel in filter(None, staged.split("\0")):
+        if rel.startswith(_ENTRY_DIRS) and Path(rel).stem in local:
+            leaks.append(rel)
+        elif rel.endswith(".md") and any(
+            t.strip() in local for t in _WIKILINK_RE.findall(git("show", f":{rel}").stdout)
+        ):
+            leaks.append(rel)
+    if leaks:
+        sys.exit(
+            "refusing to commit: these files carry entries that stay on this machine:\n  - "
+            + "\n  - ".join(leaks)
+            + f"\nunstage them and run `{Path(__file__).resolve()} sync`, which commits without the local parts"
+        )
+
+
 def commit_all(message: str) -> bool:
+    """Commit everything this machine may share; local entries are left out here,
+    so no caller can commit without applying sync-topics."""
+    hide_local(local_slugs(topic_rule_sets()))
     git("add", "-A", check=True)
     if not git("diff", "--cached", "--quiet").returncode:
         return False
@@ -1055,25 +1302,27 @@ def cmd_sync(args: argparse.Namespace) -> None:
     if (VAULT / ".git" / "MERGE_HEAD").exists():
         sys.exit("error: a previous sync left a merge to resolve — settle the conflicted "
                  "files, `git commit`, then sync again")
+    restore_local()  # a sync that stopped midway left local lines set aside
     for item in ensure_sync_config():
         print(f"configured {item}")
+    fetched = git("fetch", "--quiet")
+    if fetched.returncode:
+        sys.exit(f"error: fetch failed, nothing was committed: {fetched.stderr.strip()}")
     host = platform.node() or "unknown-host"
     if commit_all(f"chore(memoria): sync de {host}"):
         print(f"committed local changes from {host}")
 
     before = git("rev-parse", "HEAD").stdout.strip()
-    fetched = git("fetch", "--quiet")
-    if fetched.returncode:
-        sys.exit(f"error: fetch failed, local commits are safe: {fetched.stderr.strip()}")
     pulled = git("merge", "--no-edit", "-m", "chore(memoria): mescla memória de outra máquina", "@{u}")
     if pulled.returncode:
         conflicted = git("diff", "--name-only", "--diff-filter=U").stdout.split()
         if not conflicted:
+            restore_local()
             sys.exit(f"error: merge failed, local commits are safe: {pulled.stderr.strip() or pulled.stdout.strip()}")
         print("sync stopped: these files changed differently on two machines:")
         for name in conflicted:
             print(f"  - {name}")
-        sys.exit("resolve them, `git commit`, then sync again")
+        sys.exit("resolve them, `git commit`, then sync again — local-only lines come back on that sync")
 
     if git("rev-parse", "HEAD").stdout.strip() != before:
         fixed = reconcile_indexes()
@@ -1082,8 +1331,12 @@ def cmd_sync(args: argparse.Namespace) -> None:
 
     pushed = git("push")
     if pushed.returncode:
+        restore_local()
         sys.exit(f"error: push failed, local commits are safe: {pushed.stderr.strip()}")
-    print("sync ok: vault matches the remote")
+    local = local_slugs(topic_rule_sets())
+    restore_local()
+    kept = f", {len(local)} entries kept on this machine" if local else ""
+    print(f"sync ok: vault matches the remote{kept}")
 
 
 # --- self-check --------------------------------------------------------------
@@ -1349,6 +1602,12 @@ def main() -> None:
 
     sync = sub.add_parser("sync", help="commit, pull, merge and push the vault, when it has a remote")
     sync.set_defaults(func=cmd_sync)
+
+    topics = sub.add_parser("topics", help=f"which entries {TOPICS_FILE} lets sync and which stay local")
+    topics.set_defaults(func=cmd_topics)
+
+    check_staged = sub.add_parser("check-staged", help="pre-commit hook: refuse local entries (called by git)")
+    check_staged.set_defaults(func=cmd_check_staged)
 
     merge_entry = sub.add_parser("merge-entry", help="git merge driver for entries (called by git)")
     merge_entry.add_argument("base")

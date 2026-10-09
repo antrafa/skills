@@ -116,6 +116,7 @@ def publish(remote: str) -> None:
     vault.commit_all("chore(memoria): versionar vault mentat")
     branch = vault.git("branch", "--show-current").stdout.strip() or "main"
     run("git", "push", "-q", "-u", "origin", branch, cwd=vault.VAULT)
+    vault.restore_local()
 
 
 # --- agents ------------------------------------------------------------------

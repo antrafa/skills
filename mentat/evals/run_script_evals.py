@@ -494,6 +494,98 @@ def eval_sync_two_machines() -> None:
     check(name, "prose edited on both machines stops the sync", stopped.returncode != 0 and "profile.md" in stopped.stdout, stopped.stdout + stopped.stderr)
 
 
+# --- sync-topics --------------------------------------------------------------
+
+
+def eval_sync_topics() -> None:
+    """Only allowed topics leave the machine; the local ones stay whole at home.
+
+    Nothing about a local entry may reach the remote — not its file, its index
+    bullets, its slug in a link — while this machine keeps all of it, across a
+    merge that rewrites the files it was stripped from.
+    """
+    import tempfile
+
+    name = "sync-topics"
+    root = Path(tempfile.mkdtemp(prefix="mentat-topics-"))
+    sh = lambda *a, cwd=root: subprocess.run(a, cwd=cwd, capture_output=True, text=True, check=True)
+    sh("git", "init", "-q", "--bare", "-b", "main", "remote.git")
+    first = build("empty")
+    sh("git", "init", "-q", "-b", "main", cwd=first)
+    sh("git", "remote", "add", "origin", str(root / "remote.git"), cwd=first)
+    for key, value in (("user.email", "t@t"), ("user.name", "t")):
+        sh("git", "config", key, value, cwd=first)
+
+    vault_py(first, "write", "--type", "learning", "--slug", "java-records", "--summary", "records are final",
+             "--project", "estudos", "--tags", "lang/java", stdin="- shared\n")
+    vault_py(first, "write", "--type", "bug", "--slug", "waf-cliente-x", "--summary", "WAF do cliente X bloqueia",
+             "--project", "cliente-x", "--tags", "lang/java", stdin="- private\n")
+    vault_py(first, "write", "--type", "learning", "--slug", "cliente-x-usa-java", "--summary", "cliente X usa Java",
+             "--project", "estudos", "--tags", "lang/java, cliente/x", stdin="- denied by tag\n")
+    shared = next(p.stem for p in (first / "entries").glob("*java-records.md"))
+    private = next(p.stem for p in (first / "entries").glob("*waf-cliente-x.md"))
+    denied = next(p.stem for p in (first / "entries").glob("*cliente-x-usa-java.md"))
+    vault_py(first, "relate", "--slug", shared, "--related", private)
+    entry = first / "entries" / f"{shared}.md"
+    entry.write_text(entry.read_text() + f"\nSee [[{private}]].\n", encoding="utf-8")
+    (first / "sync-topics").write_text("estudos\n!cliente/*\n", encoding="utf-8")
+
+    sh("git", "add", "sync-topics", cwd=first)
+    sh("git", "commit", "-q", "-m", "seed", cwd=first)
+    sh("git", "push", "-q", "-u", "origin", "main", cwd=first)
+    out = vault_py(first, "sync")
+    check(name, "sync reports the entries kept local", "2 entries kept on this machine" in out, out.strip())
+
+    tree = sh("git", "ls-tree", "-r", "--name-only", "origin/main", cwd=first).stdout
+    leaked = subprocess.run(["git", "grep", "-l", "-e", "waf-cliente-x", "-e", "cliente-x-usa-java",
+                             "-e", "WAF do cliente", "origin/main", "--", "."], cwd=first, capture_output=True, text=True)
+    check(name, "the shared entry reaches the remote", f"entries/{shared}.md" in tree, tree)
+    check(name, "no local entry file reaches the remote", private not in tree and denied not in tree, tree)
+    check(name, "no slug or summary of a local entry reaches the remote", not leaked.stdout.strip(), leaked.stdout)
+
+    def whole(repo: Path) -> bool:
+        text = "".join((repo / f).read_text() for f in ("maps/bugs.md", "index.md", f"entries/{shared}.md"))
+        return (repo / "entries" / f"{private}.md").exists() and text.count(private) == 4
+
+    check(name, "this machine keeps the local entry, its bullets and links", whole(first),
+          (first / "maps/bugs.md").read_text())
+
+    second = root / "second"
+    sh("git", "clone", "-q", str(root / "remote.git"), str(second))
+    for key, value in (("user.email", "t@t"), ("user.name", "t")):
+        sh("git", "config", key, value, cwd=second)
+    # Two touches, not one: identical files on both sides never reach the merge
+    # driver, so a single same-day touch on each machine counts once — git's limit.
+    vault_py(second, "touch", shared)
+    vault_py(second, "touch", shared)
+    vault_py(second, "write", "--type", "learning", "--slug", "from-second", "--summary", "second",
+             "--project", "estudos", stdin="- b\n")
+    vault_py(second, "sync")
+    vault_py(first, "touch", shared)
+    out = vault_py(first, "sync")
+    check(name, "a merge over stripped files still syncs", "sync ok" in out, out.strip())
+    check(name, "the local lines survive a merge that rewrote their files", whole(first),
+          (first / f"entries/{shared}.md").read_text())
+    usage = int(frontmatter(entry).get("usage_count", 0))
+    check(name, "the other machine's change arrives", usage == 3 and "from-second" in (first / "index.md").read_text(),
+          f"usage_count={usage}")
+    check(name, "the second machine never sees the local entry", private not in
+          "".join(p.read_text() for p in second.rglob("*.md") if ".git" not in p.parts))
+
+    sh("git", "add", "-A", cwd=first)
+    manual = subprocess.run(["git", "commit", "-q", "-m", "by hand"], cwd=first, capture_output=True, text=True)
+    check(name, "a commit by hand that carries a local entry is refused",
+          manual.returncode != 0 and "refusing to commit" in manual.stderr, manual.stderr.strip())
+    sh("git", "reset", "-q", cwd=first)
+
+    (first / "sync-topics").write_text("estudos\n!cliente/*\n!lang/*\n", encoding="utf-8")
+    vault_py(first, "sync")
+    out = vault_py(second, "sync")
+    gone = sh("git", "ls-tree", "-r", "--name-only", "origin/main", cwd=first).stdout
+    check(name, "a topic withdrawn from sync leaves the remote", f"entries/{shared}.md" not in gone, gone)
+    check(name, "the other machine keeps a withdrawn entry on disk", (second / "entries" / f"{shared}.md").exists(), out)
+
+
 # --- setup-opt-in -------------------------------------------------------------
 
 
@@ -543,6 +635,24 @@ def eval_setup_opt_in() -> None:
     check(name, "uninstall restores the pre-Mentat MEMORY.md", memory.read_text() == "- original index\n", memory.read_text())
     check(name, "uninstall keeps the vault", (home / ".mentat/entries").is_dir())
 
+    remote = home / "remote.git"
+    subprocess.run(["git", "init", "-q", "--bare", "-b", "main", str(remote)], check=True)
+    env = {**os.environ, "HOME": str(home), "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t",
+           "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t"}
+    vault_py(home / ".mentat", "write", "--type", "bug", "--slug", "segredo-cliente", "--project", "cliente-x",
+             "--summary", "segredo do cliente", stdin="- x\n")
+    (home / ".mentat/sync-topics").write_text("estudos\n", encoding="utf-8")
+    published = subprocess.run(
+        [sys.executable, str(SKILL_DIR / "scripts/setup.py"), "--no-timer", "--agents", "none", "--remote", str(remote)],
+        env={**env, "MENTAT_VAULT": str(home / ".mentat")}, capture_output=True, text=True,
+    )
+    leaked = subprocess.run(["git", f"--git-dir={remote}", "grep", "-l", "segredo", "main", "--", "."],
+                            capture_output=True, text=True).stdout
+    check(name, "the first publish leaves local topics out", published.returncode == 0 and not leaked,
+          published.stderr + leaked)
+    check(name, "the first publish keeps local topics on this machine",
+          "segredo" in (home / ".mentat/maps/bugs.md").read_text(), (home / ".mentat/maps/bugs.md").read_text())
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
@@ -553,7 +663,7 @@ def main() -> None:
     for runner in (
         eval_remember_a_bug, eval_groom, eval_groom_cadence,
         eval_amend_preserves_identity, eval_stats, eval_orphan_prefix,
-        eval_archive_round_trip, eval_prefix_collision, eval_sync_two_machines,
+        eval_archive_round_trip, eval_prefix_collision, eval_sync_two_machines, eval_sync_topics,
         eval_setup_opt_in,
     ):
         try:
