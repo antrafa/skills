@@ -23,6 +23,9 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 - `/alterego` and `start` look for an open control report — current folder, repository, global folder — in parallel with arming `guardrails`, and offer once to resume from the most recent. A hand-written report in the current folder counts if it has a handoff. Eval 41 covers it.
 - `study` suggests `forja` when the topic is "build X with Y" and `forja` is installed with a track for Y: you write the code, it guides and checks each Delivery. The catalog described `forja` as scaffolding and templates, the opposite of what it does; `sources.md`, the README and onboarding now describe it as mentorship tied to `study`.
 
+### Removed
+- The `skill-loaded` grader from the eval cases. It searched the trace for a heading of `SKILL.md`, but a prompt that opens with `/alterego` expands the skill into the first message, which `claude plugin eval` does not record in the trace, so it failed on every run while the skill was in play. The behavior graders already cover what matters; case 06 keeps its negative check, which the trace can still see.
+
 ## [3.2.0] - 2026-09-30
 
 Review goes to a squad of fresh reviewers, the session opens in one call, and working files live outside the repository.

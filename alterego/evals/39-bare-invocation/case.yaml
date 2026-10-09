@@ -14,11 +14,6 @@ execution:
   - Grep
   - Skill
 graders:
-- name: skill-loaded
-  type: regex
-  target: trace
-  pattern: Threefold Reference DNA
-  arm: with-only
 - name: guardrails-invoked
   type: regex
   target: trace

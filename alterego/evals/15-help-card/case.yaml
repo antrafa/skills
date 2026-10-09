@@ -13,11 +13,6 @@ execution:
   - Grep
   - Skill
 graders:
-- name: skill-loaded
-  type: regex
-  target: trace
-  pattern: Threefold Reference DNA
-  arm: with-only
 - name: no-write
   type: tool_used
   tool: Write

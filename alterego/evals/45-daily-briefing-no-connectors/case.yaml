@@ -15,11 +15,6 @@ execution:
   - Write
   - Bash
 graders:
-- name: skill-loaded
-  type: regex
-  target: trace
-  pattern: Threefold Reference DNA
-  arm: with-only
 - name: no-send
   type: regex
   target: trace

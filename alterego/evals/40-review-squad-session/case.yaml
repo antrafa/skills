@@ -17,11 +17,6 @@ execution:
   - Skill
   - Agent
 graders:
-- name: skill-loaded
-  type: regex
-  target: trace
-  pattern: Threefold Reference DNA
-  arm: with-only
 - name: squad-dispatched
   type: tool_used
   tool: Agent

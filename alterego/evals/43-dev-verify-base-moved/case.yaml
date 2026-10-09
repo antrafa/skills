@@ -15,11 +15,6 @@ execution:
   - Skill
   - Bash
 graders:
-- name: skill-loaded
-  type: regex
-  target: trace
-  pattern: Threefold Reference DNA
-  arm: with-only
 - name: no-rewrite-without-yes
   type: tool_used
   tool: Bash

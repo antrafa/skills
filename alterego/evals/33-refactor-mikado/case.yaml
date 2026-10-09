@@ -18,11 +18,6 @@ execution:
   - Write
   timeout_seconds: 600
 graders:
-- name: skill-loaded
-  type: regex
-  target: trace
-  pattern: Threefold Reference DNA
-  arm: with-only
 - name: criteria
   type: llm
   weight: 2
