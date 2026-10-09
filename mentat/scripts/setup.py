@@ -221,13 +221,27 @@ def plan_uninstall(plan: Plan, chosen: set[str], every_agent: bool) -> None:
 
 
 def native_memory(agent: Agent) -> list[Path]:
-    """Files an agent remembered on its own, minus pointers this setup left behind."""
+    """Files an agent remembered on its own and the vault has not absorbed yet.
+
+    A folder whose MEMORY.md was redirected keeps its topic files, already
+    absorbed; only what the agent wrote after the redirect is new drift.
+    """
     files = [p for pattern in agent.native_memory for p in agent.home.glob(pattern) if p.is_file()]
-    return sorted(p for p in files if not is_pointer(p))
+    return sorted(p for p in files if not is_pointer(p) and not absorbed(p))
+
+
+POINTER_PHRASE = "memory lives in the Mentat vault"
 
 
 def is_pointer(path: Path) -> bool:
-    return path.name == "MEMORY.md" and "mentat" in path.read_text(encoding="utf-8", errors="ignore").lower()
+    """The redirect Absorb writes, recognized by its wording: an index that only
+    mentions Mentat is still a memory to absorb."""
+    return path.name == "MEMORY.md" and POINTER_PHRASE in path.read_text(encoding="utf-8", errors="ignore")
+
+
+def absorbed(path: Path) -> bool:
+    pointer = path.with_name("MEMORY.md")
+    return pointer.is_file() and is_pointer(pointer) and path.stat().st_mtime <= pointer.stat().st_mtime
 
 
 # --- timer -------------------------------------------------------------------

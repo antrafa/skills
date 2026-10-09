@@ -628,9 +628,20 @@ def eval_setup_opt_in() -> None:
     setup("--agents", "none")
     check(name, "--agents none adds nothing", (home / ".claude/CLAUDE.md").read_text() == own)
 
+    topic = memory.with_name("topic.md")
+    topic.write_text("- a fact\n", encoding="utf-8")
+    memory.write_text("- [Topic](topic.md) — indexed by an agent that knows mentat\n", encoding="utf-8")
+    check(name, "an index that merely mentions mentat still counts as memory",
+          "Claude Code: 2 files" in setup("--agents", "claude"), "")
     setup()
+    memory.write_text("- original index\n", encoding="utf-8")
     memory.rename(memory.with_name("MEMORY.md.pre-mentat"))  # what Absorb leaves behind
     memory.write_text("memory lives in the Mentat vault\n", encoding="utf-8")
+    check(name, "absorbed topic files stop counting after the redirect",
+          "Claude Code: 0 files" in setup("--agents", "claude"), "")
+    os.utime(topic, (topic.stat().st_atime, memory.stat().st_mtime + 10))
+    check(name, "a topic written after the redirect counts as new drift",
+          "Claude Code: 1 files" in setup("--agents", "claude"), "")
     setup("--uninstall")
     check(name, "uninstall restores each file to exactly what it was",
           all((home / f).read_text() == own for f in (".codex/AGENTS.md", ".claude/CLAUDE.md")),
