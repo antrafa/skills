@@ -955,6 +955,10 @@ def merge_front(base: dict, ours: dict, theirs: dict) -> tuple[dict, list[str]]:
     merged, conflicts = dict(ours), []
     for key in dict.fromkeys([*ours, *theirs]):
         mine, other, old = ours.get(key), theirs.get(key), base.get(key)
+        if key == "usage_count" and mine != old and other != old:
+            # Equal counts on both sides are two uses each, not one shared edit.
+            merged[key] = str(read_int(ours, key) + read_int(theirs, key) - read_int(base, key))
+            continue
         if mine == other or other == old:
             continue
         if other is None and mine == old:
@@ -963,8 +967,6 @@ def merge_front(base: dict, ours: dict, theirs: dict) -> tuple[dict, list[str]]:
             merged[key] = other
         elif key in _MAX_KEYS:
             merged[key] = str(max(read_int(ours, key), read_int(theirs, key)))
-        elif key == "usage_count":
-            merged[key] = str(read_int(ours, key) + read_int(theirs, key) - read_int(base, key))
         elif key in _LATEST_KEYS:
             merged[key] = max(read_str(ours, key), read_str(theirs, key))
         elif key == "related":
@@ -1225,6 +1227,8 @@ def check_front_merge() -> None:
     assert merged["usage_count"] == "5", "each side's uses must be counted once"
     assert merged["last_accessed"] == "2026-01-05", "the latest access must win"
     assert merged["related"] == '["[[2026-01-01-a]]", "[[2026-01-02-b]]", "[[2026-01-03-c]]"]'
+    merged, _ = merge_front(base, {**base, "usage_count": "3"}, {**base, "usage_count": "3"})
+    assert merged["usage_count"] == "4", "one use on each side is two uses, even when the counts match"
 
     _, conflicts = merge_front(base, {**base, "status": "resolved"}, {**base, "status": "superseded"})
     assert conflicts == ["status"], "a field changed two ways must be reported, not guessed"
