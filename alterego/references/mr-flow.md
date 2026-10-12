@@ -272,15 +272,18 @@ strings, references in Dockerfiles, charts, pipelines, docs.
 **Execution tracing.** For a change in logic, follow the call path across files
 up to the entry point. Do not evaluate the hunk in isolation.
 
-**Boundaries that leave the repository.** Mark them as *impact not verifiable
-locally* and name who probably consumes them:
+**Boundaries that leave the repository (where grep stops).** Mark them as
+*impact not verifiable locally* and name who consumes them. Do not accept a
+pure textual argument that it is safe: demand Level 4 evidence (runnable test
+or script against real code) whenever claiming a boundary change is backward-compatible:
 
-- changed/removed HTTP endpoint → other services, the frontend, integrations
-- event / queue / topic schema → consumers
+- changed/removed HTTP endpoint or payload (JSON/wire format) → other services,
+  the frontend, integrations
+- event / queue / topic schema or async task payload → consumers
+- database column, type or index change → does the version **currently in production**
+  run against the new schema? (deploys are not atomic)
 - new env var or config key → the deploy repository (k8s, chart, compose) has to
   ship alongside, or the environment breaks
-- migration → does the version **currently in production** run against the new
-  schema? (deploys are not atomic)
 - new or bumped dependency → is there already an equivalent in the project?
   What else depends on the old version?
   What is the breaking change between the two versions?

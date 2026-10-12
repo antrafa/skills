@@ -19,8 +19,30 @@ evidence.
 | Build succeeds | Build command with exit 0 | Lint passing, logs that look fine |
 | Bug fixed | The original symptom reproduced and now passing | Code changed, fix assumed |
 | Regression test works | Pass → revert the fix → **fails** → restore → pass | A single passing run |
+| Risky boundary change is safe | Safety fact proven by runnable test/script (Level 4 evidence) | Textual argument or saying "it won't break" |
 | A subagent finished | The diff in version control, checked | The subagent saying it succeeded |
 | Plan delivered | The plan reread, item by item | Green tests |
+
+## Blast radius: prove the single safety fact
+
+A writeup that sounds right is worthless on its own. For risky changes
+touching shared boundaries, database schemas, public APIs or concurrency:
+
+1. **Find the single fact it is safe because of.** Most risky changes are safe
+   because of a single condition. State that fact explicitly.
+2. **Elevate on the evidence ladder:**
+   - Level 1: You said so (worthless on its own).
+   - Level 2: Pointed at `file:line` or library source.
+   - Level 3: Showed the bad case cannot happen by control flow.
+   - Level 4: Wrote and executed an isolated test or script calling real code
+     that fails loudly if wrong.
+   - Level 5: Reproduced in the running application.
+   Aim for Level 4 minimum on high-blast-radius changes.
+3. **Check where grep stops:**
+   - Database column mappings and runtime queries.
+   - Wire formats, JSON serialization/deserialization across services.
+   - Asynchronous queue events, message payloads, background jobs.
+   - Downstream consumers in other languages or repositories.
 
 ## Nothing to run is the finding
 
