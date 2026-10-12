@@ -16,6 +16,7 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 - `/alterego clear`: saves the handoff (asking whether to keep a report) and tells the user to type `/clear` and `/alterego`. Clearing is the harness's command; a skill cannot run it.
 - `references/report-design.md`: the default design for HTML reports. When the user has their own `DESIGN.md`, the skill asks once which to use and records the answer in the profile.
 - `dev verify` and `mr`: blast radius — name the single fact a risky boundary change is safe because of, and prove it at level 4 of the evidence ladder (a runnable test or script against real code). The MR flow names where grep stops: wire formats, database columns, queue payloads, consumers in other repositories.
+- `refactor` and the Architecture lens: Chesterton's Fence — an abstraction, fallback or check is deleted only after `git log -S` or `git blame` shows why it was put there.
 - Conformance lens and the `dev review` reviewer: silencing a compiler or linter, skipping or weakening tests, or inflating timeouts to turn red into green is a finding at confidence 95.
 - `dev tdd` and `troubleshooting`: two failed attempts on one premise stop the guessing; the premise is written down and attacked before a third fix.
 

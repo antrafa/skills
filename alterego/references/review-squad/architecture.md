@@ -34,6 +34,7 @@ parts it needs to be weak. The finding is the imbalance, not the coupling.
 | Module reaching into another module's internals instead of its declared interface | 90 |
 | Breaking change to a shared or public contract (signature, response field, event, topic) with consumers | 90 |
 | Strong coupling to a distant or volatile part (see above) | 85 |
+| Deletes legacy abstractions, fallbacks or checks without identifying their original purpose (Chesterton's Fence) | 85 |
 | New dependency or new module that the declared architecture has no place for | 80 |
 | One business change spread across many unrelated files | 80 |
 

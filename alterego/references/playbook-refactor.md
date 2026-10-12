@@ -36,6 +36,11 @@ breaks things **outside the file being changed**. Before starting:
   refactoring from breaking.
 - **Is the goal verifiable?** "Improve the billing module" is not a goal.
   "`OrderService` no longer imports anything from `infra.oracle`" is.
+- **Chesterton's Fence before deleting code:** never delete an abstraction,
+  fallback or check simply because it looks redundant. Locate its origin with
+  `git log -S "<symbol>"` or `git blame`, identify the bug or constraint that
+  prompted it, and cite the reason. If you cannot explain why it was put there,
+  you cannot delete it.
 
 ---
 
