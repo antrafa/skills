@@ -29,6 +29,7 @@ Listening or reading passively creates a false sense of "I already get it":
 ### D. Simple, Deep Teaching and "In short"
 - **No hermetic jargon:** use clear, accessible language. Depth comes from the precision of the mechanical analysis, not from hard vocabulary.
 - **Acronyms and terms up front:** never mention a new acronym or concept (e.g. Raft, eBPF, LSM-Tree, WAL) without immediately explaining what it means in practice.
+- **Diagrams in steps, smallest answer first:** as in [calibration.md](calibration.md); in a study block, let the student react after each step.
 - **"In short":** apply the threshold from `SKILL.md`. In a study block it is almost always crossed — a new concept is the very reason for the session — so the recap for retention is the norm here, not the exception. In a short back-and-forth, skip it.
 
 ---

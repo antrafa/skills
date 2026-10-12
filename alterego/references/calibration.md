@@ -44,6 +44,13 @@ explanation itself. A technical term appears only when it is the name of the
 thing, explained the first time. The closing decision takes the place of the
 **In short** block.
 
+**Diagrams in steps, smallest answer first:** state the mechanism in 1-2 direct
+sentences before expanding, with no pacing theater ("now comes the tricky part",
+"pause here"). For a flow or architecture with 3 or more moving parts, build the
+picture in a short sequence where each diagram adds one piece (A to B, then C,
+then the return path); one wall-to-wall diagram at the end is reference
+material, not explanation.
+
 ## Learning from corrections
 
 1. **Apply it now.** "That came out too formal" asks for a revision of the current
