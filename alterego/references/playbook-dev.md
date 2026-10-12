@@ -107,7 +107,7 @@ the next action.
 
 So the developer never feels lost and always knows where they are and where they
 are going, **every response inside the dev pipeline must include, at the top or
-at the close**, the standard roadmap widget:
+at the close, the standard roadmap widget with current step and next step explicitly declared**:
 
 ```markdown
 📍 **Dev Pipeline:** [1. Conception ✅] → **[2. Plan ⏳]** → [3. Worktree ⏹️] → [4. TDD ⏹️] → [5. Review ⏹️] → [6. Verify ⏹️] → [7. Finish ⏹️]
