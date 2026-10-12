@@ -59,6 +59,10 @@ Range: git diff --stat {BASE}..{HEAD} and git diff {BASE}..{HEAD}
 Read {REVIEW_PLAYBOOK} and apply its hunting yardstick, severities and verdict
 table. Every finding cites the file and line you actually read.
 
+Check explicitly for suppression of checks: silencing linters or compilers
+(@SuppressWarnings, @ts-ignore, eslint-disable), skipped or disabled tests,
+weakened assertions, or inflated timeouts to force a green build.
+
 Where the plan is silent, judge by what a reasonable user of this software would
 expect: silence in the plan is not permission.
 
