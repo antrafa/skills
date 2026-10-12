@@ -32,9 +32,12 @@ a configuration file. The handoff records the exception.
 
 ## Stop conditions and scope
 
-- **Three tries, then stop.** The same test still red after three attempts at
-  making it pass means the model of the problem is wrong, not the fourth guess.
-  Stop and report: the command, the output and the hypotheses already ruled out.
+- **Two tries on one premise, then attack the premise.** When two consecutive
+  attempts share one premise and leave the same test red, the premise is the
+  suspect, not the fix. Write it down in one sentence and test it before writing
+  more code. Still red after a third attempt, whatever the premise, means the
+  model of the problem is wrong: stop and report the command, the output and the
+  hypotheses already ruled out.
 - **Nothing outside the task goes in the diff.** A bug next door, a rename
   begging to be done, a refactor that would be nice: one line each in the
   handoff as a note, and the diff stays the size of the task.
@@ -50,6 +53,7 @@ a configuration file. The handoff records the exception.
 | "I need to explore first" | Explore, throw the exploration away, start from the test. |
 | "It is hard to test" | Hard to test means hard to use: simplify the interface. |
 | "One more try and it passes" | After three, that is the sentence that burns the afternoon. Stop and report. |
+| "Just one more fix with the same idea" | Two failures under one premise prove the premise is wrong. Attack the premise. |
 | "While I'm here I'll fix this too" | Then it is not in the review's scope and not in the plan. Note it. |
 
 **Red flags** — any of these means deleting the code and starting again from

@@ -18,9 +18,11 @@ acceptance criteria, each plan task cites the ones it covers, and the TDD cycle
 turns them into tests.
 
 The disciplines are condensed from [Superpowers](https://github.com/obra/superpowers)
-(MIT, Jesse Vincent). The plugin is not needed; when it is installed, its skills
-may trigger on their own, and inside the pipeline the step's discipline here is
-the one that governs.
+(MIT, Jesse Vincent), with execution principles from
+[pstack](https://github.com/cursor/plugins/tree/main/pstack) (MIT, Lauren Tan)
+and [agent-skills](https://github.com/addyosmani/agent-skills) (MIT, Addy Osmani).
+The plugins are not needed; when installed, their skills may trigger on their
+own, and inside the pipeline the step's discipline here is the one that governs.
 
 ---
 

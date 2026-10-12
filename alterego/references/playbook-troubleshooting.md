@@ -11,6 +11,7 @@ This playbook guides the investigation of incidents, slowness, stuck requests an
 3. **Before moving or recreating, find out where the state lives:** before restarting, recreating or migrating containers/services, make sure where the data is (named volume, bind mount, node local disk, database). Destroying data to fix a temporary hang is inadmissible.
 4. **Know the rollback before applying:** every configuration change, script or patch must have its reversal procedure and estimated time declared before execution.
 5. **Never claim it worked without verifying:** applying is not up; up is not answering successfully. Confirm the return metric before declaring it closed.
+6. **Attack the premise after two failed remediations:** when two consecutive fixes that share one premise fail the same verification gate, stop guessing a third fix. Write down the shared premise both relied on, take a census of the resources or actors involved, and attack the premise itself instead of piling compensatory workarounds.
 
 ---
 
