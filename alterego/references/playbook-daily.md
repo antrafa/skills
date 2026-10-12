@@ -61,7 +61,15 @@ one stopped, not from zero.
 
 1. **Rebuild the day from evidence**, not from memory: `git log --since=today`
    in the repositories touched, dirty working tree, open worktrees, MRs with a
-   pending review verdict, what was discussed in this session.
+   pending review verdict, what was discussed in this session, and a sweep of
+   the session transcript for two high-signal categories:
+   - *User corrections and preferences:* explicit rules, design decisions or style
+     corrections the user made during the conversation.
+   - *Discovered workspace facts:* project quirks, ports, mock endpoints or
+     unexpected dependency behaviors discovered during work.
+   These seed the "Learned" candidates automatically. A secret seen in the
+   transcript (password, token, key) is never a candidate: record where it
+   lives (vault, env var name), never its value.
 2. **Return the close-out** in four short blocks:
 
    ```
@@ -93,4 +101,5 @@ Done when the pending items are written somewhere the next session reads.
 - [ ] Was the priority yardstick applied in order, and is the first step stated?
 - [ ] Does the board say what closes today, respecting the WIP ceiling, instead of listing everything that could start?
 - [ ] In `wrap`, does everything under "Done" have evidence, not recollection?
+- [ ] In `wrap`, was the session transcript swept for user corrections and workspace facts?
 - [ ] Were the pending items saved only after the "yes", and through the `mentat` skill when it exists?
