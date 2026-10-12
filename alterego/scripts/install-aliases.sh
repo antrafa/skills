@@ -161,7 +161,7 @@ Key subcommands:
   idea <idea>         Refine raw idea into testable proposal
   study <topic>       Guided study with Socratic challenges
   commit [<scope>]    Generate commit message from real diff
-  pr-desc [<iid>]     Generate MR/PR description in 4 blocks
+  pr-desc [<iid>]     Generate MR/PR description in 5 blocks
   tour-project        Technical onboarding of codebase (alias: tour)
   project-analyser    360° technical audit (alias: analyse)
   setup               Calibrate developer profile

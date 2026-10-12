@@ -63,7 +63,7 @@ In Codex: `$alterego commit`, `$alterego pr-desc`.
    the whole diff when it fits. The base is the MR's target branch; if it is not
    clear, ask once.
 2. **Title** in the same format as the commit: `<type>(<scope>): <description>`.
-3. **Description in four blocks**, in the order the reviewer reads:
+3. **Description in five blocks**, in the order the reviewer reads:
 
    ```
    ## What changed
@@ -72,8 +72,12 @@ In Codex: `$alterego commit`, `$alterego pr-desc`.
    ## Why
    <the problem that existed before; link to the issue or incident when there is one>
 
+   ## Reviewer guide
+   - **Start here:** <the central architectural or domain file to inspect first>
+   - **Mechanical noise:** <lockfiles, import reordering, renames, generated files>
+
    ## How to validate
-   1. <concrete step someone runs>
+   1. <concrete step or command someone runs to verify locally>
    2. <expected result>
 
    ## Out of scope and side effects
@@ -85,7 +89,7 @@ In Codex: `$alterego commit`, `$alterego pr-desc`.
    without a validation step there is no way to review.
 4. **Does the user have an MR template in the repository?** (`.gitlab/merge_request_templates/`,
    `.github/pull_request_template.md`) It wins; fill the template with this
-   content instead of imposing the four blocks.
+   content instead of imposing the five blocks.
 5. **Show and stop.** Opening the MR, editing the description on the remote or
    posting are external actions: only with a "yes" for each one, with the exact
    text in front of the user.
