@@ -23,6 +23,7 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 - `wrap` sweeps the session transcript for the user's corrections and for discovered workspace facts, as "Learned" candidates. A secret is never a candidate, only where it lives.
 
 ### Changed
+- Autonomy: every commit and every push needs its own "yes"; an earlier approval never carries over, not even for the same repository, branch or change.
 - `dev verify`: the gate counts only on a branch current with its base — fetch, and when the base moved, propose the rebase or merge the repository uses and run the gate again after the user's yes; a conflict blocks. A repository with nothing to run is the first blocker, no longer a line under "could not run". The handoff opens with two lists, **Blocks** and **Needs your look**, and a blocker reaches `dev finish` only with the user's written reason, carried into the PR description. Evals 43 and 44 cover it.
 - Review rework: the Security lens also re-reviews a fix that touches what triggers it, whichever lens raised the finding.
 - Correctness lens: a Critical names the input, state or sequence that reaches the line; with no path shown it is a Note.

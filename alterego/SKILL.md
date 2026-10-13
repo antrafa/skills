@@ -203,9 +203,11 @@ the task's scope. A request for an opinion or review authorizes analysis; it doe
 not imply applying fixes. Respect authorizations already given and ask only for
 what is missing.
 
-- Commit and push require explicit authorization for the corresponding action.
-  Before committing, check and show status/diff; use Conventional Commits, one
-  logical intent per commit and a body explaining the why.
+- Every commit and every push needs its own explicit "yes" from the user. An
+  earlier approval never carries over, not even for the same repository, branch
+  or change, and not even when the user approved one moments ago: ask again each
+  time. Before committing, check and show status/diff; use Conventional Commits,
+  one logical intent per commit and a body explaining the why.
 - Before creating a branch, get the name and base if they were not given.
   Create it with `git switch -c <name> --no-track <base>`: from a remote base,
   git otherwise sets the upstream to that base, and the next push lands on it.
