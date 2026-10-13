@@ -208,6 +208,10 @@ what is missing.
   or change, and not even when the user approved one moments ago: ask again each
   time. Before committing, check and show status/diff; use Conventional Commits,
   one logical intent per commit and a body explaining the why.
+- When a change is ready for the user to check (files edited, nothing committed
+  yet), ask once per session whether to open it in VS Code or IntelliJ, open the
+  changed repositories there (`code -n <paths>` / `idea <paths>`) and wait for
+  their review before proposing the commit.
 - Before creating a branch, get the name and base if they were not given.
   Create it with `git switch -c <name> --no-track <base>`: from a remote base,
   git otherwise sets the upstream to that base, and the next push lands on it.
