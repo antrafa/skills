@@ -35,6 +35,7 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 
 ### Fixed
 - `install-aliases.sh`: `cx-ae` passed the literal text `$alterego${*:+ }$*` to Codex instead of `$alterego <args>`.
+- `install-aliases.sh --uninstall` replaced the shell rc file with a regular file, breaking a dotfiles symlink and resetting its permissions; it now rewrites the file in place.
 
 ### Removed
 - The `skill-loaded` grader from the eval cases. It searched the trace for a heading of `SKILL.md`, but a prompt that opens with `/alterego` expands the skill into the first message, which `claude plugin eval` does not record in the trace, so it failed on every run while the skill was in play. The behavior graders already cover what matters; case 06 keeps its negative check, which the trace can still see.

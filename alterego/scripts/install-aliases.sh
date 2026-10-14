@@ -64,7 +64,9 @@ if [ "$UNINSTALL" -eq 1 ]; then
     # Remove source block cleanly
     TMP_RC="$(mktemp)"
     grep -v -F "$TARGET_FILE" "$RC_FILE" | grep -v "# AlterEgo CLI Shortcuts" > "$TMP_RC" || true
-    mv "$TMP_RC" "$RC_FILE"
+    # cat em vez de mv: preserva symlink de dotfiles e permissões do rc
+    cat "$TMP_RC" > "$RC_FILE"
+    rm -f "$TMP_RC"
     echo "  [rc] Removida integração de $RC_FILE"
   fi
   if [ -f "$TARGET_FILE" ]; then
