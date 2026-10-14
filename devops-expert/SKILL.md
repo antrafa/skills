@@ -24,8 +24,9 @@ metadata:
    causa de aplicação (crash no código), de manifest (probe mal configurada,
    limite de recursos baixo), de imagem (build quebrado) ou de cluster
    (nó sem recursos, PVC não disponível). Não conserte a camada errada.
-3. **Leia a referência da ferramenta** (lista abaixo) antes de escrever
-   configuração nova.
+3. **Leia a referência da ferramenta** (lista abaixo) e
+   `references/armadilhas.md` antes de escrever configuração nova ou de
+   improvisar um caminho fora do padrão.
 4. **Proponha a menor mudança que resolve a causa raiz**, não a primeira que
    faz o sintoma sumir. Um `CrashLoopBackOff` por falta de memória se resolve
    ajustando `resources.limits`, não removendo a liveness probe que está só
@@ -55,6 +56,11 @@ metadata:
   workspaces, `moved`, pin de versão.
 - `references/docker.md` — armadilhas de Dockerfile e compose que passam em
   revisão, checklist de entrega.
+- `references/armadilhas.md` — erros que passam em revisão e só aparecem
+  depois do deploy: `apply` que não apaga recurso renomeado, cluster
+  divergente do git, variável não definida que vira texto vazio, pipeline
+  disparado por mensagem de commit. Cresce com cada armadilha nova que custar
+  tempo.
 
 ## Ambiente já documentado
 
@@ -72,5 +78,8 @@ esta é a base geral de DevOps.
       usuário confirmou antes de aplicar?
 - [ ] A configuração foi validada (`lint`/`plan`/`--dry-run`/build local)
       antes de considerar pronta?
+- [ ] Algum recurso foi renomeado? O nome antigo tem passo de remoção?
+- [ ] Antes de aplicar em ambiente em uso, o usuário tem o `kubectl diff` (ou
+      `helm diff`) para ler o que difere do que está vivo?
 - [ ] O tamanho da solução é proporcional ao problema (sem abstração ou
       dependência nova que o caso não pediu)?
