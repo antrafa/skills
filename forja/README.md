@@ -231,7 +231,8 @@ forja/
 ├── commands/
 │   └── forja.md           pointer used by agents without native skill support
 ├── hooks/
-│   └── forja-guard.py     PreToolUse guard enforcing the no-write rule
+│   ├── forja-guard.py     PreToolUse guard enforcing the no-write rule
+│   └── register-hook.py   installer helper that adds the guard to ~/.claude/settings.json
 └── tracks/
     ├── mastra.md          the Mastra track content (loaded only when selected)
     └── vercel-ai-sdk.md   the Vercel AI SDK track content (loaded only when selected)
