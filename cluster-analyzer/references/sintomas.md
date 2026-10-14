@@ -1,8 +1,8 @@
 # Sintoma → causa provável (somente leitura)
 
-Tabela de apoio para montar as hipóteses do Passo 3. Cobre só o que dá para
+Tabela de apoio para montar as hipóteses do Passo 2. Cobre só o que dá para
 confirmar ou descartar com os comandos do allow-list — nenhuma entrada aqui
-depende de `exec`, `debug` ou qualquer verbo fora do Passo 2.
+depende de `exec`, `debug` ou qualquer verbo fora das *Regras de execução*.
 
 | Sintoma (`kubectl get pods`) | Causas mais prováveis | Onde confirmar |
 |---|---|---|
@@ -18,6 +18,57 @@ depende de `exec`, `debug` ou qualquer verbo fora do Passo 2.
 | Ingress sem efeito | `ingressClassName` não corresponde ao controller do cluster, ou Service referenciado não existe no namespace do Ingress | `kubectl describe ingress`, `kubectl get svc -n <namespace>` |
 | PVC preso em `Pending` | Sem `StorageClass`/`PV` compatível disponível. Com `volumeBindingMode: WaitForFirstConsumer` o `Pending` é normal até um pod usar o PVC — não é erro | `kubectl get pvc -n <namespace>`, `kubectl describe pvc`, `kubectl get storageclass` |
 | Pod preso em `ContainerCreating` com `Multi-Attach error` | Dois pods em nodes diferentes montando o mesmo PVC `ReadWriteOnce` (comum em rollout com `RollingUpdate` de deploy com volume RWO) | `kubectl describe pod` (evento `FailedAttachVolume`/`Multi-Attach`) |
+
+## Parece problema, mas é normal
+
+A coluna da direita é o que separa o falso alarme do problema real. Sem ela,
+toda linha estranha vira hipótese e a investigação se dispersa.
+
+| Observado | Por que costuma ser normal | Vira problema quando |
+|---|---|---|
+| `RESTARTS` alto | O contador é da vida inteira do pod; o último restart pode ter dias (`kubectl get pods` mostra `5 (3d ago)`) | O último restart é recente ou o número sobe enquanto você observa |
+| Pods `Evicted` ou `Failed` antigos na lista | Histórico que ninguém limpou; não consome recurso | Aparecem pods novos nesse estado |
+| Pods `Completed` | Execução normal de `Job`/`CronJob` | Ficam em `Error`, ou o `Job` nunca chega a `Completed` |
+| `Readiness probe failed` nos primeiros segundos | App ainda subindo; o pod fica `Ready` logo depois | Continua depois do `Ready`, ou o pod nunca fica `Ready` |
+| Memória perto do limit em `top pod`, numa JVM | A JVM reserva heap e não devolve; uso alto e estável é o esperado | Há `OOMKilled` no `Last State` ou o uso cresce sem parar |
+| Endpoints vazio ou deploy com `0/0` | Alguém escalou para zero de propósito (manutenção, desligamento) | O values/manifest no git declara réplicas > 0 e ninguém sabe do desligamento |
+| HPA no mínimo de réplicas | Fora do horário de pico | Sob carga e sem escalar; ou `FailedGetResourceMetric` muito depois do deploy |
+| PVC `Pending` com `WaitForFirstConsumer` | Só faz bind quando um pod usa o PVC | Há pod usando o PVC e ele continua `Pending` |
+| 404 do proxy em `/app` sem barra final | A rota declara o prefixo `/app/` | `/app/` com barra também falha |
+
+## Onde nasce o erro HTTP
+
+Quando o sintoma é "a URL dá erro", descubra primeiro **quem respondeu**: o
+proxy de entrada (Istio/Envoy, ingress-nginx) ou a aplicação. Um GET que só
+imprime os cabeçalhos responde isso:
+
+```bash
+curl -sk -m 15 -o /dev/null -D - https://<host>/<caminho>/
+```
+
+| Resposta | Quem respondeu | Próxima leitura |
+|---|---|---|
+| 503 `no healthy upstream`, `content-type: text/plain`, sem `x-envoy-upstream-service-time` | Envoy, sem destino saudável | `get endpoints <svc>` vazio, deploy com 0 réplicas, `targetPort` errado, rota apontando para Service que não existe |
+| 502/503/504 com página HTML do ingress-nginx | Ingress controller | Endpoints e readiness do backend; timeout configurado nas annotations do Ingress |
+| 404 do proxy | Nenhuma rota casou | Host e prefixo declarados no Ingress/VirtualService; ver a linha da barra final acima |
+| 500, 401, 302 ou 200 com `x-envoy-upstream-service-time` (ou cabeçalho próprio da app) | A aplicação | `logs` do pod no horário da chamada |
+
+Dois objetos de rota declarando o mesmo host e prefixo é sinal de objeto
+órfão: um recurso foi renomeado, o `kubectl apply` criou o novo e não apagou
+o antigo, e o antigo pode estar vencendo. Liste as rotas do namespace
+(`get virtualservice,ingress -o wide`) e compare hosts e prefixos.
+
+## Funciona num ambiente e não no outro
+
+Quase sempre a diferença é variável de ambiente ou infraestrutura (memória,
+certificado, rota), não versão. Compare nesta ordem:
+
+1. Imagem e tag de cada container — `get deploy <nome> -o wide` nos dois.
+2. Variáveis de ambiente — `scripts/envdiff.py`, que lê o deploy e os
+   ConfigMaps referenciados nos dois lados e mostra o que só existe num deles
+   e o que difere. Valores com cara de credencial saem mascarados, e Secret
+   nunca é lido: aparece só como referência.
+3. `resources`, probes e réplicas — `get deploy <nome> -o yaml` nos dois.
 
 ## Lendo `describe` e `events` corretamente
 

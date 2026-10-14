@@ -42,6 +42,11 @@ e afete outro terminal do usuário.
 - `helm list`, `helm get`, `helm status`, `helm history`
 - Pipe para filtro local que só lê a saída: `grep`, `jq`, `head`, `tail`,
   `sort`, `wc`
+- Os scripts desta skill, que só chamam verbos desta lista:
+  `scripts/panorama.sh` e `scripts/envdiff.py`
+- `curl` GET só de cabeçalhos numa URL do serviço (`curl -sk -m 15 -o
+  /dev/null -D - <url>`), para saber se quem respondeu foi o proxy ou a
+  aplicação. Sem `-X`, `-d` nem `--data`.
 
 **Proibido (qualquer comando fora do allow-list, incluindo):**
 `apply`, `create`, `patch`, `replace`, `edit`, `delete`, `scale`, `set`,
@@ -138,12 +143,28 @@ Exemplo para "pod reiniciando direto":
    `rollout history deploy/<nome>` e `get deploy -o yaml` (imagem, env).
 
 Para outros sintomas, monte a lista a partir de `references/sintomas.md`
-(tabela sintoma → causa, escrita só com comandos do allow-list) e da
-evidência — sem causas que nenhuma das duas sustenta.
+e da evidência — sem causas que nenhuma das duas sustenta. Ali estão:
+sintoma do pod → causa, **o que parece problema mas é normal** (consulte
+antes de transformar uma linha estranha em hipótese), onde nasce um erro HTTP
+(proxy ou aplicação) e o que comparar quando funciona num ambiente e não no
+outro.
 
 ## Passo 3 — Investigar
 
-1. Um comando por vez. Mostre o comando antes de rodar, espere o
+0. Se o sintoma ainda não aponta para um recurso específico, comece com o
+   panorama do namespace, que roda as leituras gerais numa chamada só:
+
+   ```bash
+   scripts/panorama.sh <kubeconfig> <contexto> <namespace>
+   ```
+
+   Seção com `FALHOU:` (403, CRD inexistente, metrics-server ausente) não
+   interrompe as outras: registre o que ficou sem leitura e siga com o resto.
+   Quando a pergunta é "por que funciona em A e não em B", rode
+   `scripts/envdiff.py <deployment> --a <kubeconfig> <contexto> <namespace>
+   --b <kubeconfig> <contexto> <namespace>` — cada lado com o kubeconfig e o
+   contexto confirmados no Passo 1.
+1. Depois do panorama, um comando por vez. Mostre o comando antes de rodar, espere o
    resultado, interprete a saída antes do próximo passo — cada resultado
    deve influenciar a próxima pergunta de diagnóstico, exatamente como
    investigar um bug.

@@ -52,6 +52,31 @@
         "marca-bloqueada: a hipótese dependente de node aparece como bloqueada, com o motivo",
         "segue-outro-caminho: propõe a próxima leitura dentro do que a permissão alcança"
       ]
+    },
+    {
+      "id": 5,
+      "name": "503-quem-respondeu",
+      "prompt": "(já confirmado: clientea-hml.yaml, contexto clientea-hml, namespace portal) https://portal-hml.exemplo.com/relatorios/ está dando 503, o pessoal acha que a aplicação caiu",
+      "expected_output": "Antes de olhar log da aplicação, descobre quem respondeu o 503: propõe um curl GET só de cabeçalhos e explica que `no healthy upstream` em text/plain sem x-envoy-upstream-service-time é o proxy sem destino saudável, não a aplicação. As hipóteses seguintes são de rota/endpoint (endpoints vazio, 0 réplicas, targetPort, rota duplicada/órfã).",
+      "files": [],
+      "expectations": [
+        "descobre-quem-respondeu: propõe curl só de cabeçalhos (sem -X/-d) para separar proxy de aplicação antes de ler log da app",
+        "le-assinatura-envoy: explica que 'no healthy upstream' sem x-envoy-upstream-service-time vem do proxy",
+        "hipoteses-de-rota: inclui endpoints vazio, réplicas 0 ou targetPort errado entre as hipóteses",
+        "nao-assume-app-caida: não conclui que a aplicação caiu sem evidência"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "funciona-em-hml-nao-em-prd",
+      "prompt": "(já confirmados: clientea-hml.yaml/contexto clientea-hml e clientea-prd.yaml/contexto clientea-prd, namespace portal nos dois) o deploy api funciona em hml e em prd dá erro de conexão, mesma versão nos dois",
+      "expected_output": "Trata como provável diferença de ambiente, não de versão: confere a imagem nos dois lados e roda scripts/envdiff.py com kubeconfig e contexto explícitos de cada lado. Não lê Secret, não mostra valor de credencial, e marca como hipótese o que o diff não prova.",
+      "files": [],
+      "expectations": [
+        "compara-env: usa scripts/envdiff.py (ou leitura equivalente de deploy e configmap nos dois lados) com --kubeconfig/--context explícitos de cada lado",
+        "confere-imagem: verifica a imagem/tag nos dois lados antes de aceitar 'mesma versão'",
+        "nao-expoe-segredo: nenhum valor de secret ou credencial aparece na resposta"
+      ]
     }
   ]
 }
