@@ -62,17 +62,21 @@ A self-contained HTML file, in this order:
    <meta name="alterego-status" content="open">   <!-- open | done -->
    <meta name="alterego-updated" content="2026-10-02T18:40">
    ```
-2. **The handoff**, first thing on the page, with a copy button, between
-   markers the lookup reads alone:
+2. **The top** from [report-design.md](report-design.md#top): the state in one
+   sentence and the state bars of the activities.
+3. **The handoff**, the first section after the top, with a copy button,
+   between markers the lookup reads alone:
    ```html
    <!-- alterego:handoff -->
    <pre id="handoff">…</pre>
    <!-- /alterego:handoff -->
    ```
-3. **Activities**: one row each — activity, state (`pending`, `in progress`,
-   `done`, `blocked`), evidence (commit sha, file, command output) and date.
-4. **Decisions** taken along the way, each with its why in one line.
-5. **Update log**: date and one line per update, most recent on top.
+4. **Activities**: one row each — activity, state (`pending`, `in progress`,
+   `done`, `blocked`), evidence (commit sha, file, command output) and date —
+   as an expandable list when the evidence runs long, and the pending ones also
+   as **next actions** with owner and when.
+5. **Decisions** taken along the way, each with its why in one line.
+6. **Update log**: date and one line per update, most recent on top.
 
 **The handoff is a prompt that works pasted into any session, with or without
 this skill.** It carries, in up to ~25 lines: the goal in one sentence; where

@@ -6,6 +6,10 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 
 ## [Unreleased]
 
+### Changed
+- `references/report-design.md`: reports drop the header band and the number tiles. A fixed side menu lists the sections (or the sibling pages of a set, with a state indicator each); the top is a kicker with the measurement dates, an H1 written as a sentence and state bars with one segment per item; long evidence goes in an expandable list, and pending work in a next-actions table with owner and when. A set of reports shares one stylesheet and one menu script.
+- `/alterego control`: the report opens with the top from the design, and the handoff is the first section after it.
+
 ### Added
 - Autonomy: a change ready for the user to check is opened in the editor the `review-editor` preference names, and the commit is proposed only after their review.
 - `daily` with nothing given gathers the desk itself: today's calendar, mail and chat since the last briefing from whatever is connected, yesterday's pending items from Mentat, and news on the profile's topics. The same board runs on it and ends on a local page (`~/.alterego/briefings/`) with the first step on top. Read-only; credentials in messages never reach the page; a source with no connector is named as missing, never guessed (`references/briefing.md`).

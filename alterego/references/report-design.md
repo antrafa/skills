@@ -46,6 +46,7 @@ what gives the page unity without needing a second color.
 | `--muted` | `#5B6478` | secondary text, caption |
 | `--line` | `#DCE2EC` | common border and divider |
 | `--bg` | `#FFFFFF` | page background |
+| `--side` | `#F6F8FB` | side menu background |
 
 Pure gray stays out. The neutrals carry a touch of blue so they talk to the
 palette. Semantic color (ok, attention, critical) stays separate from the blue
@@ -63,7 +64,9 @@ Plex Mono**, loaded from Google Fonts, with `system-ui` and `Menlo` as
 fallback. Hierarchy comes from weight, size and color, never from switching
 family.
 
-* **H1**: 1.75rem/700, `--blue-900`, `text-wrap: balance`.
+* **H1**: 1.85rem/700, `--blue-900`, `text-wrap: balance`. It is a sentence
+  that answers the page's question ("Staging closed; production still has 6
+  open items"), not the document's name.
 * **H2**: 1.15rem/600, `--blue-900`, with a short supporting line in `--muted`
   right below explaining what the section answers.
 * **Body**: 0.95–1rem/400, `line-height: 1.55`, up to ~70 characters per line.
@@ -75,16 +78,40 @@ family.
 
 ## 4. Components
 
-### Header
-Full-width band in `--blue-50`, with a bottom border in `--blue-200`. Inside it
-go a context label (team, date, data source), the title and one sentence saying
-what the page answers. It is not a hero: its height follows the content.
+### Page structure
+Two columns: a fixed **side menu**, 264px wide in `--side` with a 1px `--line`
+right border, and the content with a `max-width` of 1040px. The menu lists the
+page's sections, with a count next to them when there is one. When the report
+belongs to a set (one page per client, environment or module), the menu lists
+the sibling pages instead, each with a minimal state indicator (two 8px
+squares, one per dimension), and opens the current page's sections nested
+under its own entry. What has no page yet shows in `--muted`, without a link,
+with a short label ("next", "queued"). A deadline that governs the set sits at
+the top of the menu, with the day count computed on load.
 
-### Highlight numbers
-When the report exists to answer a number, open with 2 to 4 tiles: large value
-in Plex Mono `--blue-900`, label above and a context line below ("46% of the
-total"). The tile has a white background, a 1px `--line` border and the
-standard radius. If the number is not the point of the page, do not use tiles.
+A single report — the control report among them — stays one self-contained
+file, with its CSS inline. A set of reports shares **one stylesheet and one
+menu script** (`assets/report.css`, `assets/nav.js`) that every page
+references: the menu list and the look change in one place, never in a copy
+per page.
+
+### Top
+No header band and no number boxes. From top to bottom:
+
+* **Kicker** at 0.84rem/600 in `--blue-500` with the context (client, team,
+  region) and, in `--muted`, the dates each piece of data was measured. Data
+  more than a day old goes in amber ("production measured 10/13").
+* **H1** as a sentence (see Typography) and a **lede** of up to three lines
+  with the next milestone.
+* **State bars**: one block with a 1px `--line` border, one row per dimension
+  (environment, phase), each with a bar of N segments 8px tall — one segment
+  per measured item, in the report's order — and a sentence beside it with the
+  number in bold ("**6 open** · 1 contained only by the WAF"). A small legend
+  below. When the per-item state is not known, the row carries a chip and the
+  sentence, with no invented segments.
+
+Numbers live inside sentences, not in tiles. The bar shows the shape of the
+problem (where the open items are), and the sentence gives the count.
 
 ### Tables
 The header has a `--blue-100` background and weight 600, no forced uppercase.
@@ -104,6 +131,20 @@ A block in `--blue-50` with a 1px `--blue-200` border, opening with a text
 label in weight 600 (`NOTE —`, `CRITERION —`, `RISK —`). For risk, switch to
 the matching semantic color. No thick side border.
 
+### Expandable list
+For items with long evidence (the points of a scope, the findings of a
+pentest): a grid with a `--blue-100` header and one `<details>` row per item,
+with the number in mono, the name, one chip per dimension and an arrow that
+turns when it opens. The open content sits on `--blue-50` as a definition
+list (`Staging 10/14`, `Production 10/13`, `Missing`, `Criterion`). When
+printing, everything is open.
+
+### Next actions
+A table with action, owner and when. An undefined owner shows as "To be
+defined" in the semantic red; an immediate deadline in a red chip, today's in
+amber. What the action blocks or depends on goes on a secondary line in
+`--muted`, right under the action.
+
 ### Long lists
 Group by category in a collapsible `<details>`, with the count next to the
 title. Each item carries the main data on the left and the metadata (date,
@@ -114,16 +155,21 @@ Default bullet (`•`), no Roman numerals. Use numbering only when the order is
 information. Spacing between items is 6–8px.
 
 ### Layout
-A `max-width: 960px` column, a minimum 16px side gutter and sections separated
-by 40px. Inside each section the information is dense: the breathing room
-separates one unit from the next, it does not inflate the item. At phone width
-(~400px), tiles and columns stack, and a wide table scrolls inside its own
-container.
+Sections separated by 44px; inside each section the information is dense: the
+breathing room separates one unit from the next, it does not inflate the item.
+At phone width (up to ~900px) the menu becomes a short strip at the top with
+only the entries that have a page, as pills, without the sections or the
+legend; the state bars move their sentence below the bar, and a wide table
+scrolls inside its own container. When printing, the menu disappears and the
+content takes the page.
 
 ## 5. Checklist before delivering
 
-* The number that answers the question shows without scrolling the page.
+* The number that answers the question shows without scrolling the page,
+  inside a sentence, not in a box.
 * Every number comes with the criterion that produced it, visible on the page.
 * No color appears only as decoration: every blue marks a surface, data or an
   action.
 * The page opens legible in light mode and prints to PDF from the browser.
+* In a set of reports, no page carries its own styles: everything comes from
+  the shared stylesheet.
