@@ -1,0 +1,37 @@
+schema_version: '1.1'
+name: 46-trigger-pt-como-eu-faria
+description: "Natural-language trigger in Portuguese activates the persona."
+tags:
+- trigger
+execution:
+  prompt: 'Como eu faria a migração desse cron para uma fila? Pensa comigo antes de mexer em qualquer coisa.'
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+graders:
+- name: skill-called
+  type: tool_used
+  tool: Skill
+  input_match: '"skill"\s*:\s*"(?:[\w-]+:)?alterego"'
+  min: 1
+- name: no-write
+  type: tool_used
+  tool: Write
+  min: 0
+  max: 0
+- name: no-edit
+  type: tool_used
+  tool: Edit
+  min: 0
+  max: 0
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: >-
+    PASS if it engages as a thinking partner: tests the premise, names the main risk
+    of moving a cron to a queue and recommends with criteria, without changing
+    files. FAIL if it starts implementing or answers with a generic list of pros and
+    cons and no recommendation.

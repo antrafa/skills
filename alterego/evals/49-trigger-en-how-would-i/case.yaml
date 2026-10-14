@@ -1,0 +1,36 @@
+schema_version: '1.1'
+name: 49-trigger-en-how-would-i
+description: "'How would I do this' activates the persona."
+tags:
+- trigger
+execution:
+  prompt: 'How would I approach adding rate limiting to our public API? Think it through with me.'
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+graders:
+- name: skill-called
+  type: tool_used
+  tool: Skill
+  input_match: '"skill"\s*:\s*"(?:[\w-]+:)?alterego"'
+  min: 1
+- name: no-write
+  type: tool_used
+  tool: Write
+  min: 0
+  max: 0
+- name: no-edit
+  type: tool_used
+  tool: Edit
+  min: 0
+  max: 0
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: >-
+    PASS if it reasons from the problem (who is abusing what, where the limit lives,
+    how it degrades) and recommends one option with the trade-off, without writing
+    code. FAIL if it jumps to an implementation.

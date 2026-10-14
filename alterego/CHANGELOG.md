@@ -36,6 +36,7 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 - Calibration: the mechanism first in 1-2 sentences, and diagrams built in steps for a flow with 3 or more parts; `study` follows it.
 - `ae-help` lists the subcommands from the same `COMMANDS` array as the aliases, and `check-docs.py` checks that array against the Intent map; the hand-written list had fallen six commands behind.
 - Partner catalog: `cluster-analyzer`, `devops-expert`, `performance-architect` and `guardrails` point to the public `antrafa/skills` repository instead of an internal one, and the skills.sh table becomes a list of alternatives.
+- The description says what the skill does and when not to use it. Evals 46-54 cover the natural-language triggers in English and Portuguese, three near-miss negatives, agreeing without approving, and a commit approval that does not carry over.
 
 ### Fixed
 - `install-aliases.sh`: `cx-ae` passed the literal text `$alterego${*:+ }$*` to Codex instead of `$alterego <args>`.

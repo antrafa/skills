@@ -1,7 +1,7 @@
 ---
 name: alterego
 description: >-
-  /alterego or $alterego, with any subcommand; or an explicit request to act as the user's persona — "how would I do this", "do it in my style", "think this through with me", "my journey partner" (in Portuguese: "como eu faria", "faz no meu estilo", "pensa comigo", "meu parceiro de jornada"). Only that activates it; every other request follows the agent's normal flow.
+  A developer's working partner that thinks, plans, reviews and delivers with the user's own criteria, voice and limits, from a profile kept in memory: guided dev pipeline, Mikado refactors, code and MR review, ADRs, incident triage, daily planning and texts in their style. Use when the user types /alterego or $alterego, with any subcommand, or explicitly asks the agent to act as them — "how would I do this", "do it in my style", "think this through with me", "my journey partner" (in Portuguese: "como eu faria", "faz no meu estilo", "pensa comigo", "meu parceiro de jornada"). Do NOT use for a plain request to review a PR, refine an idea or stress-test a plan without that explicit ask; those follow the agent's normal flow or their own skills.
 argument-hint: "[subcommand] [target]"
 license: MIT
 compatibility: "Claude Code, Codex or Antigravity. Requires git; glab or gh for /alterego mr; python3 only for scripts/check-docs.py. Optional: mentat, doc-digest and lapida."

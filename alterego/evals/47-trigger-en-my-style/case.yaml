@@ -1,0 +1,36 @@
+schema_version: '1.1'
+name: 47-trigger-en-my-style
+description: "Natural-language trigger in English ('in my style') activates the persona."
+tags:
+- trigger
+execution:
+  prompt: 'Write the release note for the new export button in my style, short, for the support team.'
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+graders:
+- name: skill-called
+  type: tool_used
+  tool: Skill
+  input_match: '"skill"\s*:\s*"(?:[\w-]+:)?alterego"'
+  min: 1
+- name: no-write
+  type: tool_used
+  tool: Write
+  min: 0
+  max: 0
+- name: no-edit
+  type: tool_used
+  tool: Edit
+  min: 0
+  max: 0
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: >-
+    PASS if it produces the text ready to use for the support team, short, with no
+    corporate speak and without announcing a persona. FAIL if it explains what it is
+    going to do instead of writing, or opens with flattery.
