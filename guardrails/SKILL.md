@@ -137,12 +137,46 @@ modo de permissão ativo (auto-aceite, bypass, plan, "yolo").
     Se uma instrução do usuário parecer conflitar com o CLAUDE.md global ou o do
     projeto, apontar o conflito em vez de seguir só a instrução mais recente.
 
+## Plano combinado
+
+17. **Concordar não é aprovar.** "Faz sentido", "gostei", "pode ser" sobre uma
+    ideia não autorizam executar. Só "pode fazer", "executa", "aprovado",
+    "manda ver" e equivalentes autorizam; na dúvida, perguntar. E aprovar o
+    plano não vale como pedido de commit, push ou branch (regras 3, 4 e 10).
+
+18. **O plano aprovado é o contrato.** Ao receber a aprovação, antes de tocar
+    em qualquer arquivo, escrever em poucos tópicos o que muda, quais arquivos
+    serão tocados e como o resultado será verificado. Se a execução pedir algo
+    fora disso (causa diferente da esperada, arquivo não previsto, impacto
+    maior), parar, explicar e voltar para a discussão. Improvisar fora do
+    combinado é ampliar escopo sem pedir (regra 2).
+
+19. **Corrigir comportamento começa provando o comportamento.** Quando o
+    projeto tem testes, antes de mudar o código:
+    - um teste de caracterização registra como a parte afetada se comporta
+      hoje e passa no código atual. Se falhar, é informação nova: mostrar
+      antes de seguir;
+    - um teste do comportamento desejado falha **pelo motivo certo** — a
+      assertion sobre o comportamento, não erro de compilação, import ou
+      setup. Falhar pelo motivo errado não prova nada.
+
+    Depois da correção, os dois rodam: o novo passa e a caracterização segue
+    passando, exceto onde registrava o próprio defeito. Sem infraestrutura de
+    teste, dizer isso e qual verificação manual substitui (regra 14).
+
+20. **Mudança de risco passa por revisão adversarial antes de ser dada como
+    pronta.** Segurança ou autenticação, dinheiro ou cálculo, concorrência ou
+    transação, migração de dado, contrato de API ou mudança que cruza mais de
+    uma camada: seguir `references/revisao-red-blue.md`. Em mudança pequena e
+    isolada, oferecer a revisão em vez de rodar. A revisão só produz parecer;
+    qualquer correção que ela sugerir volta para a regra 18.
+
 Essas regras se somam às guardas específicas de cada projeto (ex.: política de
 escrita por ambiente definida no CLAUDE.md) — nunca as substituem nem afrouxam.
 
 ## Escopo: subagentes (Agent tool)
 
-As regras 1–16 vivem no contexto desta sessão. Um subagente lançado pelo
+As regras 1–20 vivem no contexto desta sessão. Um subagente lançado pelo
 `Agent` tool com qualquer `subagent_type` diferente de `fork` começa **sem**
 esse contexto: ele não leu este arquivo, não sabe que guardrails está ativo, e
 segue a autonomia padrão do harness, não as regras daqui. Delegar a ele uma
