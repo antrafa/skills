@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Checks the consistency of the skill's documents.
 
-Three invariants, the ones that have already broken in this repo:
+Four invariants, the ones that have already broken in this repo:
 
 1. Every subcommand in the SKILL.md Intent map appears in README.md and in
    COMMANDS.md. The map is the source; the human guides must cover it. This is
@@ -9,6 +9,9 @@ Three invariants, the ones that have already broken in this repo:
 2. Every relative link between the documents resolves, file and anchor.
 3. The SKILL.md frontmatter follows the Agent Skills spec (agentskills.io):
    kebab-case name up to 64 characters, description up to 1024.
+4. The COMMANDS array in scripts/install-aliases.sh has exactly the map's
+   subcommands. It feeds the terminal aliases and ae-help, whose hand-written
+   list once fell six commands behind.
 
 Usage: python3 scripts/check-docs.py     (exit 0 = ok, 1 = inconsistent)
 """
@@ -90,6 +93,21 @@ def check_command_coverage():
     return failures
 
 
+def check_alias_commands():
+    script = (ROOT / "scripts" / "install-aliases.sh").read_text(encoding="utf-8")
+    m = re.search(r"COMMANDS=\((.*?)\)", script, re.S)
+    if not m:
+        return ["scripts/install-aliases.sh: COMMANDS array not found"]
+    aliases = set(re.findall(r'"([^"]+)"', m.group(1)))
+    commands = set(map_subcommands(ROOT / "SKILL.md"))
+    failures = []
+    if commands - aliases:
+        failures.append(f"scripts/install-aliases.sh: missing from COMMANDS -> {', '.join(sorted(commands - aliases))}")
+    if aliases - commands:
+        failures.append(f"scripts/install-aliases.sh: not in the Intent map -> {', '.join(sorted(aliases - commands))}")
+    return failures
+
+
 def check_links():
     failures = []
     for doc in documents():
@@ -128,14 +146,14 @@ def check_frontmatter():
 
 
 def main():
-    failures = check_command_coverage() + check_links() + check_frontmatter()
+    failures = check_command_coverage() + check_links() + check_frontmatter() + check_alias_commands()
     if failures:
         print("Documentation inconsistent:\n")
         for f in failures:
             print(f"  - {f}")
         print(f"\n{len(failures)} problem(s). The SKILL.md Intent map is the source of the command list.")
         return 1
-    print("Documentation consistent: commands covered in the guides, links resolving and frontmatter within spec.")
+    print("Documentation consistent: commands covered in the guides and aliases, links resolving and frontmatter within spec.")
     return 0
 
 

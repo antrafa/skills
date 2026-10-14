@@ -32,6 +32,7 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 - `study` suggests `forja` when the topic is "build X with Y" and `forja` is installed with a track for Y: you write the code, it guides and checks each Delivery. The catalog described `forja` as scaffolding and templates, the opposite of what it does; `sources.md`, the README and onboarding now describe it as mentorship tied to `study`.
 - `pr-desc` writes five blocks: a **Reviewer guide** (where to start, what is mechanical noise) between Why and How to validate. A repository template still wins.
 - Calibration: the mechanism first in 1-2 sentences, and diagrams built in steps for a flow with 3 or more parts; `study` follows it.
+- `ae-help` lists the subcommands from the same `COMMANDS` array as the aliases, and `check-docs.py` checks that array against the Intent map; the hand-written list had fallen six commands behind.
 
 ### Fixed
 - `install-aliases.sh`: `cx-ae` passed the literal text `$alterego${*:+ }$*` to Codex instead of `$alterego <args>`.

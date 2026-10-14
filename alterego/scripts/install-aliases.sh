@@ -151,24 +151,12 @@ Terminal aliases (opens AI session with AlterEgo pre-loaded):
   Antigravity:     agy-<cmd>      (e.g., agy-daily, agy-sre, agy-dev)
   OpenAI Codex:    cx-<cmd>       (e.g., cx-daily, cx-sre, cx-mr)
 
-Key subcommands:
-  daily               Organize the day and prioritize tasks
-  wrap                Close the day and log pending items
-  dev [<step>]        Guided 7-step development pipeline
-  refactor <goal>     Structural refactor via Mikado Method
-  review [<target>]   Socratic code review (file, diff, branch)
-  mr [<iid>|<url>]    Remote MR/PR impact evaluation in worktree
-  sre <symptom>       Incident investigation by measurement
-  adr <decision>      Structural architectural decision record
-  idea <idea>         Refine raw idea into testable proposal
-  study <topic>       Guided study with Socratic challenges
-  commit [<scope>]    Generate commit message from real diff
-  pr-desc [<iid>]     Generate MR/PR description in 5 blocks
-  tour-project        Technical onboarding of codebase (alias: tour)
-  project-analyser    360° technical audit (alias: analyse)
-  setup               Calibrate developer profile
-  persona [<name>]    Switch technical persona lens
-  help [<command>]    Detailed card of any command
+Subcommands (cl-help <cmd> for the full card):
+EOF
+  # Rendered from COMMANDS, which check-docs.py checks against the Intent map:
+  # a second hand-written list here went stale once already.
+  echo "${COMMANDS[*]}" | fold -s -w 74 | sed 's/^/  /'
+  cat << 'EOF'
 
 Free-form shortcuts:
   cl-ae "<prompt>"    Free-form request in Claude Code
