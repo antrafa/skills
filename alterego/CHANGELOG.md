@@ -9,6 +9,7 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 ### Changed
 - `references/report-design.md`: reports drop the header band and the number tiles. A fixed side menu lists the sections (or the sibling pages of a set, with a state indicator each); the top is a kicker with the measurement dates, an H1 written as a sentence and state bars with one segment per item; long evidence goes in an expandable list, and pending work in a next-actions table with owner and when. A set of reports shares one stylesheet and one menu script.
 - `/alterego control`: the report opens with the top from the design, and the handoff is the first section after it.
+- The eval suite moved to `../evals/alterego/`, outside the installed skill, so an install no longer ships fixtures with deliberate vulnerabilities and fake secrets. `scripts/run-evals.sh` links it back as `evals/`.
 
 ### Added
 - Autonomy: a change ready for the user to check is opened in the editor the `review-editor` preference names, and the commit is proposed only after their review.

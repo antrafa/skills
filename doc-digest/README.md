@@ -108,7 +108,8 @@ diagram shows the error on screen.
 
 ## Evals
 
-`evals/evals.json` contains seven cases with the documents in `evals/files/`: a
+`../evals/doc-digest/evals.json` (linked as `evals/` by `scripts/link-evals.sh`
+at the repository root) contains seven cases with the documents in `evals/files/`: a
 77-line ADR (options diagram with the chosen one highlighted), an SDD in
 evolution mode with a contract inconsistency the Box must catch, a 900-line
 greenfield plan with `--html`, and three agent replies pasted as text: a cache

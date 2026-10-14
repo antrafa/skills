@@ -96,9 +96,12 @@ in any language. `dossie-politico` only covers Brazilian public data.
 
 ## Quality
 
-- **Evals.** Seven of the eleven skills ship an `evals/` suite of behavior
-  cases graded on real agent runs, several with trigger cases for when the
-  skill should and should not activate.
+- **Evals.** Seven of the eleven skills have a suite in `evals/<skill>/` of
+  behavior cases graded on real agent runs, several with trigger cases for when
+  the skill should and should not activate. The suites stay out of the skill
+  folders, so installing a skill does not ship fixtures written with deliberate
+  vulnerabilities and fake secrets; `scripts/link-evals.sh` links each one back
+  as `<skill>/evals`, where the runners expect it.
 - **Self-tests for scripts.** Shell and Python helpers come with a test that
   runs without external systems. For example, the `guardrails` hook test and
   the `cluster-analyzer` scripts test run against a fake `kubectl`.

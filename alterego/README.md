@@ -213,14 +213,14 @@ prefer the terminal, you never need to open it.
 
 - [`SKILL.md`](SKILL.md): core behavior and the Intent map, the source of the command list.
 - `references/`: one playbook per kind of work, loaded only when the task calls for it; `references/personas/` holds the catalog.
-- `evals/`: one case per behavior (`case.yaml` with prompt and graders, plus a `fixture.sh` when it needs a repository), run with `scripts/run-evals.sh`.
+- `../evals/alterego/`: one case per behavior (`case.yaml` with prompt and graders, plus a `fixture.sh` when it needs a repository), run with `scripts/run-evals.sh`, which links it as `evals/`.
 - `scripts/check-docs.py`: ensures every command in the map is in the guides, every link resolves and the frontmatter follows the spec.
 - `.claude-plugin/`: manifest for installing as a plugin.
 
 ## Contributing
 
 A new command goes into the Intent map in `SKILL.md`, then into the tables of
-this README and of `COMMANDS.md`, with a case in `evals/`. Before
+this README and of `COMMANDS.md`, with a case in `../evals/alterego/`. Before
 opening a PR:
 
 ```bash

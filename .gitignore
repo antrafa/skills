@@ -34,3 +34,6 @@ ENV/
 *.tmp
 *.temp
 /tmp/
+
+# Eval suites live in /evals; scripts/link-evals.sh links them back locally
+/*/evals

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Runs the eval suite in evals/ with this repository's defaults.
+# Runs the eval suite in ../evals/alterego with this repository's defaults.
 #
 #   --no-publish   the report stays local; claude plugin eval publishes to claude.ai by default
 #   --output-dir   results go outside the repo: the plugin declares "." as its skill path, so
@@ -14,6 +14,8 @@
 set -eu
 
 root=$(cd "$(dirname "$0")/.." && pwd)
+# The suite lives in ../evals/alterego, outside the installed skill; the CLI reads it from evals/.
+[ -e "$root/evals" ] || ln -s ../evals/alterego "$root/evals"
 out=${ALTEREGO_EVAL_OUT:-${XDG_CACHE_HOME:-$HOME/.cache}/alterego-evals/$(date +%Y%m%d-%H%M%S)}
 
 exec claude plugin eval "$root" \

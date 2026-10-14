@@ -158,7 +158,6 @@ lapida/
     fit.md
     idea-file.md              format of the living file
     more-methods.md           methods outside the core, optional views
-  evals/                      executable cases for `claude plugin eval`
   .claude-plugin/plugin.json
 ```
 
@@ -215,7 +214,8 @@ It also triggers from natural language, in any language: "I had an idea",
 
 ## Evals
 
-Seven executable cases in `evals/`, each run with and without the skill. The
+Seven executable cases in `../evals/lapida/` (link it as `evals/` with
+`scripts/link-evals.sh` from the repository root), each run with and without the skill. The
 first three check the entry and the sourcing rule; the last four each start
 from an idea file stopped at one phase and check that its methods are applied:
 

@@ -25,7 +25,8 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-SKILL_DIR = Path(__file__).resolve().parent.parent
+# The suite lives in <repo>/evals/mentat, linked back as mentat/evals.
+SKILL_DIR = Path(__file__).resolve().parents[2] / "mentat"
 TODAY = dt.date.today()
 
 
