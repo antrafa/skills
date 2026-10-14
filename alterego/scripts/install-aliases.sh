@@ -126,7 +126,7 @@ EOF
   if command -v codex >/dev/null 2>&1 || [ "$DRY_RUN" -eq 1 ]; then
     cat << 'EOF'
 # --- OpenAI Codex (cx-*) ---
-cx-ae() { codex "\$alterego\${*:+ }\$*"; }
+cx-ae() { codex "\$alterego${*:+ }$*"; }
 cx-alterego() { cx-ae "$@"; }
 EOF
     for cmd in "${COMMANDS[@]}"; do

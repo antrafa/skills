@@ -33,6 +33,9 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 - `pr-desc` writes five blocks: a **Reviewer guide** (where to start, what is mechanical noise) between Why and How to validate. A repository template still wins.
 - Calibration: the mechanism first in 1-2 sentences, and diagrams built in steps for a flow with 3 or more parts; `study` follows it.
 
+### Fixed
+- `install-aliases.sh`: `cx-ae` passed the literal text `$alterego${*:+ }$*` to Codex instead of `$alterego <args>`.
+
 ### Removed
 - The `skill-loaded` grader from the eval cases. It searched the trace for a heading of `SKILL.md`, but a prompt that opens with `/alterego` expands the skill into the first message, which `claude plugin eval` does not record in the trace, so it failed on every run while the skill was in play. The behavior graders already cover what matters; case 06 keeps its negative check, which the trace can still see.
 
