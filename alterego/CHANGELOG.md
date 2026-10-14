@@ -34,6 +34,7 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 - `pr-desc` writes five blocks: a **Reviewer guide** (where to start, what is mechanical noise) between Why and How to validate. A repository template still wins.
 - Calibration: the mechanism first in 1-2 sentences, and diagrams built in steps for a flow with 3 or more parts; `study` follows it.
 - `ae-help` lists the subcommands from the same `COMMANDS` array as the aliases, and `check-docs.py` checks that array against the Intent map; the hand-written list had fallen six commands behind.
+- Partner catalog: `cluster-analyzer`, `devops-expert`, `performance-architect` and `guardrails` point to the public `antrafa/skills` repository instead of an internal one, and the skills.sh table becomes a list of alternatives.
 
 ### Fixed
 - `install-aliases.sh`: `cx-ae` passed the literal text `$alterego${*:+ }$*` to Codex instead of `$alterego <args>`.

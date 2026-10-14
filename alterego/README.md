@@ -183,7 +183,7 @@ delivers the degraded version and offers the installation once per session.
 | `lapida` | Refining a raw idea into a viable, testable proposal | [github.com/antrafa/lapida](https://github.com/antrafa/lapida) |
 | `forja` | Mentorship to learn by building: you write the code, it guides (`study`) | [github.com/antrafa/forja](https://github.com/antrafa/forja) |
 | `writing-for-agents` | Yardstick for writing skills and `AGENTS.md` | [github.com/mattpocock/skills](https://github.com/mattpocock/skills), a skill by Matt Pocock |
-| `cluster-analyzer`, `devops-expert`, `performance-architect`, `guardrails` | Evidence on infra, pipeline, performance and security | internal to your organization, if they exist; without them, the [public fallbacks from skills.sh](references/onboarding.md#public-fallback-for-the-internal-skills) |
+| `cluster-analyzer`, `devops-expert`, `performance-architect`, `guardrails` | Evidence on infra, pipeline, performance, and safety rules for the agent | [github.com/antrafa/skills](https://github.com/antrafa/skills); [alternatives on skills.sh](references/onboarding.md#alternatives-on-skillssh) |
 
 The full map of evidence per skill, with the degradation column, is in
 [`references/sources.md`](references/sources.md).

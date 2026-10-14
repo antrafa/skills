@@ -80,14 +80,14 @@ mapped in the catalog is not offered: mention it only if it is already present.
 
 | Evidence the decision needs | Skill | Artifact it usually leaves behind | Degradation without it |
 |---|---|---|---|
-| State of a k8s cluster, restarting pod, resources, events | `cluster-analyzer` | cluster analysis in md/html | partial [public fallback](onboarding.md#public-fallback-for-the-internal-skills); without it, read-only `kubectl get/describe/top`, marked as a one-off sample |
-| Bottleneck, capacity, sizing, p95, infra cost | `performance-architect` | `docs/performance/analise-*.md`, `resumo-decisao-*.md` | no [public fallback](onboarding.md#public-fallback-for-the-internal-skills) that measures up; the user's assumption about volume, labeled as an assumption |
+| State of a k8s cluster, restarting pod, resources, events | `cluster-analyzer` | cluster analysis in md/html | partial [public alternative](onboarding.md#alternatives-on-skillssh); without it, read-only `kubectl get/describe/top`, marked as a one-off sample |
+| Bottleneck, capacity, sizing, p95, infra cost | `performance-architect` | `docs/performance/analise-*.md`, `resumo-decisao-*.md` | no [public alternative](onboarding.md#alternatives-on-skillssh) that measures up; the user's assumption about volume, labeled as an assumption |
 | How a corporate legacy system works | architecture memories in Mentat / local skills *(if installed)* | architecture notes and flows in `docs/` | direct reading of the code for the flow in question |
 | Structure, dependencies and relationships of a repository | `graphify` | `graphify-out/` | `Glob` + `Grep` over the repo |
 | Architecture, sequence, lifecycle diagram | `archify` *(if installed)* | standalone html with SVG | inline mermaid in the answer itself |
-| Writing the Helm, pipeline, Dockerfile, Terraform for the chosen option | `devops-expert` | manifests / `.gitlab-ci.yml` | [public fallback](onboarding.md#public-fallback-for-the-internal-skills) per tool (Terraform, GitLab CI, Helm, Docker); without it, describe the change without generating the file |
+| Writing the Helm, pipeline, Dockerfile, Terraform for the chosen option | `devops-expert` | manifests / `.gitlab-ci.yml` | [public alternative](onboarding.md#alternatives-on-skillssh) per tool (Terraform, GitLab CI, Helm, Docker); without it, describe the change without generating the file |
 | Durable history and profile: past decisions and preferences | `mentat` | `~/.mentat/entries/*.md`, `profile.md` | local fallback in `~/.alterego/` |
-| Strict security check, linter and guardrails | `guardrails` | compliance / linter reports | [public fallback](onboarding.md#public-fallback-for-the-internal-skills) for the git layer (hook); the rest is already a rule of this skill; manual check of patterns and diff |
+| Strict security check, linter and guardrails | `guardrails` | compliance / linter reports | [public alternative](onboarding.md#alternatives-on-skillssh) for the git layer (hook); the rest is already a rule of this skill; manual check of patterns and diff |
 | Pedagogical structuring, ZPD and learning progression | `teach` *(if installed)* | `MISSION.md`, `lessons/*.html` | `references/playbook-study.md` inline |
 | Learning a framework by building with it, the student writing the code (study) | `forja` *(if installed, with a matching track)* | `~/.forja/progress/<track>.md` | `references/playbook-study.md` inline |
 | Investigation and deep reading of RFCs, papers and docs | `research` *(subagent, if available)* | synthesized research report | web search or direct reading of the source |

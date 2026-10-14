@@ -104,15 +104,13 @@ the "yes"** for that set. Never install on your own initiative.
 | `forja` | Mentorship to learn by building — the student writes the code, it guides (`study`) | [github.com/antrafa/forja](https://github.com/antrafa/forja) |
 | `doc-digest` | 30-60s visual digest of AI-generated docs (SDD, ADR, plans) | [github.com/antrafa/doc-digest](https://github.com/antrafa/doc-digest) |
 | `lapida` | Refines a raw idea into a viable, testable proposal (EXPLORE, CHALLENGE, REFINE, FIT) | [github.com/antrafa/lapida](https://github.com/antrafa/lapida) |
-| `cluster-analyzer` | Read-only diagnosis of Kubernetes/Rancher clusters | *(internal to your organization, if it exists)* |
-| `devops-expert` | Helm, GitLab CI, Terraform, Docker | *(internal to your organization, if it exists)* |
-| `performance-architect` | Bottlenecks, capacity, p95, infrastructure cost | *(internal to your organization, if it exists)* |
-| `guardrails` | Safety hardening and rules for working with the agent | *(internal to your organization, if it exists)* |
+| `cluster-analyzer` | Read-only diagnosis of Kubernetes clusters across many kubeconfigs and contexts | [github.com/antrafa/skills](https://github.com/antrafa/skills), folder `cluster-analyzer/` |
+| `devops-expert` | Helm, GitLab CI, Terraform, Docker | [github.com/antrafa/skills](https://github.com/antrafa/skills), folder `devops-expert/` |
+| `performance-architect` | Bottlenecks, capacity, p95, infrastructure cost | [github.com/antrafa/skills](https://github.com/antrafa/skills), folder `performance-architect/` |
+| `guardrails` | Confirmation per action, rollback before acting, verified reporting, and a hook that blocks destructive commands | [github.com/antrafa/skills](https://github.com/antrafa/skills), folder `guardrails/` |
 
-The last four are usually maintained internally by larger companies (corporate
-GitLab) and require access to the corresponding group/organization. Without
-access, the clone fails with a permission error — report that to the user and move
-on, do not work around it.
+The last four share one repository: clone it once and link each folder (step 4
+of the installation flow), or use `npx skills add antrafa/skills --skill <name>`.
 
 ### Third-party skills and plugins
 
@@ -123,14 +121,13 @@ channel. When offering, show the link and the command for the harness in use.
 |---|---|---|---|
 | `writing-for-agents` | Writing bar for skills, `AGENTS.md` and any doc an agent reads | [github.com/mattpocock/skills](https://github.com/mattpocock/skills) (skill by Matt Pocock, in `skills/productivity/writing-for-agents`) | Claude Code: `/plugin install mattpocock-skills`. Codex and others: `npx skills@latest add mattpocock/skills` and pick `writing-for-agents` |
 
-### Public fallback for the internal skills
+### Alternatives on skills.sh
 
-The four internal skills have partial substitutes on [skills.sh](https://www.skills.sh/)
-(survey from 2026-09). Offer the fallback only after confirming the internal one is
-not in the environment, following the same rite of degrade, deliver and offer;
-installation with `npx skills add <owner/repo@skill>`.
+Other public skills cover part of the same ground (survey from 2026-09). Offer
+one only when the user does not want the catalog skill, following the same rite
+of degrade, deliver and offer; installation with `npx skills add <owner/repo@skill>`.
 
-| Internal | Public fallback | Covers | Does not cover |
+| Catalog skill | Alternative | Covers | Does not cover |
 |---|---|---|---|
 | `cluster-analyzer` | [`affaan-m/ecc@kubernetes-patterns`](https://skills.sh/affaan-m/ecc/kubernetes-patterns) (partial) or [`jeffallan/claude-skills@kubernetes-specialist`](https://skills.sh/jeffallan/claude-skills/kubernetes-specialist) | debugging with `kubectl`, probes, RBAC, resource limits | read-only guaranteed by contract and per-client kubeconfig selection: keep `kubectl get/describe/top` read-only |
 | `devops-expert` | Terraform: [`antonbabenko/terraform-skill`](https://skills.sh/antonbabenko/terraform-skill/terraform-skill) or [`hashicorp/agent-skills@terraform-style-guide`](https://skills.sh/hashicorp/agent-skills/terraform-style-guide). GitLab CI: [`wshobson/agents@gitlab-ci-patterns`](https://skills.sh/wshobson/agents/gitlab-ci-patterns). Helm: [`wshobson/agents@helm-chart-scaffolding`](https://skills.sh/wshobson/agents/helm-chart-scaffolding). Docker: [`github/awesome-copilot@multi-stage-dockerfile`](https://skills.sh/github/awesome-copilot/multi-stage-dockerfile) | writing and reviewing Terraform, pipelines, charts and Dockerfiles | the per-client environment repository conventions, which come from Mentat |
@@ -184,6 +181,9 @@ installation list**: mention it only if it is already present in the environment
    git clone <repository> <destination>/<skill>
    ln -s <destination>/<skill> <agent-skills-dir>/<skill>
    ```
+
+   For a repository that holds several skills in folders, clone it once and
+   link each folder: `ln -s <destination>/skills/<skill> <agent-skills-dir>/<skill>`.
 
 5. **Report the real outcome** of each clone — including what failed and why.
    Do not declare a skill installed unless the clone returned success.
