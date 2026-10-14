@@ -64,7 +64,7 @@ track means adding a new file under `tracks/` — the mentor rules apply to all 
 ### Via [skills.sh](https://skills.sh) (recommended)
 
 ```bash
-npx skills add antrafa/forja -g
+npx skills add antrafa/skills --skill forja -g
 ```
 
 `-g` installs at the user level for every supported agent; drop it to install into the

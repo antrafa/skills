@@ -167,11 +167,15 @@ carries only the flow and the rules every phase shares.
 
 ## Install
 
-Clone the repository and link it into each agent's skills directory:
+```bash
+npx skills add antrafa/skills --skill lapida
+```
+
+To work from a clone of this repository, link the skill folder into each agent's
+skills directory:
 
 ```bash
-git clone git@github.com:antrafa/lapida.git ~/workspace/pessoal/skills/lapida
-SRC=~/workspace/pessoal/skills/lapida   # adjust to where you cloned it
+SRC=/path/to/skills/lapida
 for d in ~/.claude/skills ~/.agents/skills ~/.codex/skills ~/.gemini/config/skills; do
   mkdir -p "$d" && ln -sfn "$SRC" "$d/lapida"
 done

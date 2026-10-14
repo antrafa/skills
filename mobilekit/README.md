@@ -34,7 +34,7 @@ Four rules do most of the work:
 ### With the skills CLI (recommended)
 
 ```bash
-npx skills add antrafa/skill-mobilekit
+npx skills add antrafa/skills --skill mobilekit
 ```
 
 Detects the agents you have installed and links the skill into each. Nothing else is needed — the workflow, the phase files and the prompt library all travel with the skill.
