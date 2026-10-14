@@ -25,10 +25,20 @@ DEFAULT_PROFILE_IMAGE = (
 )
 
 
+def safe_href(value: Any, fallback: str = '#') -> str:
+    """Link de dado externo só vira href se for http(s); `javascript:` e afins viram fallback."""
+    candidate = str(value or '').strip()
+    if not re.match(r'^https?://', candidate, re.IGNORECASE):
+        return html.escape(fallback)
+    return html.escape(candidate)
+
+
 def safe_image_url(value: Any) -> str:
     """Retorna a foto informada ou um fallback local sem dependência de rede."""
     candidate = str(value or '').strip()
-    return candidate if candidate else DEFAULT_PROFILE_IMAGE
+    if re.match(r'^(https?://|data:image/)', candidate, re.IGNORECASE):
+        return candidate
+    return DEFAULT_PROFILE_IMAGE
 
 
 def image_error_handler() -> str:
@@ -85,10 +95,27 @@ TRANSPARENCY_LABELS = {
 TRANSPARENCY_MANUAL = {'tse_divulgacand', 'tcu_jurisprudencia_e_inabilitados', 'diario_oficial_uniao'}
 
 
+def is_public_http_url(url: str) -> bool:
+    """A URL vem do JSON montado com dado da web: não deixa a verificação bater em rede interna."""
+    import ipaddress
+    import socket
+    from urllib.parse import urlparse
+    parsed = urlparse(url)
+    if parsed.scheme not in ('http', 'https') or not parsed.hostname:
+        return False
+    try:
+        addresses = {info[4][0] for info in socket.getaddrinfo(parsed.hostname, None)}
+    except (socket.gaierror, UnicodeError):
+        return False
+    return all(ipaddress.ip_address(a.split('%')[0]).is_global for a in addresses)
+
+
 def check_url(url: str, timeout: int = 10) -> str:
     """Classifica um link de fonte sem afirmar mais do que a resposta HTTP permite."""
     import urllib.error
     import urllib.request
+    if not is_public_http_url(url):
+        return 'nao verificado (endereco nao publico)'
     req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 DossiePolitico/1.0'})
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
@@ -226,7 +253,7 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
     uf = html.escape(data.get('uf') or 'BR')
     foto_url = safe_image_url(data.get('foto_url'))
     salario_base = html.escape(str(data.get('salario_oficial_base') or 'Não informado'))
-    data_geracao = data.get('data_geracao') or datetime.datetime.now().strftime("%d/%m/%Y às %H:%M:%S")
+    data_geracao = html.escape(str(data.get('data_geracao') or datetime.datetime.now().strftime("%d/%m/%Y às %H:%M:%S")))
     data_corte = html.escape(str(data.get('data_corte') or 'Não informada'))
     status_eleitoral = html.escape(str(data.get('status_eleitoral') or 'Não se aplica / não informado'))
     situacao = html.escape(str(data.get('situacao') or 'Não informada'))
@@ -385,9 +412,9 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
                 elif "instagram.com" in r: platform = "📸 Instagram"
                 elif "facebook.com" in r: platform = "📘 Facebook"
                 elif "youtube.com" in r: platform = "▶️ YouTube"
-                redes_html += f"<a href='{html.escape(r)}' target='_blank' rel='noopener' class='social-pill'>{platform} ↗</a> "
+                redes_html += f"<a href='{safe_href(r)}' target='_blank' rel='noopener' class='social-pill'>{platform} ↗</a> "
             elif isinstance(r, dict):
-                redes_html += f"<a href='{html.escape(r.get('url', '#'))}' target='_blank' rel='noopener' class='social-pill'>{html.escape(r.get('rede', 'Social'))} ↗</a> "
+                redes_html += f"<a href='{safe_href(r.get('url'))}' target='_blank' rel='noopener' class='social-pill'>{html.escape(str(r.get('rede', 'Social')))} ↗</a> "
     if not redes_html:
         redes_html = "<span class='text-muted'>Não cadastradas oficialmente</span>"
 
@@ -413,7 +440,7 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
                 </div>
                 <p class="proposal-ementa">{ementa}</p>
                 <div class="proposal-footer">
-                    <a href="{html.escape(link_p)}" target="_blank" rel="noopener" class="btn-link">{link_label} ↗</a>
+                    <a href="{safe_href(link_p)}" target="_blank" rel="noopener" class="btn-link">{link_label} ↗</a>
                 </div>
             </div>
             """
@@ -459,8 +486,8 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
                             f"nome do veículo e pela data'>📄 {f_nome}{sufixo} — URL não localizada</span> "
                         )
                     elif isinstance(f, dict):
-                        f_nome = html.escape(f.get('veiculo', 'Fonte'))
-                        f_url = html.escape(f.get('url', '#'))
+                        f_nome = html.escape(str(f.get('veiculo', 'Fonte')))
+                        f_url = safe_href(f.get('url'))
                         f_status = str(f.get('status_link') or '')
                         if f_status.startswith('quebrado') or f_status.startswith('indisponivel'):
                             mark, cls, hint = '⚠️', 'source-tag source-dead', f'Link não resolveu na verificação: {html.escape(f_status)}'
@@ -472,7 +499,7 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
                             mark, cls, hint = '🔗', 'source-tag', 'Link não verificado automaticamente'
                         fontes_links += f"<a href='{f_url}' target='_blank' rel='noopener' class='{cls}' title='{hint}'>{mark} {f_nome}</a> "
                     elif isinstance(f, str) and f.startswith('http'):
-                        fontes_links += f"<a href='{html.escape(f)}' target='_blank' rel='noopener' class='source-tag'>🔗 Matéria Original</a> "
+                        fontes_links += f"<a href='{safe_href(f)}' target='_blank' rel='noopener' class='source-tag'>🔗 Matéria Original</a> "
 
             fallback_fontes = "<span class='text-muted'>Nenhuma fonte vinculada; verificação pendente.</span>"
             final_fontes = fontes_links if fontes_links else fallback_fontes
@@ -608,7 +635,7 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
     transparencia_html = ""
     if isinstance(links_transp, dict):
         transparencia_html = "".join(
-            f"<a href='{html.escape(str(url))}' target='_blank' rel='noopener' class='btn-link'>"
+            f"<a href='{safe_href(url)}' target='_blank' rel='noopener' class='btn-link'>"
             f"{html.escape(TRANSPARENCY_LABELS.get(key, key.replace('_', ' ').capitalize()))}"
             f"{' (digite o nome)' if key in TRANSPARENCY_MANUAL else ''} ↗</a>"
             for key, url in links_transp.items()
@@ -906,7 +933,7 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
             ementa = html.escape(str(ref.get('ementa', '')))
             impacto = html.escape(str(ref.get('impacto', '')))
             link_ref = ref.get('link', '')
-            link_html = f"<a href='{html.escape(link_ref)}' target='_blank' rel='noopener' class='btn-link' style='margin-top: 10px; align-self: flex-start;'>Ver texto oficial da norma ↗</a>" if link_ref else ""
+            link_html = f"<a href='{safe_href(link_ref)}' target='_blank' rel='noopener' class='btn-link' style='margin-top: 10px; align-self: flex-start;'>Ver texto oficial da norma ↗</a>" if link_ref else ""
 
             reformas_cards += f"""
             <div class="card" style="display: flex; flex-direction: column; gap: 8px;">
@@ -985,15 +1012,15 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
 
     link_votacoes = data.get('link_votacoes')
     votacoes_link_html = (
-        f'<a href="{html.escape(str(link_votacoes))}" target="_blank" rel="noopener">🗳️ Histórico de votações</a>'
+        f'<a href="{safe_href(link_votacoes)}" target="_blank" rel="noopener">🗳️ Histórico de votações</a>'
         if isinstance(link_votacoes, str) and link_votacoes.startswith('http') else ''
     )
 
     # Links oficiais
-    link_perfil = data.get('link_perfil_oficial') or "https://www.camara.leg.br"
-    link_gastos = data.get('link_transparencia_gastos') or "https://portaldatransparencia.gov.br"
-    link_presenca = data.get('link_presenca') or "#"
-    link_tse = data.get('link_tse') or "https://divulgacandcontas.tse.jus.br"
+    link_perfil = safe_href(data.get('link_perfil_oficial'), "https://www.camara.leg.br")
+    link_gastos = safe_href(data.get('link_transparencia_gastos'), "https://portaldatransparencia.gov.br")
+    link_presenca = safe_href(data.get('link_presenca'))
+    link_tse = safe_href(data.get('link_tse'), "https://divulgacandcontas.tse.jus.br")
 
     if is_governo:
         corpo_secoes_html = f"""
@@ -2254,7 +2281,7 @@ def generate_index_html(entries: List[Dict[str, Any]]) -> str:
         itens_label = html.escape(str(e.get('itens_label') or 'Propostas'))
         data_analise = html.escape(e.get('data_atualizacao', 'Recente'))
         resumo_curto = html.escape(str(e.get('resumo_curto') or 'Abra o relatório para consultar o panorama cidadão.'))
-        tipo_dossie = e.get('tipo_dossie', 'perfil_politico')
+        tipo_dossie = html.escape(str(e.get('tipo_dossie', 'perfil_politico')))
         periodo_mandato = html.escape(str(e.get('periodo_mandato') or ''))
         tipo_tag = ""
         if tipo_dossie == 'governo_presidencial':
