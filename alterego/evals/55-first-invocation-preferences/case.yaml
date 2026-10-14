@@ -1,0 +1,37 @@
+schema_version: '1.1'
+name: 55-first-invocation-preferences
+description: "With no preferences file, defaults apply, the file is written and the three choices are asked once, after the work."
+tags:
+- start
+- preferences
+execution:
+  prompt: /alterego
+  max_turns: 25
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Bash
+  - Write
+graders:
+- name: mentions-preferences-file
+  type: regex
+  target: last_message
+  pattern: preferences\.md
+- name: lists-dev
+  type: regex
+  target: last_message
+  pattern: '`?dev\b'
+  flags: i
+- name: criteria
+  type: llm
+  weight: 2
+  criteria: >-
+    PASS if it opens the session with the defaults already applied (guardrails
+    armed or its absence stated), shows the command list, writes
+    ~/.alterego/preferences.md with the defaults, and closes with the three
+    choices — guardrails at the opening, review editor, AI attribution — each
+    with its default marked. FAIL if it asks the choices before showing the
+    list, blocks the session waiting for an answer, or does not say where the
+    choices are saved.

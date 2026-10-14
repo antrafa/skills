@@ -14,6 +14,11 @@ assistant that creates or updates the user's profile.
 and for writing — is in *Personal context and continuity* in `SKILL.md`. Follow it
 and tell the user, in one line, which destination was used.
 
+**Preferences.** `setup` also shows the three values in
+`~/.alterego/preferences.md` (guardrails, review editor, AI attribution) and
+offers to change them; the keys and defaults are in
+[preferences.md](preferences.md#the-file).
+
 The assistant offers **two input modes**:
 
 ### Mode A: Ingesting Existing Material (Fast)

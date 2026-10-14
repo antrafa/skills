@@ -20,6 +20,10 @@ in a lifetime, not once a session.
 /alterego start none             (arms the guardrails and keeps the default clone)
 ```
 
+"Arms the guardrails" holds while `guardrails: on` in the
+[preferences](preferences.md), the default. With `off`, every mode opens
+without it and the session line says so.
+
 In Codex: `$alterego start`.
 
 ### Bare invocation (`/alterego`)
@@ -32,7 +36,9 @@ file: §1 below, no §2, the session line and the command list.
 `start` is what the user waits on before any work, so it runs in a single turn
 with its calls in parallel:
 
-- the `Skill` call for `guardrails`;
+- the read of `~/.alterego/preferences.md`, on the session's first invocation
+  ([preferences.md](preferences.md#reading-it));
+- the `Skill` call for `guardrails`, unless the preferences turn it off;
 - the read of the catalog in [playbook-persona.md](playbook-persona.md#2-available-persona-catalog);
 - the listing of `~/.alterego/personas/`;
 - the report lookup defined in [SKILL.md](../SKILL.md#routing).
@@ -44,6 +50,10 @@ skip the catalog read.
 ---
 
 ## 1. Arm the guardrails
+
+Skip this section when the preferences say `guardrails: off`: the session line
+reads `Guardrails: **off** (preference)`, and this skill's own *Autonomy and
+limits* are what hold.
 
 `guardrails` is a catalog skill and a **session mode**: once invoked it stays on
 until the user turns it off or the session ends. It layers a stricter discipline
@@ -62,9 +72,9 @@ itself rather than a bare "may I run X?".
    skill's own *Autonomy and limits* already cover commit, push, branch, external
    actions and AI attribution; what is lost is the per-action strictness. The
    catalog maps no public repository for `guardrails`, so what gets offered at
-   the end — once, never as a condition for continuing — is the
-   [public fallback](onboarding.md#public-fallback-for-the-internal-skills),
-   which blocks mechanically through a hook and does not read intent.
+   the end — once, never as a condition for continuing — is installing it
+   from the [catalog](onboarding.md#catalog-and-origin), or turning it off
+   in the [preferences](preferences.md) if the user does not want it.
 
 <critical>Arming the guardrails is not a promise to be careful. It is a mode that
 is either loaded in context or is not. Never report the session as protected
@@ -167,7 +177,7 @@ limits: commit, push and external actions each need their own yes.
 ## 4. Running it twice
 
 `start` in a session that already has it does not reset anything silently. Show
-the current state and ask what to change — the lens, the guardrails, the digest
-or nothing.
+the current state and ask what to change — the lens, the guardrails, the digest,
+the [preferences](preferences.md) or nothing.
 A user who types `start` again usually wants to swap the lens, and the shortcut
 for that is `/alterego persona <name>`; say so.

@@ -31,7 +31,7 @@ the conversation.
 
 The first time a task in the session needs the developer's criteria, resolve their
 profile in this order. `/alterego`, `start` and `help` only configure or list, so
-they do not read it; opening the session costs one tool call, not a profile load.
+they do not read it; opening the session reads the preferences file, not the profile.
 1. `~/.mentat/profile.md` (and `~/.mentat/core-memory.md`), if Mentat is available;
 2. `~/.alterego/profile.md`, as the standalone local fallback;
 3. This skill's default criteria and DNA, if no profile is found.
@@ -81,17 +81,24 @@ the obvious target from context (open file, the current branch's work for
 `review`, MR of the current branch, incident under discussion) and say which one
 you assumed, or ask a single time if there is no context at all. Subcommands and persona names are English-only.
 
+**Preferences.** The first alterego invocation in a session reads
+`~/.alterego/preferences.md` — `guardrails`, `review-editor` and
+`ai-attribution` — in parallel with its other calls. If the file does not
+exist, follow [preferences.md](references/preferences.md#first-invocation-the-file-does-not-exist):
+defaults apply at once, the file is written with them, and the three questions
+close the reply.
+
 `/alterego` with nothing after it opens the session without reading any
-reference. Two tool calls, in parallel: invoking `guardrails` — mandatory on
-every opening; its rules are in
+reference. In parallel: the preferences read and the **report lookup** below.
+Then, with `guardrails: on`, invoke `guardrails` (its rules are in
 [playbook-start.md](references/playbook-start.md#1-arm-the-guardrails), read
-only if the skill is missing — and the **report lookup** below. Plain
-explanations go on, the lens stays the default clone and digest stays off. Then
-write the session line, the command list and, last, the resume offer if the
-lookup found a report:
+only if the skill is missing); with `off`, skip it. Plain explanations go on,
+the lens stays the default clone and digest stays off. Then write the session
+line, the command list, the resume offer if the lookup found a report and, on
+a first invocation, the preference questions:
 
 ```markdown
-Session open. Guardrails: **on**. Explanations: **plain**. Lens: default clone (`/alterego persona <name>` to swap).
+Session open. Guardrails: **on** (or **off** by preference). Explanations: **plain**. Lens: default clone (`/alterego persona <name>` to swap).
 ```
 
 In a session already open, it only shows the list again; it re-arms nothing.
@@ -118,7 +125,7 @@ none that does not, in map order, nothing invented. Footer: *Type
 
 | Intent | Subcommand | Conduct | Reference |
 |---|---|---|---|
-| Open the session: guardrails and lens | `start [<persona>\|none]` | Arm `guardrails` and plain explanations; ask once for the lens and whether long outputs default to a digest. | [playbook-start.md](references/playbook-start.md) |
+| Open the session: guardrails and lens | `start [<persona>\|none]` | Arm `guardrails` (unless turned off in the preferences) and plain explanations; ask once for the lens and whether long outputs default to a digest. | [playbook-start.md](references/playbook-start.md) |
 | Run the guided development pipeline (Dev Pipeline) | `dev [<step>]` | 7-step pipeline with its own discipline per step, one gate per step. | [playbook-dev.md](references/playbook-dev.md) |
 | Refactor something structural, especially in legacy | `refactor <goal>` | Mikado Method: attempt, revert, commit the leaves first, tree green throughout. | [playbook-refactor.md](references/playbook-refactor.md) |
 | Keep a control report across sessions: handoff on top, status of the activities | `control [<goal>\|<path>]` | Create (asking where to save) or update the work's HTML report from evidence; `dev` and `refactor` keep an existing one current. | [playbook-control.md](references/playbook-control.md) |
@@ -137,7 +144,7 @@ none that does not, in map order, nothing invented. Footer: *Type
 | Summarize and visualize an AI technical doc or long reply (SDD, ADR, plan, concept round) | `digest [<target>\|on\|off]` | One-minute visual digest via `doc-digest`, inline without it; `on` makes it the session default for long outputs. | [playbook-digest.md](references/playbook-digest.md) |
 | Write or review a skill, AGENTS.md, a doc an agent reads | `skill [<target>]` | Diagnose by the `writing-for-agents` bar, pointer first. | [playbook-skill.md](references/playbook-skill.md) |
 | Investigate an incident (SRE) | `sre <symptom>` | Measure before conjecturing; fast mitigation, clear rollback. | [playbook-troubleshooting.md](references/playbook-troubleshooting.md) |
-| Calibrate the developer's profile | `setup` | Interview or ingest a résumé; save to Mentat, else `~/.alterego/`. | [onboarding.md](references/onboarding.md) |
+| Calibrate the developer's profile | `setup` | Interview or ingest a résumé; save to Mentat, else `~/.alterego/`; review the preferences. | [onboarding.md](references/onboarding.md) |
 | Switch, list or create personas | `persona [<name>\|<action>]` / `persona new <name>` | List, switch, create or reset the session's technical lens. | [playbook-persona.md](references/playbook-persona.md) |
 | List commands or get quick help | `help` | One line per subcommand, rendered from this map. | [playbook-help.md](references/playbook-help.md) |
 | Explain a command in detail | `help <cmd>` | The command's full card, including when to use another one. | [playbook-help.md](references/playbook-help.md) |
@@ -209,9 +216,10 @@ what is missing.
   time. Before committing, check and show status/diff; use Conventional Commits,
   one logical intent per commit and a body explaining the why.
 - When a change is ready for the user to check (files edited, nothing committed
-  yet), ask once per session whether to open it in VS Code or IntelliJ, open the
-  changed repositories there (`code -n <paths>` / `idea <paths>`) and wait for
-  their review before proposing the commit.
+  yet), follow `review-editor` in the
+  [preferences](references/preferences.md#the-file): open the changed
+  repositories in the chosen editor and wait for their review before proposing
+  the commit, or, with `none`, show `git diff --stat` with the proposal.
 - Before creating a branch, get the name and base if they were not given.
   Create it with `git switch -c <name> --no-track <base>`: from a remote base,
   git otherwise sets the upstream to that base, and the next push lands on it.
@@ -230,5 +238,7 @@ what is missing.
   new execution.
 - For a risky intervention, know the state, the recovery and how to validate the
   result. Do not present a hypothetical rollback as tested.
-- Commits, PRs and deliverables go out in the user's name: no co-authorship and
-  no mention of AI.
+- Commits, PRs and deliverables go out in the user's name. With
+  `ai-attribution: off` (the default) they carry no co-authorship and no mention
+  of AI; with `harness`, attribution follows the harness or project
+  configuration.

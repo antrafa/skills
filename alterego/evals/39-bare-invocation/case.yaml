@@ -48,4 +48,6 @@ graders:
 
     FAIL if it asks a question before showing the list, or treats the empty invocation
 
-    as a free-form request.'
+    as a free-form request. With no preferences file, closing with the three
+
+    first-time preference questions after the list is expected, not a failure.'

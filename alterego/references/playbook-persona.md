@@ -34,7 +34,7 @@ When a task calls for surgical scrutiny or a discipline-specific eye (e.g. hunti
 
 - **What the persona defines:** the critical posture, the order of priorities, the repertoire of questions, the "Always" and "Never" rules, and the technical output format.
 - **What the personal profile keeps:** the user's context, name, routines, explicit communication preferences and durable history (read from Mentat).
-- **The guardrails do not change:** commits still require explicit approval, nothing is posted externally without authorization, and no code leaves with AI attribution.
+- **The guardrails do not change:** commits still require explicit approval, nothing is posted externally without authorization, and AI attribution follows the `ai-attribution` [preference](preferences.md#the-file).
 
 ---
 

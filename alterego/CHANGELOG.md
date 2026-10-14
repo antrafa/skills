@@ -7,7 +7,7 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 ## [Unreleased]
 
 ### Added
-- Autonomy: a change ready for the user to check is opened in VS Code or IntelliJ (asked once per session), and the commit is proposed only after their review.
+- Autonomy: a change ready for the user to check is opened in the editor the `review-editor` preference names, and the commit is proposed only after their review.
 - `daily` with nothing given gathers the desk itself: today's calendar, mail and chat since the last briefing from whatever is connected, yesterday's pending items from Mentat, and news on the profile's topics. The same board runs on it and ends on a local page (`~/.alterego/briefings/`) with the first step on top. Read-only; credentials in messages never reach the page; a source with no connector is named as missing, never guessed (`references/briefing.md`).
 - Review squad: the security scanners that are installed (gitleaks always, semgrep when the Security lens runs, the ecosystem's dependency audit when a manifest changed) run before the dispatch, and their output goes to the Security lens as evidence. A secret gitleaks finds is a Critical on its own; a missing scanner is listed under what was left out, never installed.
 - Review squad: an **Approach** lens that assumes the diff is correct and asks whether it should exist in this shape — a fix at the symptom while the cause lives upstream, a second copy of a helper the repository has, a much smaller change that solves the same problem, a workaround over a removable cause. Runs when what the change is for is stated; dropped after Tests when more than five lenses apply.
@@ -22,6 +22,7 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 - Conformance lens and the `dev review` reviewer: silencing a compiler or linter, skipping or weakening tests, or inflating timeouts to turn red into green is a finding at confidence 95.
 - `dev tdd` and `troubleshooting`: two failed attempts on one premise stop the guessing; the premise is written down and attacked before a third fix.
 - `wrap` sweeps the session transcript for the user's corrections and for discovered workspace facts, as "Learned" candidates. A secret is never a candidate, only where it lives.
+- Preferences, asked once on the first invocation and saved in `~/.alterego/preferences.md`: arming `guardrails` at every opening, the editor a change opens in for review, and whether commits and PRs mention AI. Defaults keep the previous behavior, except the editor, which defaults to none (`git diff --stat`). The questions never block the work. Eval 55 covers it (`references/preferences.md`).
 
 ### Changed
 - Autonomy: every commit and every push needs its own "yes"; an earlier approval never carries over, not even for the same repository, branch or change.

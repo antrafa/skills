@@ -110,8 +110,8 @@ It configures and gets out of the way: it does not organize the day, does not
 read the repository, does not propose work. The one thing it looks for is an
 open control report: if it finds one, the last line offers to resume from it
 (`/alterego` without a subcommand does the same). If `guardrails` is not in the
-environment, the session opens anyway and says what actually holds — this skill's
-own limits.
+environment, or you turned it off in the preferences, the session opens anyway
+and says what actually holds — this skill's own limits.
 
 Full flow in [playbook-start.md](references/playbook-start.md).
 
@@ -428,7 +428,9 @@ Run it once when installing, and again when your context changes.
 
 **What you get:** a 5-question interview, or ingestion of your resume, LinkedIn
 and real messages of yours. The profile is written to Mentat when it is
-installed, otherwise to `~/.alterego/profile.md`.
+installed, otherwise to `~/.alterego/profile.md`. It also shows your three
+preferences — guardrails at the opening, review editor, AI attribution — and
+offers to change them.
 
 At the end it shows the status of the partner skills, displays the clone and
 symlink commands, and installs **only the ones you approve**: installing a skill
@@ -732,8 +734,9 @@ the next action nor to a new run.
 | Send a message, e-mail or anything to the outside | A "yes" for that content and that target |
 | Destructive action | A "yes", regardless of the active permission mode |
 
-Preparing a text never authorizes sending it. No commit or PR carries
-co-authorship or a mention of AI.
+Preparing a text never authorizes sending it. Whether a commit or PR carries
+any mention of AI is your `ai-attribution` preference: none by default
+(`~/.alterego/preferences.md`, asked on the first invocation).
 
 ---
 
