@@ -47,6 +47,10 @@ What was gathered is the desk. Run `daily` on it, steps 1 to 7.
 
 ## 3. Page
 
+The page summarizes the person's mail and chat, so it is created readable
+only by them: the folder with `0700` and the file with `0600`
+(`mkdir -p -m 700 ~/.alterego/briefings` and `umask 077` before writing).
+
 Write `~/.alterego/briefings/<YYYY-MM-DD>.html`, in the person's language, per
 [report-design.md](report-design.md) (or their own `DESIGN.md`), as one file
 with its CSS inside. Top to bottom:
@@ -73,6 +77,11 @@ Open it with `xdg-open` (`open` on macOS), and reply in the chat with the first
 step and the counts, in three lines at most. Then offer, once, to record the
 day's pending items in Mentat; on a yes, write them as facts, never as message
 text.
+
+**Old pages.** If `~/.alterego/briefings/` holds pages older than 30 days, say
+how many in the same reply and offer, once, to delete them; delete only after
+a yes, listing the files first. A summary of someone's mail has no reason to
+outlive the week it was useful.
 
 Done when the page is open, every section either filled or marked with the
 source it lacked, and the person has the first step.

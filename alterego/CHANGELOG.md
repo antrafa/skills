@@ -23,6 +23,7 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 - `dev tdd` and `troubleshooting`: two failed attempts on one premise stop the guessing; the premise is written down and attacked before a third fix.
 - `wrap` sweeps the session transcript for the user's corrections and for discovered workspace facts, as "Learned" candidates. A secret is never a candidate, only where it lives.
 - Preferences, asked once on the first invocation and saved in `~/.alterego/preferences.md`: arming `guardrails` at every opening, the editor a change opens in for review, and whether commits and PRs mention AI. Defaults keep the previous behavior, except the editor, which defaults to none (`git diff --stat`). The questions never block the work. Eval 55 covers it (`references/preferences.md`).
+- Briefing pages are created readable only by the user (`0700` folder, `0600` files), pages older than 30 days are offered for deletion, and the README lists everything the skill keeps on disk.
 
 ### Changed
 - Autonomy: every commit and every push needs its own "yes"; an earlier approval never carries over, not even for the same repository, branch or change.
