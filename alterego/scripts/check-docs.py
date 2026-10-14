@@ -48,7 +48,8 @@ def map_subcommands(skill_md):
     for line in body.splitlines():
         if not line.startswith("|") or line.startswith("|---"):
             continue
-        columns = [c.strip() for c in line.strip("|").split("|")]
+        # Split on unescaped pipes only: `start [<persona>\|none]` is one cell.
+        columns = [c.strip() for c in re.split(r"(?<!\\)\|", line.strip().strip("|"))]
         if len(columns) < 2 or columns[1] in ("—", "Subcommand"):
             continue
         for token in re.findall(r"`([^`]+)`", columns[1]):
