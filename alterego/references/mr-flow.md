@@ -328,7 +328,9 @@ Out of scope for this review
 ```
 
 No findings? Say so in one line. An HTML report only if the user asks for one;
-in that case follow `~/.claude/DESIGN.md`. Always finish by echoing the MR URL.
+in that case follow [report-design.md](report-design.md), or the user's own
+`DESIGN.md` as decided in
+[playbook-control.md](playbook-control.md#2-design). Always finish by echoing the MR URL.
 
 ### Mandatory stop
 
