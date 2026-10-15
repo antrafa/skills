@@ -1,9 +1,9 @@
 # Playbook: Control Report (`/alterego control`, `/alterego clear`)
 
 A long piece of work outlives the session that started it. The **control
-report** is one HTML file per piece of work that carries it across sessions: a
-**handoff** at the top that a fresh session can resume from, and the status of
-the activities below it. With it, clearing the context costs nothing — the state
+report** is one HTML file per piece of work that carries it across sessions:
+the status of the activities, and at the end a **handoff** that a fresh session
+can resume from. With it, clearing the context costs nothing — the state
 the next session needs is on disk, not in the chat history.
 
 ---
@@ -64,19 +64,20 @@ A self-contained HTML file, in this order:
    ```
 2. **The top** from [report-design.md](report-design.md#top): the state in one
    sentence and the state bars of the activities.
-3. **The handoff**, the first section after the top, with a copy button,
-   between markers the lookup reads alone:
-   ```html
-   <!-- alterego:handoff -->
-   <pre id="handoff">…</pre>
-   <!-- /alterego:handoff -->
-   ```
+3. **In short**, as in [report-design.md](report-design.md#5-language).
 4. **Activities**: one row each — activity, state (`pending`, `in progress`,
    `done`, `blocked`), evidence (commit sha, file, command output) and date —
    as an expandable list when the evidence runs long, and the pending ones also
    as **next actions** with owner and when.
 5. **Decisions** taken along the way, each with its why in one line.
 6. **Update log**: date and one line per update, most recent on top.
+7. **The handoff**, the last section, with a copy button and a link to it in
+   the side menu, between markers the lookup reads alone:
+   ```html
+   <!-- alterego:handoff -->
+   <pre id="handoff">…</pre>
+   <!-- /alterego:handoff -->
+   ```
 
 **The handoff is a prompt that works pasted into any session, with or without
 this skill.** It carries, in up to ~25 lines: the goal in one sentence; where

@@ -209,7 +209,8 @@ knowing the mechanism. Write in the user's language.
 * **Decision with a recommendation.** Every open decision carries the
   recommendation on the same row, in one sentence.
 * **Machine text at the end.** Commands, absolute paths and agent prompts go
-  at the bottom of the page; the beginning is for the person reading.
+  at the bottom of the page — the control report's handoff included; the
+  beginning is for the person reading.
 * Short sentences, active voice, concrete verbs; corporate jargon and filler
   words stay out.
 

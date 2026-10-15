@@ -104,7 +104,7 @@ Full guide, with examples and what each one returns: [`COMMANDS.md`](COMMANDS.md
 | `/alterego start [<persona>]` | Opens the session: arms `guardrails` (unless turned off in the preferences) and plain explanations, asks which persona lens to use (or `none`) and whether long outputs default to a digest. |
 | `/alterego dev [<step>]` | 7-step Dev Pipeline with its own discipline per step (brainstorming, plan, worktree, TDD, review, verify, finish). |
 | `/alterego refactor <goal>` | Structural refactor by the Mikado Method: discovers the prerequisites by attempting and reverting, leaves first, tree green at every commit. |
-| `/alterego control [<goal>\|<path>]` | HTML control report for one piece of work: a handoff on top to resume in a fresh session, the status of the activities below. Saved in the repository (`.alterego/reports/`) or in `~/.alterego/work/<project>/reports/`; `/alterego` offers to resume it. |
+| `/alterego control [<goal>\|<path>]` | HTML control report for one piece of work: the status of the activities, and at the end a handoff to resume in a fresh session. Saved in the repository (`.alterego/reports/`) or in `~/.alterego/work/<project>/reports/`; `/alterego` offers to resume it. |
 | `/alterego clear` | Updates the report's handoff and tells you to type `/clear` and `/alterego`, which picks up from it. |
 | `/alterego daily` | Organizes the day in 2 minutes: stability > unblocking the team > architecture > feature. With nothing given, gathers calendar, mail, chat and news first, into a local briefing page. |
 | `/alterego wrap [<notes>]` | Closes the day by the evidence: done, left over, learned, open risk; records what is pending in Mentat with your yes. |

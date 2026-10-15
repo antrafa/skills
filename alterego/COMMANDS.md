@@ -146,10 +146,11 @@ first leaf is a characterization test.
 /alterego clear                        (saves the handoff before you clear)
 ```
 
-**What you get:** one HTML report per piece of work, updated in place. At the
-top, a handoff with a copy button: goal, where it stopped, next step, decisions
-already taken, files that matter, how to verify. Below, the activities with
-their state and evidence, the decisions and an update log. On creation it asks
+**What you get:** one HTML report per piece of work, updated in place: the
+state in one sentence, the activities with their state and evidence, the
+decisions and an update log. At the end, a handoff with a copy button (goal,
+where it stopped, next step, decisions already taken, files that matter, how to
+verify), one click away in the side menu. On creation it asks
 where to save — the repository's `.alterego/reports/` (kept out of git through
 `.git/info/exclude`) or `~/.alterego/work/<project>/reports/`, the default when
 you do not answer. The design is the skill's default, or your own `DESIGN.md`
