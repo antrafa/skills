@@ -163,7 +163,57 @@ legend; the state bars move their sentence below the bar, and a wide table
 scrolls inside its own container. When printing, the menu disappears and the
 content takes the page.
 
-## 5. Checklist before delivering
+## 5. Language
+
+The report is read by someone who does not master the subject. The language is
+plain and still precise: the reader understands what is happening without
+knowing the mechanism. Write in the user's language.
+
+* **Plain word first.** Write "the security team's rule", not "the policy";
+  "fingerprint", not "digest". A technical term stays only when it is the name
+  the reader will meet again (in the tool, in the meeting), explained the first
+  time it appears ("the `.gitlab-multi-image.yml` file, a note that tells the
+  scanner where the image is"). When the user's language has a word for it,
+  use that word instead of the English one.
+* **Acronyms spelled out or swapped.** An acronym the reader would not say out
+  loud gets replaced by the plain word; one they must learn is spelled out the
+  first time ("merge request (MR)"). Team-internal acronyms and code names
+  carry a short gloss too ("SMO, the works measurement system").
+* **Situation before mechanism.** Explain with a scene the reader would live
+  ("a developer opens an MR; the pipeline compiles and the MR is accepted"),
+  with the before and the after. Numbers, tables and technical detail come
+  after, as proof.
+* **Every number says what it means.** "91 critical flaws, most of them
+  inherited from the operating system", not "91 CVEs CRITICAL". The reader
+  never has to work out whether a number is good or bad.
+* **Machine identifiers live in the proof.** Pipeline, commit, project and
+  ticket IDs, file paths and commands go in the **Proof** of a finding or in
+  the activities' evidence. The title, the lede and "In short" carry only
+  words.
+* **"In short" right after the top.** Two or three paragraphs say what is
+  being attempted, followed by two boxes side by side, **Today** and **After**
+  (the second on `--blue-50`).
+* **Findings in three parts.** In the expandable list, each finding's title is
+  a sentence stating the fact ("Changing everyone's build at once would break
+  37 projects") and, opened, **In plain words**, **Why it matters** and
+  **Proof**.
+* **Chips name the weight in plain words:** `blocks`, `careful`, `helps`,
+  `works`, `ready`, `not started`, in the user's language. Severity codes
+  (P1, HIGH) stay inside the proof.
+* **Long explanation goes to a sibling page.** When the subject needs a
+  glossary, a step-by-step flow and alternatives, add a "How it works" page to
+  the set and keep on the main page only what changes the decision, with a
+  link to it.
+* **Short glossary** as a definition list, term on the left: one or two
+  sentences per term, with the project's real example.
+* **Decision with a recommendation.** Every open decision carries the
+  recommendation on the same row, in one sentence.
+* **Machine text at the end.** Commands, absolute paths and agent prompts go
+  at the bottom of the page; the beginning is for the person reading.
+* Short sentences, active voice, concrete verbs; corporate jargon and filler
+  words stay out.
+
+## 6. Checklist before delivering
 
 * The number that answers the question shows without scrolling the page,
   inside a sentence, not in a box.
@@ -173,3 +223,5 @@ content takes the page.
 * The page opens legible in light mode and prints to PDF from the browser.
 * In a set of reports, no page carries its own styles: everything comes from
   the shared stylesheet.
+* Someone outside the subject understands the H1 and "In short" without
+  opening another page, and meets no unexplained acronym or ID in them.
