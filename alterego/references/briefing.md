@@ -55,10 +55,11 @@ Write `~/.alterego/briefings/<YYYY-MM-DD>.html`, in the person's language, per
 [report-design.md](report-design.md) (or their own `DESIGN.md`), as one file
 with its CSS inside. Top to bottom:
 
-1. **Header:** the date, the window, and the sources that answered.
-2. **First step:** `daily`'s answer, with why it comes first and how long it
-   takes. Then tiles with counts: meetings today, waiting for you, tickets
-   needing action, mail from people.
+1. **The top** from [report-design.md](report-design.md#top): a kicker with
+   the date, the window and the sources that answered; an H1 that names the
+   first step (`daily`'s answer); a lede with why it comes first and how long
+   it takes; and the counts in sentences, the number in bold ("**3 people**
+   waiting for you · 4 meetings today · 2 tickets need action").
 3. **Waiting for you:** chat and mail together, oldest first.
 4. **Today's calendar.**
 5. **Tickets:** the ones needing action, then the grouped notifications in a
