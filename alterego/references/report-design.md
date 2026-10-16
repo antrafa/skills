@@ -149,6 +149,11 @@ with the number in mono, the name, one chip per dimension and an arrow that
 turns when it opens. The open content sits on `--blue-50` as a definition
 list (`Staging 10/14`, `Production 10/13`, `Missing`, `Criterion`). When
 printing, everything is open.
+The grid's arrow replaces both the browser marker and any generic `<details>`
+triangle: turn them off **in both states**, closed and open
+(`.pts summary::before, .pts details[open] summary::before { content: none }`).
+Otherwise the open-state rule, being more specific, brings the triangle back
+and it lands in the grid as an extra column.
 
 ### Next actions
 A table with action, owner and when. An undefined owner shows as "To be
