@@ -104,12 +104,14 @@ references: the menu list and the look change in one place, never in a copy
 per page.
 
 ### Links
-Every link opens in a new window: `target="_blank" rel="noopener"`. The
-exception is a link to a section of the same page (`#...`), which only
-scrolls. In a set of reports the rule lives in the shared menu script
-(`assets/nav.js`), which marks the links on load and also the ones the page
-draws later (a filter, a redrawn table) through a `MutationObserver`. In a
-single report the same snippet goes in the page's own script.
+A link in the **content** opens in a new window: `target="_blank"
+rel="noopener"`. A link in the **side menu** navigates in the same window,
+since it leads to pages of the same set, and a link to a section of the same
+page (`#...`) only scrolls. In a set of reports the rule lives in the shared
+menu script (`assets/nav.js`), which marks only the links inside `main`, on
+load and also the ones the page draws later (a filter, a redrawn table)
+through a `MutationObserver`. In a single report the same snippet goes in the
+page's own script.
 
 ### Top
 No header band and no number boxes. From top to bottom:
@@ -243,8 +245,8 @@ knowing the mechanism. Write in the user's language.
 * No color appears only as decoration: every blue marks a surface, data or an
   action.
 * The page opens legible in light mode and prints to PDF from the browser.
-* Every link outside the page opens in a new window, including the ones drawn
-  after load.
+* Every link in the content opens in a new window, including the ones drawn
+  after load; side-menu links open in the same window.
 * In a set of reports, no page carries its own styles: everything comes from
   the shared stylesheet.
 * Someone outside the subject understands the H1 and "In short" without
