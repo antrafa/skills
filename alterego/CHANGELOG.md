@@ -7,6 +7,7 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 ## [Unreleased]
 
 ### Changed
+- `references/report-design.md`: the main container gets `align-content: start`, so a page shorter than the window (an accordion with everything closed) does not stretch its rows and gaps.
 - `references/report-design.md`: the expandable list turns off the generic `<details>` triangle in both states, closed and open, so it does not come back as an extra grid column when an item opens.
 - `references/report-design.md`: every link opens in a new window (`target="_blank" rel="noopener"`), except links to a section of the same page; in a set of reports the shared menu script marks them, including links drawn after load.
 - `references/report-design.md`: a Language section. Reports are written for someone outside the subject: plain word before the technical term, acronyms spelled out or swapped, the situation before the mechanism, every number saying what it means, machine IDs only in the proof, an "In short" with Today and After, findings in three parts (in plain words, why it matters, proof) and chips that name the weight in plain words.

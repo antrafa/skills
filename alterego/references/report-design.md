@@ -92,6 +92,11 @@ under its own entry. What has no page yet shows in `--muted`, without a link,
 with a short label ("next", "queued"). A deadline that governs the set sits at
 the top of the menu, with the day count computed on load.
 
+The main container is a grid at least as tall as the screen: give it
+`align-content: start`. Without it, on a page shorter than the window (an
+accordion with everything closed, say), the grid stretches its rows to fill
+the leftover height, the gaps grow and blocks gain empty space.
+
 A single report — the control report among them — stays one self-contained
 file, with its CSS inline. A set of reports shares **one stylesheet and one
 menu script** (`assets/report.css`, `assets/nav.js`) that every page
