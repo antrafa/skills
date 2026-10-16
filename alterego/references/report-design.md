@@ -80,7 +80,10 @@ family.
 
 ### Page structure
 Two columns: a fixed **side menu**, 264px wide in `--side` with a 1px `--line`
-right border, and the content with a `max-width` of 1040px. The menu lists the
+right border, and the content taking all the remaining width, **with no
+`max-width`** on the main container (`main.conteudo`): wide tables and control
+lists use the screen. The ~70-character line limit applies only to running
+text (a prose block, the lede), which carries its own `max-width`. The menu lists the
 page's sections, with a count next to them when there is one. When the report
 belongs to a set (one page per client, environment or module), the menu lists
 the sibling pages instead, each with a minimal state indicator (two 8px
