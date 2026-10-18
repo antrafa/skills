@@ -149,6 +149,7 @@ When reporting a technical investigation, use the following concise pattern:
 3. **Conclusion and degree of evidence:** proven mechanism or hypotheses, with the evidence and the collection still missing to tell them apart. A recovered service can coexist with a cause still under investigation.
 4. **Immediate mitigation:** distinguish proposed action from applied action; record rollback and verified result when something was executed.
 5. **Fix or next investigation:** well-grounded fix with the smallest diff, or the next experiment needed.
+6. **Follow-up safeguard:** what keeps this from recurring unnoticed — an alert on the signal that showed it, a regression test, an entry in the project's pitfalls list — or "none needed" with the reason.
 
 ---
 

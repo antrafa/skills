@@ -140,3 +140,4 @@ the step is green and integrated.
 - [ ] Was every naive attempt reverted, with the discard announced first?
 - [ ] Is every commit green and releasable on its own, with the graph updated and the sha recorded?
 - [ ] Does the goal commit contain the behavior change, and the leaves none?
+- [ ] Is the debt deliberately left behind named (what, where, why it waited), so the next reader does not take it for an oversight?
