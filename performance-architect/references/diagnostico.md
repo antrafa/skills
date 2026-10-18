@@ -153,6 +153,11 @@ No caminho de ingestão, escrita domina. O que verificar:
 - Anexo em coluna de banco (`BLOB`/`bytea`): inviável neste volume. Custo de
   backup, de replicação e de cache do banco disparam.
 - Escrita de ingestão competindo com leitura analítica na mesma instância.
+- Toda proposta de índice novo ou mudança de esquema em tabela grande diz
+  como aplicar sem parar o sistema: criar índice trava a escrita na tabela,
+  salvo na forma online (`CREATE INDEX CONCURRENTLY` no PostgreSQL,
+  `ONLINE = ON` no SQL Server, `ONLINE` no Oracle); coluna nova com valor
+  preenchido pede carga em lotes, não um `UPDATE` único. E diz como desfazer.
 
 ## Camada 5: cluster e escala
 

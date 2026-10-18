@@ -16,6 +16,7 @@ pronta.
 | `docker compose up` funciona, mas o pod no cluster falha com `exec format error` | Imagem buildada para a arquitetura da máquina local (`arm64` num Mac) e o cluster é `amd64` | `docker build --platform linux/amd64` (ou buildx multi-arch) — e no CI, garanta que o runner builda para a arquitetura do cluster |
 | `depends_on` no compose não espera o banco ficar pronto | `depends_on` espera só o container iniciar, não o serviço aceitar conexão | `healthcheck` no serviço + `condition: service_healthy`, ou retry de conexão na própria aplicação |
 | Ferramentas de debug (`curl`, `vim`, `netcat`) na imagem final "por garantia" | Aumentam superfície de ataque e tamanho sem necessidade | Debug em produção é com `kubectl debug` (container efêmero), não com ferramenta embutida na imagem — ver `kubernetes.md` |
+| Pod demora o `terminationGracePeriodSeconds` inteiro para parar e a app não fecha conexões | `ENTRYPOINT`/`CMD` em forma de shell (`CMD node app.js`) ou script `sh -c` sem `exec`: o PID 1 é o shell, que não repassa o SIGTERM para a app | Forma exec (`CMD ["node", "app.js"]`), ou `exec` na última linha do script de entrada |
 | Base `alpine` quebra dependência nativa (`bcrypt`, `sharp`, drivers) | musl vs glibc | Use `-slim` (Debian) nos dois estágios em vez de forçar alpine; a diferença de tamanho não compensa o risco |
 
 ## Checklist antes de entregar um Dockerfile

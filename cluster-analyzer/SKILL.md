@@ -175,6 +175,11 @@ outro.
    disponível.
 3. Relate só saída de comando que você de fato rodou. Se não rodou, diga
    que não rodou.
+4. Quando vários workloads falham juntos, ache o que falhou primeiro antes
+   de investigar os outros: os eventos do panorama já vêm ordenados por
+   `lastTimestamp`. O banco que caiu às 10:02 explica as aplicações em
+   `CrashLoopBackOff` desde 10:03; investigar cada aplicação é perseguir a
+   cascata. Diga no relatório qual é a falha de origem e quais são efeito.
 
 **Concluído quando:** cada hipótese do Passo 2 está marcada como
 *confirmada*, *descartada* ou *bloqueada* (403, metrics-server ausente,

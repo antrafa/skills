@@ -43,6 +43,11 @@ Leia a saída do `plan` pelos símbolos:
 - `-/+` é o mais perigoso: o recurso antigo é destruído e o dado dele se
   perde (ex.: banco recriado do zero); sem `create_before_destroy`, há também
   downtime. Pare e confirme antes de aplicar isso em ambiente com dado real.
+- O `plan` diz o motivo da recriação: a linha marcada `# forces replacement`
+  é o atributo que obriga a troca (nome, zona, chave). Mudar esse atributo de
+  volta, ou usar `moved`, costuma evitar a recriação.
+- Recurso que não pode ser recriado (banco, bucket com dado) leva
+  `lifecycle { prevent_destroy = true }`: o `plan` falha em vez de destruir.
 
 ## Gestão de state
 
@@ -64,6 +69,13 @@ valor sensível gerenciado (senhas geradas, chaves).
   não só o state.
 - `terraform state list` / `terraform state show <recurso>` inspecionam o
   state sem precisar abrir o arquivo bruto.
+- `sensitive = true` em variável e output só esconde o valor da saída do
+  `plan` e do log: no state ele continua em texto. Proteja o backend
+  (acesso, criptografia), não só o código.
+- Não proponha `terraform state rm`, `state mv` ou `import` como atalho sem o
+  usuário pedir: mexer no state à mão desalinha código e infra sem deixar
+  rastro no `plan`. Prefira `moved` e blocos `import` no código, que passam
+  pela revisão.
 
 ## Variáveis e workspaces
 

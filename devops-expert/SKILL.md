@@ -82,6 +82,8 @@ esta é a base geral de DevOps.
 - [ ] A configuração foi validada (`lint`/`plan`/`--dry-run`/build local)
       antes de considerar pronta?
 - [ ] Algum recurso foi renomeado? O nome antigo tem passo de remoção?
+- [ ] O caminho de volta está dito (`helm rollback <revisão>`,
+      `kubectl rollout undo`, a tag anterior da imagem, o `plan` que desfaz)?
 - [ ] Antes de aplicar em ambiente em uso, o usuário tem o `kubectl diff` (ou
       `helm diff`) para ler o que difere do que está vivo?
 - [ ] O tamanho da solução é proporcional ao problema (sem abstração ou

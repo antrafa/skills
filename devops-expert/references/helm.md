@@ -137,6 +137,10 @@ existe uma nova release para instalar via `helm upgrade`.
 - **`--force` no `helm upgrade`**: recria recursos em vez de atualizar in
   place, pode causar downtime desnecessário — use só quando um erro de
   imutabilidade (ex.: mudança de `selector` de um Service) exigir.
+- **ConfigMap ou Secret alterado e pods com a config velha**: mudar o
+  conteúdo não reinicia o Deployment. Anote o pod template com o hash,
+  `checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}`,
+  para o `upgrade` reiniciar quando a config muda.
 - **Não revisar `helm diff` antes de `upgrade` em produção**: sem isso, uma
   mudança não intencional em `values.yaml` (ex.: réplica ou recurso
   reduzido por engano) só aparece depois do deploy.
