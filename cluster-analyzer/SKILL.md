@@ -1,6 +1,6 @@
 ---
 name: cluster-analyzer
-description: 'Diagnóstico somente leitura de cluster Kubernetes, confirmando o kubeconfig e o contexto certos quando há vários ambientes ou clientes. Use when o usuário pedir para investigar um cluster, pod, deploy ou ingress de um ambiente ("pod reiniciando no cluster do cliente X", "dá uma olhada na homologação"). Do NOT use for escrever ou aplicar a correção (manifest, Helm, pipeline) nem para qualquer operação que altere o cluster.'
+description: 'Read-only diagnosis of a Kubernetes cluster, confirming the right kubeconfig and context when there are several environments or clients. Use when the user asks to investigate a cluster, pod, deploy or ingress of an environment (in Portuguese: "pod reiniciando no cluster do cliente X", "dá uma olhada na homologação"). Do NOT use for writing or applying the fix (manifest, Helm, pipeline) nor for any operation that changes the cluster.'
 license: MIT
 metadata:
   author: Antonio Rafael Ortega
@@ -10,198 +10,209 @@ metadata:
   stack: all
 ---
 
-# Cluster Analyzer (somente leitura)
+# Cluster Analyzer (read-only)
 
-Diagnóstico de cluster Kubernetes agindo como **observador, nunca como
-operador**. É comum haver vários kubeconfigs (um por cliente ou ambiente)
-ou vários contextos num mesmo arquivo — o primeiro passo é sempre descobrir
-e confirmar qual usar, nunca assumir o contexto atual do `kubectl`.
+Kubernetes cluster diagnosis acting as an **observer, never as an
+operator**. It is common to have several kubeconfigs (one per client or
+environment) or several contexts in the same file — the first step is always
+to find out and confirm which one to use, never to assume `kubectl`'s
+current context.
 
-## Regras de execução (valem a sessão inteira)
+## Language
 
-Este acesso é para diagnóstico. Você atua como observador do início ao fim
-da conversa — mesmo que o usuário peça para "corrigir" algo durante a
-análise. Se o diagnóstico apontar para uma correção, descreva o comando de
-escrita num bloco separado, explique o impacto esperado e devolva a decisão
-e a execução para o usuário.
+Chat replies and the final report follow the user's language, not the
+language of this skill. A user writing in Portuguese ("dá uma olhada na
+homologação") gets the whole analysis in Portuguese.
 
-**Todo comando leva `--kubeconfig <arquivo> --context <contexto>`
-explícitos** (e `--namespace` quando aplicável). Nunca troque o contexto
-atual do usuário (`kubectl config use-context`) nem exporte `KUBECONFIG`
-global — isso evita que uma troca de contexto "vaze" para fora desta tarefa
-e afete outro terminal do usuário.
+## Execution rules (valid for the whole session)
 
-**Permitido (allow-list — nada fora disto):**
+This access is for diagnosis. You act as an observer from the start to the
+end of the conversation — even if the user asks you to "fix" something
+during the analysis. If the diagnosis points to a fix, describe the write
+command in a separate block, explain the expected impact and hand the
+decision and the execution back to the user.
+
+**Every command carries an explicit `--kubeconfig <file> --context <context>`**
+(and `--namespace` when applicable). Never switch the user's current context
+(`kubectl config use-context`) nor export a global `KUBECONFIG` — this keeps
+a context switch from "leaking" outside this task and affecting another of
+the user's terminals.
+
+**Allowed (allow-list — nothing outside it):**
 - `kubectl get / describe / logs / top / events`
 - `kubectl explain`, `api-resources`, `version`, `auth can-i`,
   `config get-contexts`
-- `kubectl rollout status`, `kubectl rollout history` (só estes dois — são
-  leitura pura, e a tabela de sintoma → causa depende deles para diagnosticar
-  deploy travado)
-- Flags de saída: `-o yaml`, `-o json`, `-o wide`, `--show-labels`, `--sort-by`
+- `kubectl rollout status`, `kubectl rollout history` (only these two — they
+  are pure reads, and the symptom → cause table depends on them to diagnose
+  a stuck deploy)
+- Output flags: `-o yaml`, `-o json`, `-o wide`, `--show-labels`, `--sort-by`
 - `helm list`, `helm get`, `helm status`, `helm history`
-- Pipe para filtro local que só lê a saída: `grep`, `jq`, `head`, `tail`,
-  `sort`, `wc`
-- Os scripts desta skill, que só chamam verbos desta lista:
-  `scripts/panorama.sh` e `scripts/envdiff.py`
-- `curl` GET só de cabeçalhos numa URL do serviço (`curl -sk -m 15 -o
-  /dev/null -D - <url>`), para saber se quem respondeu foi o proxy ou a
-  aplicação. Sem `-X`, `-d` nem `--data`.
+- Pipe to a local filter that only reads the output: `grep`, `jq`, `head`,
+  `tail`, `sort`, `wc`
+- This skill's scripts, which only call verbs from this list:
+  `scripts/panorama.sh` and `scripts/envdiff.py`
+- `curl` GET of headers only on a service URL (`curl -sk -m 15 -o
+  /dev/null -D - <url>`), to tell whether the proxy or the application
+  answered. No `-X`, `-d` or `--data`.
 
-**Proibido (qualquer comando fora do allow-list, incluindo):**
+**Forbidden (any command outside the allow-list, including):**
 `apply`, `create`, `patch`, `replace`, `edit`, `delete`, `scale`, `set`,
 `label`, `annotate`, `rollout restart`/`undo`/`pause`, `cordon`, `drain`,
 `uncordon`, `taint`, `exec`, `cp`, `attach`, `port-forward`, `proxy`, `run`,
 `debug`, `helm install`/`upgrade`/`uninstall`/`rollback`, `kubectl config
-set-*`, `--force`, `--dry-run=server`, e pipe para qualquer coisa que
-execute comando (`xargs`, `sh`, `bash`, `kubectl`).
+set-*`, `--force`, `--dry-run=server`, and piping to anything that runs a
+command (`xargs`, `sh`, `bash`, `kubectl`).
 
-**Limites de uso:**
-- `logs` sempre com `--tail=200` (ou `--since=<janela>`); aumente só se as
-  200 linhas não mostrarem o erro. Log sem limite despeja milhares de linhas
-  e soterra a evidência.
-- `top` depende do metrics-server. Se falhar com `Metrics API not
-  available`, diga isso e use `resources` no `get pod -o yaml` e o
-  `Last State` do `describe` no lugar.
-- Antes do primeiro `helm`, rode `command -v helm`. Sem `helm`, identifique
-  o release pelos labels (`app.kubernetes.io/managed-by`, `helm.sh/chart`,
-  `app.kubernetes.io/instance`) — os secrets `sh.helm.release.v1.*` guardam
-  o values com senha e ficam fora da investigação.
+**Usage limits:**
+- `logs` always with `--tail=200` (or `--since=<window>`); increase only if
+  the 200 lines don't show the error. An unbounded log dumps thousands of
+  lines and buries the evidence.
+- `top` depends on metrics-server. If it fails with `Metrics API not
+  available`, say so and use `resources` in `get pod -o yaml` and the
+  `Last State` from `describe` instead.
+- Before the first `helm`, run `command -v helm`. Without `helm`, identify
+  the release by its labels (`app.kubernetes.io/managed-by`, `helm.sh/chart`,
+  `app.kubernetes.io/instance`) — the `sh.helm.release.v1.*` secrets hold
+  the values with passwords and stay out of the investigation.
 
-**Segredo aparece como nome e tamanho, nunca como valor.** `get` está no
-allow-list, mas o que ele devolve de sensível não entra na resposta:
-- Secret: use `describe secret` (mostra chaves e tamanhos, sem valor). Para
-  saber só quais chaves existem: `get secret <nome> -o jsonpath='{.data}' |
-  jq 'keys'`. Base64 não é proteção — `get secret -o yaml` expõe a senha.
-- Em `get configmap`, `get pod/deploy -o yaml` (bloco `env`) e `helm get
-  values`/`helm get all`, qualquer valor com cara de credencial (senha,
-  token, chave, connection string com usuário/senha) sai como `***`.
-- Kubeconfig: inspecione só com `config get-contexts`; o arquivo bruto
-  (`cat <kubeconfig>`) carrega certificados e tokens.
+**A secret shows up as name and size, never as a value.** `get` is on the
+allow-list, but the sensitive things it returns stay out of the reply:
+- Secret: use `describe secret` (shows keys and sizes, no value). To learn
+  only which keys exist: `get secret <name> -o jsonpath='{.data}' |
+  jq 'keys'`. Base64 is not protection — `get secret -o yaml` exposes the
+  password.
+- In `get configmap`, `get pod/deploy -o yaml` (the `env` block) and `helm
+  get values`/`helm get all`, any value that looks like a credential
+  (password, token, key, connection string with user/password) comes out as
+  `***`.
+- Kubeconfig: inspect it only with `config get-contexts`; the raw file
+  (`cat <kubeconfig>`) carries certificates and tokens.
 
-**Log de produção carrega dado pessoal de cidadão.** Resuma o que o log
-mostra (erro, horário, frequência) e mascare CPF, e-mail e nome de pessoa
-nos trechos citados.
+**Production logs carry citizens' personal data.** Summarize what the log
+shows (error, time, frequency) and mask CPF (the Brazilian taxpayer ID),
+email and person names in the quoted excerpts.
 
-## Passo 1 — Escolher o kubeconfig
+## Step 1 — Choose the kubeconfig
 
-Liste os arquivos de configuração disponíveis antes de perguntar qualquer
-coisa — não peça ao usuário para lembrar o nome do arquivo de cabeça:
+List the available configuration files before asking anything — don't ask
+the user to remember the file name off the top of their head:
 
 ```bash
 echo "$KUBECONFIG"; ls -p ~/.kube/ 2>/dev/null
 ```
 
-Candidatos: os arquivos listados em `$KUBECONFIG`, o `~/.kube/config` e os
-demais kubeconfigs em `~/.kube/` (ignore diretórios como `cache/` e
+Candidates: the files listed in `$KUBECONFIG`, `~/.kube/config` and the
+other kubeconfigs in `~/.kube/` (ignore directories such as `cache/` and
 `http-cache/`).
 
-Responda com a lista encontrada, a pergunta de qual ambiente investigar e,
-**na mesma mensagem**, as hipóteses do Passo 2 — elas não dependem do
-ambiente, e o usuário pode corrigir o rumo junto com a confirmação. Os nomes
-de arquivo geralmente seguem `<cliente>-<ambiente>[-<plataforma>].yaml`
-(ex.: `clientea-hml.yaml`, `clienteb-prd-oke.yaml`), mas **confirme o
-cliente/ambiente com o usuário em vez de deduzir pelo nome** — clientes
-diferentes podem ter siglas parecidas, e escolher `prd` em vez de `hml` é
-exatamente o tipo de engano caro demais para arriscar. Se a lista for longa,
-pergunte em texto livre em vez de tentar encaixar tudo numa pergunta de
-múltipla escolha.
+Reply with the list found, the question of which environment to
+investigate and, **in the same message**, the Step 2 hypotheses — they
+don't depend on the environment, and the user can correct the course along
+with the confirmation. File names usually follow
+`<client>-<environment>[-<platform>].yaml` (e.g. `clientea-hml.yaml`,
+`clienteb-prd-oke.yaml`), but **confirm the client/environment with the
+user instead of deducing it from the name** — different clients can have
+similar acronyms, and picking `prd` instead of `hml` is exactly the kind of
+mistake too expensive to risk. If the list is long, ask in free text instead
+of trying to fit everything into a multiple-choice question.
 
-Depois de escolhido o arquivo, rode e informe o(s) contexto(s) contido(s)
-nele (um kubeconfig pode ter mais de um):
+Once the file is chosen, run and report the context(s) it contains (a
+kubeconfig can have more than one):
 
 ```bash
-kubectl --kubeconfig <caminho-escolhido> config get-contexts
+kubectl --kubeconfig <chosen-path> config get-contexts
 ```
 
-Se houver mais de um contexto, confirme qual usar.
+If there is more than one context, confirm which one to use.
 
-**Concluído quando:** o usuário confirmou arquivo e contexto, e você
-escreveu em texto qual ambiente vai investigar — ele precisa conseguir ler
-isso e perceber na hora se está errado.
+**Done when:** the user has confirmed file and context, and you have written
+in text which environment you are going to investigate — they need to be
+able to read it and notice at once if it is wrong.
 
-## Passo 2 — Hipóteses ranqueadas
+## Step 2 — Ranked hypotheses
 
-Escreva as 3 a 4 causas mais prováveis do sintoma relatado, em ordem de
-probabilidade, e qual comando de leitura confirma ou descarta cada uma.
-Isso transforma a sessão numa investigação dirigida (cada saída elimina
-hipóteses) em vez de uma coleta de comandos "para ver o que aparece" — e
-deixa o usuário reordenar se souber de algo (ex.: "teve deploy hoje de
-manhã").
+Write the 3 to 4 most likely causes of the reported symptom, in order of
+probability, and which read command confirms or rules out each one. This
+turns the session into a directed investigation (each output eliminates
+hypotheses) instead of a collection of commands "to see what shows up" — and
+lets the user reorder them if they know something (e.g. "there was a deploy
+this morning").
 
-Exemplo para "pod reiniciando direto":
+Example for "pod restarting all the time":
 
-1. `OOMKilled` — limit de memória abaixo do uso real. Confirma em
-   `describe pod` (`Last State: Reason: OOMKilled`, exit 137) e `top pod`.
-2. Liveness probe agressiva matando a app durante o boot ou sob carga.
-   Confirma nos `Events` do `describe` (`Liveness probe failed`, `Killing`)
-   e no tempo de startup no `logs --previous`.
-3. Dependência externa indisponível (banco, fila, serviço de auth) fazendo
-   a app abortar no startup. Confirma no fim do `logs --previous`
-   (stack trace de conexão, `Connection refused`, `ORA-`, timeout).
-4. Deploy recente com imagem/config quebrada. Confirma em
-   `rollout history deploy/<nome>` e `get deploy -o yaml` (imagem, env).
+1. `OOMKilled` — memory limit below the real usage. Confirm in
+   `describe pod` (`Last State: Reason: OOMKilled`, exit 137) and `top pod`.
+2. Aggressive liveness probe killing the app during boot or under load.
+   Confirm in the `describe` `Events` (`Liveness probe failed`, `Killing`)
+   and in the startup time in `logs --previous`.
+3. External dependency unavailable (database, queue, auth service) making
+   the app abort at startup. Confirm at the end of `logs --previous`
+   (connection stack trace, `Connection refused`, `ORA-`, timeout).
+4. Recent deploy with a broken image/config. Confirm in
+   `rollout history deploy/<name>` and `get deploy -o yaml` (image, env).
 
-Para outros sintomas, monte a lista a partir de `references/sintomas.md`
-e da evidência — sem causas que nenhuma das duas sustenta. Ali estão:
-sintoma do pod → causa, **o que parece problema mas é normal** (consulte
-antes de transformar uma linha estranha em hipótese), onde nasce um erro HTTP
-(proxy ou aplicação) e o que comparar quando funciona num ambiente e não no
-outro.
+For other symptoms, build the list from `references/symptoms.md` and the
+evidence — with no causes that neither of the two supports. It holds: pod
+symptom → cause, **what looks like a problem but is normal** (check it
+before turning a strange line into a hypothesis), where an HTTP error
+originates (proxy or application) and what to compare when it works in one
+environment and not in the other.
 
-## Passo 3 — Investigar
+## Step 3 — Investigate
 
-0. Se o sintoma ainda não aponta para um recurso específico, comece com o
-   panorama do namespace, que roda as leituras gerais numa chamada só:
+0. If the symptom doesn't point to a specific resource yet, start with the
+   namespace overview, which runs the general reads in a single call:
 
    ```bash
-   scripts/panorama.sh <kubeconfig> <contexto> <namespace>
+   scripts/panorama.sh <kubeconfig> <context> <namespace>
    ```
 
-   Seção com `FALHOU:` (403, CRD inexistente, metrics-server ausente) não
-   interrompe as outras: registre o que ficou sem leitura e siga com o resto.
-   Quando a pergunta é "por que funciona em A e não em B", rode
-   `scripts/envdiff.py <deployment> --a <kubeconfig> <contexto> <namespace>
-   --b <kubeconfig> <contexto> <namespace>` — cada lado com o kubeconfig e o
-   contexto confirmados no Passo 1.
-1. Depois do panorama, um comando por vez. Mostre o comando antes de rodar, espere o
-   resultado, interprete a saída antes do próximo passo — cada resultado
-   deve influenciar a próxima pergunta de diagnóstico, exatamente como
-   investigar um bug.
-2. Se um comando falhar com `403 Forbidden`, isso é esperado e faz parte do
-   modelo de permissão — não tente contornar, não procure credencial
-   alternativa, não sugira ampliar a permissão. Reporte o que a falta de
-   acesso significa para o diagnóstico e siga por outro caminho de leitura
-   disponível.
-3. Relate só saída de comando que você de fato rodou. Se não rodou, diga
-   que não rodou.
-4. Quando vários workloads falham juntos, ache o que falhou primeiro antes
-   de investigar os outros: os eventos do panorama já vêm ordenados por
-   `lastTimestamp`. O banco que caiu às 10:02 explica as aplicações em
-   `CrashLoopBackOff` desde 10:03; investigar cada aplicação é perseguir a
-   cascata. Diga no relatório qual é a falha de origem e quais são efeito.
+   A section with `FAILED:` (403, missing CRD, metrics-server absent)
+   doesn't stop the others: record what was left unread and carry on with
+   the rest. When the question is "why does it work in A and not in B", run
+   `scripts/envdiff.py <deployment> --a <kubeconfig> <context> <namespace>
+   --b <kubeconfig> <context> <namespace>` — each side with the kubeconfig
+   and context confirmed in Step 1.
+1. After the overview, one command at a time. Show the command before
+   running it, wait for the result, interpret the output before the next
+   step — each result should shape the next diagnostic question, exactly
+   like investigating a bug.
+2. If a command fails with `403 Forbidden`, that is expected and part of the
+   permission model — don't try to get around it, don't look for an
+   alternative credential, don't suggest widening the permission. Report
+   what the missing access means for the diagnosis and continue through
+   another available read path.
+3. Report only output from commands you actually ran. If you didn't run it,
+   say you didn't run it.
+4. When several workloads fail together, find what failed first before
+   investigating the others: the overview events already come sorted by
+   `lastTimestamp`. The database that went down at 10:02 explains the
+   applications in `CrashLoopBackOff` since 10:03; investigating each
+   application is chasing the cascade. Say in the report which is the
+   originating failure and which are effects.
 
-**Concluído quando:** cada hipótese do Passo 2 está marcada como
-*confirmada*, *descartada* ou *bloqueada* (403, metrics-server ausente,
-evento já expirado), cada marcação apoiada no comando e no trecho de saída
-que a sustenta. Se todas foram descartadas, isso também é um resultado:
-diga quais foram descartadas e qual leitura sugere a próxima hipótese.
+**Done when:** each Step 2 hypothesis is marked *confirmed*, *ruled out* or
+*blocked* (403, metrics-server absent, event already expired), each mark
+backed by the command and the output excerpt that supports it. If all were
+ruled out, that is also a result: say which were ruled out and which read
+suggests the next hypothesis.
 
-## Encerrando a análise
+## Wrapping up the analysis
 
-Resuma o que foi encontrado (sintoma, evidência coletada, qual hipótese
-do Passo 2 se confirmou e quais foram descartadas) e, se houver uma
-correção necessária, apresente-a em bloco separado para o usuário revisar
-e aplicar — nunca aplicada por esta skill.
+Summarize what was found (symptom, evidence collected, which Step 2
+hypothesis was confirmed and which were ruled out) and, if a fix is needed,
+present it in a separate block for the user to review and apply — never
+applied by this skill.
 
-Antes de escrever a correção, veja quem gerencia o recurso — os labels já
-vêm no `get -o yaml` / `--show-labels`:
+Before writing the fix, check who manages the resource — the labels already
+come in `get -o yaml` / `--show-labels`:
 
-- `app.kubernetes.io/managed-by: Helm`, `helm.sh/chart` ou anotação
-  `meta.helm.sh/release-name`: a correção vai no values/chart do release (em
-  geral no repositório do ambiente do cliente). Um `kubectl set`/`patch`
-  direto é desfeito no próximo `helm upgrade`, e o problema volta sem
-  ninguém saber por quê. Aponte o campo do values a mudar; para escrever o
-  manifest/values corrigido, a skill `devops-expert` entra depois.
-- Recurso sem gerenciador aparente: o comando `kubectl` de escrita
-  correspondente, com o impacto esperado (ex.: "gera novo rollout").
+- `app.kubernetes.io/managed-by: Helm`, `helm.sh/chart` or the
+  `meta.helm.sh/release-name` annotation: the fix goes in the release's
+  values/chart (usually in the client's environment repository). A direct
+  `kubectl set`/`patch` is undone on the next `helm upgrade`, and the
+  problem comes back without anyone knowing why. Point to the values field
+  to change; to write the corrected manifest/values, the `devops-expert`
+  skill comes in afterwards.
+- Resource with no apparent manager: the corresponding `kubectl` write
+  command, with the expected impact (e.g. "triggers a new rollout").

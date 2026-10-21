@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""Compara as variáveis de ambiente de um Deployment entre dois ambientes, só com leitura.
+"""Compares a Deployment's environment variables between two environments, read-only.
 
-Uso:
-  envdiff.py <deployment> --a <kubeconfig> <contexto> <namespace> \
-                          --b <kubeconfig> <contexto> <namespace> [--container <nome>]
+Usage:
+  envdiff.py <deployment> --a <kubeconfig> <context> <namespace> \
+                          --b <kubeconfig> <context> <namespace> [--container <name>]
 
-Lê o Deployment e os ConfigMaps que ele referencia (env e envFrom) nos dois lados e
-imprime a imagem de cada container, o que só existe em A, o que só existe em B e o
-que difere. Secret nunca é lido: aparece como referência (secret:<nome>/<chave>).
-Valor de chave com cara de credencial sai mascarado; o script diz só se é igual ou
-diferente. Se um ConfigMap não puder ser lido (403, inexistente), a variável aparece
-como ilegível e o resto segue.
+Reads the Deployment and the ConfigMaps it references (env and envFrom) on both sides and
+prints each container's image, what exists only in A, what exists only in B and what
+differs. A Secret is never read: it shows up as a reference (secret:<name>/<key>).
+The value of a credential-like key comes out masked; the script only says whether it is
+the same or different. If a ConfigMap can't be read (403, nonexistent), the variable shows
+up as unreadable and the rest carries on.
 """
 import argparse
 import json
@@ -42,8 +42,8 @@ def ler_configmap(lado, nome, cache):
 def valor_do_configmap(lado, nome, chave, cache):
     data = ler_configmap(lado, nome, cache)
     if isinstance(data, Exception):
-        return f"<configmap {nome} ilegível: {data}>"
-    return data.get(chave, f"<chave {chave} ausente no configmap {nome}>")
+        return f"<configmap {nome} unreadable: {data}>"
+    return data.get(chave, f"<key {chave} missing from configmap {nome}>")
 
 
 def ambiente(lado, deployment, container):
@@ -61,7 +61,7 @@ def ambiente(lado, deployment, container):
                 nome = fonte["configMapRef"]["name"]
                 data = ler_configmap(lado, nome, cache)
                 if isinstance(data, Exception):
-                    env[f"{prefixo}{pre}*"] = f"<configmap {nome} ilegível: {data}>"
+                    env[f"{prefixo}{pre}*"] = f"<configmap {nome} unreadable: {data}>"
                     continue
                 for k, v in data.items():
                     env[prefixo + pre + k] = v
@@ -90,10 +90,10 @@ def exibir(chave, valor):
 
 
 def main():
-    p = argparse.ArgumentParser(description="Diff de env de um Deployment entre dois ambientes (somente leitura).")
+    p = argparse.ArgumentParser(description="Env diff of a Deployment between two environments (read-only).")
     p.add_argument("deployment")
-    p.add_argument("--a", nargs=3, required=True, metavar=("KUBECONFIG", "CONTEXTO", "NAMESPACE"))
-    p.add_argument("--b", nargs=3, required=True, metavar=("KUBECONFIG", "CONTEXTO", "NAMESPACE"))
+    p.add_argument("--a", nargs=3, required=True, metavar=("KUBECONFIG", "CONTEXT", "NAMESPACE"))
+    p.add_argument("--b", nargs=3, required=True, metavar=("KUBECONFIG", "CONTEXT", "NAMESPACE"))
     p.add_argument("--container")
     args = p.parse_args()
 
@@ -102,11 +102,11 @@ def main():
         try:
             lados[rotulo] = ambiente(lado, args.deployment, args.container)
         except RuntimeError as e:
-            sys.exit(f"{rotulo} ({lado[1]}/{lado[2]}): não foi possível ler deployment/{args.deployment}: {e}")
+            sys.exit(f"{rotulo} ({lado[1]}/{lado[2]}): could not read deployment/{args.deployment}: {e}")
 
     (img_a, env_a), (img_b, env_b) = lados["A"], lados["B"]
     print(f"A = {args.a[1]}/{args.a[2]}   B = {args.b[1]}/{args.b[2]}\n")
-    print("== Imagens")
+    print("== Images")
     for nome in sorted(img_a.keys() | img_b.keys()):
         a, b = img_a.get(nome, "-"), img_b.get(nome, "-")
         print(f"{'  ' if a == b else '≠ '}{nome}: A={a}  B={b}")
@@ -115,19 +115,19 @@ def main():
     so_b = sorted(env_b.keys() - env_a.keys())
     diferentes = sorted(k for k in env_a.keys() & env_b.keys() if env_a[k] != env_b[k])
 
-    print(f"\n== Só em A ({len(so_a)})")
+    print(f"\n== Only in A ({len(so_a)})")
     for k in so_a:
         print(f"  {k}={exibir(k, env_a[k])}")
-    print(f"\n== Só em B ({len(so_b)})")
+    print(f"\n== Only in B ({len(so_b)})")
     for k in so_b:
         print(f"  {k}={exibir(k, env_b[k])}")
-    print(f"\n== Diferentes ({len(diferentes)})")
+    print(f"\n== Different ({len(diferentes)})")
     for k in diferentes:
         if exibir(k, env_a[k]) == "***":
-            print(f"  {k}: valores diferentes (mascarado)")
+            print(f"  {k}: values differ (masked)")
         else:
             print(f"  {k}:\n    A={env_a[k]}\n    B={env_b[k]}")
-    print(f"\nIguais: {len(env_a.keys() & env_b.keys()) - len(diferentes)}")
+    print(f"\nSame: {len(env_a.keys() & env_b.keys()) - len(diferentes)}")
 
 
 if __name__ == "__main__":

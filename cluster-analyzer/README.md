@@ -26,7 +26,7 @@ current context. Each one also runs on its own, without the agent.
 
 - `scripts/panorama.sh <kubeconfig> <context> <namespace>` — pods,
   workloads, services and endpoints, routes, HPA, PVC, `top` and recent
-  events in one call. A section that fails prints `FALHOU:` and the rest
+  events in one call. A section that fails prints `FAILED:` and the rest
   keeps going.
 - `scripts/envdiff.py <deployment> --a <kubeconfig> <context> <namespace>
   --b <kubeconfig> <context> <namespace>` — images and environment variables
