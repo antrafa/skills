@@ -1,6 +1,6 @@
-# Estrutura e Esquema de Dados do Dossiê (JSON Schema)
+# Dossier Data Structure and Schema (JSON Schema)
 
-O dossiê político compilado segue a seguinte estrutura padronizada de dados antes da renderização em HTML:
+The compiled political dossier follows this standardized data structure before HTML rendering. Keys and enum values are a contract with the scripts and stay exactly as written; `example` values show the Portuguese content the dossier carries.
 
 ```json
 {
@@ -41,7 +41,7 @@ O dossiê político compilado segue a seguinte estrutura padronizada de dados an
       "properties": {
         "sintese": {
           "type": "string",
-          "description": "Raio-X factual em linguagem simples, com aproximadamente 300 a 600 palavras, cobrindo identidade, trajetória, atuação, dinheiro público, patrimônio, propostas, todos os casos materiais catalogados, contraditório e lacunas, sem recomendação de voto."
+          "description": "Factual X-ray in plain language, roughly 300 to 600 words, covering identity, career, activity, public money, assets, proposals, every material catalogued case, the right of reply and gaps, with no voting recommendation."
         },
         "pontos_chave": {
           "type": "array",
@@ -73,7 +73,7 @@ O dossiê político compilado segue a seguinte estrutura padronizada de dados an
     },
     "cobertura_pesquisa": {
       "type": "object",
-      "description": "Registro auditável do alcance e das limitações da busca por fatos de interesse público.",
+      "description": "Auditable record of the reach and limitations of the search for facts of public interest.",
       "properties": {
         "data_execucao": { "type": "string", "example": "2026-08-22" },
         "periodo": { "type": "string", "example": "2021-01-01 a 2026-08-22, com fatos anteriores ainda ativos" },
@@ -162,14 +162,14 @@ O dossiê político compilado segue a seguinte estrutura padronizada de dados an
           "posicao_defesa": { "type": "string" },
           "fontes": {
             "type": "array",
-            "description": "Cada URL é verificada na geração (HTTP). Link que não resolve aparece riscado e marcado com ⚠️ no relatório: substitua por uma URL conferida em vez de citar de memória.",
+            "description": "Each URL is checked at generation time (HTTP). A link that does not resolve appears struck through and flagged with ⚠️ in the report: replace it with a checked URL instead of citing from memory.",
             "items": {
               "type": "object",
               "properties": {
                 "veiculo": { "type": "string" },
-                "url": { "type": "string", "description": "Omita quando não tiver o endereço conferido. Sem url, o relatório exibe veículo e data com a marca 'URL não localizada' — o que é correto; link remontado de memória não é." },
-                "data": { "type": "string", "description": "Usada na exibição quando não há url." },
-                "status_link": { "type": "string", "description": "Preenchido automaticamente: ok, quebrado (404), nao verificavel (403), nao verificado." }
+                "url": { "type": "string", "description": "Omit when you do not have a checked address. Without url, the report shows outlet and date with the mark 'URL não localizada' — which is correct; a link rebuilt from memory is not." },
+                "data": { "type": "string", "description": "Shown when there is no url." },
+                "status_link": { "type": "string", "description": "Filled automatically: ok, quebrado (broken, 404), nao verificavel (not verifiable, 403), nao verificado (not checked)." }
               }
             }
           }
@@ -178,26 +178,26 @@ O dossiê político compilado segue a seguinte estrutura padronizada de dados an
     },
     "despesas_discriminadas": {
       "type": "array",
-      "description": "Gastos públicos abertos por categoria (cota parlamentar, verba de gabinete, diárias, cartão corporativo).",
+      "description": "Public spending broken down by category (parliamentary allowance, office allowance, per diems, corporate card).",
       "items": {
         "type": "object",
         "properties": {
           "categoria": { "type": "string" },
           "valor": { "type": "number" },
           "valor_formatado": { "type": "string" },
-          "detalhe": { "type": "string", "description": "Período, fornecedores relevantes e link da nota, quando público." }
+          "detalhe": { "type": "string", "description": "Period, relevant suppliers and the receipt link, when public." }
         }
       }
     },
     "despesas_resumo": {
       "type": "object",
-      "description": "Agregação da cota parlamentar produzida por scripts/fetch_camara.py. Preencha manualmente para cargos sem coletor.",
+      "description": "Parliamentary allowance aggregation produced by scripts/fetch_camara.py. Fill by hand for offices with no collector.",
       "properties": {
         "periodo": { "type": "string", "example": "2023 a 2026" },
         "total": { "type": "number" },
         "total_formatado": { "type": "string" },
         "registros_analisados": { "type": "number" },
-        "truncado": { "type": "boolean", "description": "Verdadeiro quando a leitura parou no limite de páginas: o total é parcial." },
+        "truncado": { "type": "boolean", "description": "True when reading stopped at the page limit: the total is partial." },
         "por_ano": { "type": "array", "items": { "type": "object", "properties": { "ano": { "type": ["string", "number"] }, "valor": { "type": "number" }, "valor_formatado": { "type": "string" } } } },
         "por_categoria": { "type": "array", "items": { "type": "object", "properties": { "categoria": { "type": "string" }, "valor": { "type": "number" }, "valor_formatado": { "type": "string" }, "notas": { "type": "number" } } } },
         "principais_fornecedores": { "type": "array", "items": { "type": "object", "properties": { "nome": { "type": "string" }, "cnpj_cpf": { "type": "string" }, "valor": { "type": "number" }, "valor_formatado": { "type": "string" }, "notas": { "type": "number" } } } }
@@ -205,7 +205,7 @@ O dossiê político compilado segue a seguinte estrutura padronizada de dados an
     },
     "revisoes_anteriores": {
       "type": "array",
-      "description": "Preenchido automaticamente a partir do catálogo: datas das gerações anteriores, exibidas no rodapé.",
+      "description": "Filled automatically from the catalog: dates of earlier generations, shown in the footer.",
       "items": { "type": "string" }
     },
     "mandato_periodo": { "type": "string", "example": "2023 a 2027" },
@@ -213,7 +213,7 @@ O dossiê político compilado segue a seguinte estrutura padronizada de dados an
     "patrimonio_declarado_recente": { "type": "string", "example": "R$ 1.589.369,94 (2022)" },
     "controversias_nota": {
       "type": "string",
-      "description": "Substitui o aviso padrão quando não há casos catalogados. Nunca afirme inexistência de fatos."
+      "description": "Replaces the default notice when there are no catalogued cases. Never claim that no facts exist."
     },
     "comissoes_orgaos": {
       "type": "array",
@@ -251,10 +251,10 @@ O dossiê político compilado segue a seguinte estrutura padronizada de dados an
       }
     },
     "bloco_parlamentar": { "type": "string" },
-    "sala_gabinete": { "type": "string", "description": "Endereço funcional do gabinete. Nunca use endereço residencial." },
+    "sala_gabinete": { "type": "string", "description": "Official office address. Never use a home address." },
     "links_transparencia": {
       "type": "object",
-      "description": "Buscas abertas em portais oficiais para conferência independente, geradas por scripts/fetch_tse_transparency.py.",
+      "description": "Open searches on official portals for independent checking, generated by scripts/fetch_tse_transparency.py.",
       "additionalProperties": { "type": "string" }
     },
     "link_perfil_oficial": { "type": "string" },
@@ -266,11 +266,11 @@ O dossiê político compilado segue a seguinte estrutura padronizada de dados an
       "type": "string",
       "enum": ["perfil_politico", "governo_presidencial"],
       "default": "perfil_politico",
-      "description": "Diferencia perfis individuais (parlamentares/candidatos) de dossiês analíticos de mandatos executivos de governo."
+      "description": "Distinguishes individual profiles (legislators/candidates) from analytical dossiers on executive government terms."
     },
     "mandato_executivo": {
       "type": "object",
-      "description": "Metadados do mandato de chefe do Poder Executivo (ex-presidentes ou governadores).",
+      "description": "Metadata on the term of a head of the Executive (former presidents or governors).",
       "properties": {
         "id": { "type": "string", "example": "bolsonaro, lula, fhc" },
         "presidente": { "type": "string" },
@@ -296,7 +296,7 @@ O dossiê político compilado segue a seguinte estrutura padronizada de dados an
     },
     "indicadores_economicos": {
       "type": "object",
-      "description": "Séries e consolidação macroeconômica geradas a partir do Banco Central do Brasil (SGS).",
+      "description": "Macroeconomic series and consolidation generated from the Banco Central do Brasil (SGS).",
       "properties": {
         "resumo_macro": {
           "type": "object",
@@ -317,7 +317,7 @@ O dossiê político compilado segue a seguinte estrutura padronizada de dados an
         },
         "series": {
           "type": "object",
-          "description": "Séries completas de dados do BCB SGS (IPCA, Selic, Dólar, Dívida Bruta, PIB)."
+          "description": "Full BCB SGS data series (IPCA inflation, Selic rate, dollar, gross debt, GDP)."
         },
         "grafico_anual": {
           "type": "array",
@@ -337,7 +337,7 @@ O dossiê político compilado segue a seguinte estrutura padronizada de dados an
     },
     "cofres_publicos": {
       "type": "object",
-      "description": "Contas públicas, resultado primário e gastos operacionais da Presidência da República.",
+      "description": "Public accounts, primary balance and operating expenses of the Presidency.",
       "properties": {
         "resultado_fiscal_acumulado": { "type": "string" },
         "divida_publica_trajetoria": { "type": "string" },
@@ -348,7 +348,7 @@ O dossiê político compilado segue a seguinte estrutura padronizada de dados an
     },
     "promessas_campanha": {
       "type": "object",
-      "description": "Balanço factual de cumprimento de promessas de campanha registradas na Justiça Eleitoral.",
+      "description": "Factual scorecard of fulfillment of campaign promises registered with the electoral courts.",
       "properties": {
         "fonte": { "type": "string" },
         "total": { "type": "integer" },
@@ -374,7 +374,7 @@ O dossiê político compilado segue a seguinte estrutura padronizada de dados an
     },
     "projetos_de_lei_e_reformas": {
       "type": "array",
-      "description": "Emendas Constitucionais, Leis Complementares e Ordinárias sancionadas/promulgadas no mandato.",
+      "description": "Constitutional amendments, complementary and ordinary laws signed/enacted during the term.",
       "items": {
         "type": "object",
         "required": ["titulo", "norma", "ano", "impacto"],

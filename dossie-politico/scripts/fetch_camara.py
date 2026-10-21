@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-fetch_camara.py - Consulta e estruturação de dados da API da Câmara dos Deputados.
-Fonte oficial: https://dadosabertos.camara.leg.br/api/v2/
+fetch_camara.py - Queries and structures data from the Câmara dos Deputados (Chamber of Deputies) API.
+Official source: https://dadosabertos.camara.leg.br/api/v2/
 """
 
 import sys
@@ -29,7 +29,7 @@ def normalize(text: str) -> str:
     return unicodedata.normalize('NFKD', text).encode('ASCII', 'ignore').decode('utf-8').lower().strip()
 
 def http_get(url: str, timeout: int = 15, tentativas: int = 3) -> Optional[Dict[str, Any]]:
-    """As APIs da Camara e do Senado derrubam handshake com frequencia; uma falha unica nao e resposta."""
+    """The Câmara and Senado APIs drop handshakes often; a single failure is not an answer."""
     for tentativa in range(1, tentativas + 1):
         try:
             req = urllib.request.Request(url, headers=HEADERS)
@@ -38,11 +38,11 @@ def http_get(url: str, timeout: int = 15, tentativas: int = 3) -> Optional[Dict[
                     return json.loads(resp.read().decode('utf-8'))
                 return None
         except urllib.error.HTTPError as e:
-            sys.stderr.write(f"[WARN] {e.code} ao consultar {url}\n")
+            sys.stderr.write(f"[WARN] {e.code} while querying {url}\n")
             return None
         except Exception as e:
             if tentativa == tentativas:
-                sys.stderr.write(f"[WARN] Falha ao consultar {url} apos {tentativas} tentativas: {e}\n")
+                sys.stderr.write(f"[WARN] Failed to query {url} after {tentativas} attempts: {e}\n")
             else:
                 time.sleep(0.6 * tentativa)
     return None
@@ -51,7 +51,7 @@ LEGISLATURAS_ANTERIORES = (56, 55, 54)
 
 
 def _dedupe(hits: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    """A mesma pessoa aparece uma vez por legislatura; id repetido não é homônimo."""
+    """The same person appears once per legislature; a repeated id is not a namesake."""
     vistos = {}
     for h in hits:
         vistos.setdefault(h.get('id'), h)
@@ -59,7 +59,7 @@ def _dedupe(hits: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 
 
 def find_deputados(nome: str) -> List[Dict[str, Any]]:
-    """Todos os deputados compatíveis com o nome, sem escolher por conta própria."""
+    """Every deputy matching the name, without picking one on its own."""
     norm_query = normalize(nome)
     query_encoded = urllib.parse.quote(nome.strip())
     url_search = f"https://dadosabertos.camara.leg.br/api/v2/deputados?nome={query_encoded}&ordem=ASC&ordenarPor=nome"
@@ -78,14 +78,14 @@ def find_deputados(nome: str) -> List[Dict[str, Any]]:
     if hits:
         return hits
 
-    # Ex-deputado: a busca padrão cobre apenas a legislatura corrente.
+    # Former deputy: the default search covers only the current legislature.
     for legislatura in LEGISLATURAS_ANTERIORES:
         data_leg = http_get(f"{url_search}&idLegislatura={legislatura}")
         hits = _dedupe((data_leg or {}).get('dados') or [])
         if hits:
             sys.stderr.write(
-                f"[INFO] Encontrado apenas na {legislatura}a legislatura: trate como ex-deputado "
-                "e confirme mandato e situacao atual.\n"
+                f"[INFO] Found only in legislature {legislatura}: treat as a former deputy "
+                "and confirm the term and current status.\n"
             )
             return hits
     return []
@@ -97,8 +97,8 @@ def describe_candidates(hits: List[Dict[str, Any]]) -> str:
         for d in hits
     )
     return (
-        f"Nome ambiguo na Camara: {len(hits)} correspondencias. "
-        f"Escolha explicitamente para nao gerar o dossie da pessoa errada:\n{linhas}"
+        f"Ambiguous name in the Câmara: {len(hits)} matches. "
+        f"Choose one explicitly so the dossier is not built for the wrong person:\n{linhas}"
     )
 
 
@@ -107,10 +107,10 @@ def _brl(valor: float) -> str:
 
 
 def fetch_despesas(dep_id: int, id_legislatura: int = 57, max_paginas: int = 30) -> Dict[str, Any]:
-    """Agrega a CEAP por ano, categoria e fornecedor.
+    """Aggregates the CEAP (parliamentary expense allowance) by year, category and supplier.
 
-    O filtro `?ano=` da API retorna vazio: só `idLegislatura` traz registros.
-    Nota fiscal solta não informa nada; o que fiscaliza é o agregado.
+    The API's `?ano=` filter returns nothing: only `idLegislatura` brings records.
+    A single receipt says nothing; oversight comes from the aggregate.
     """
     base = "https://dadosabertos.camara.leg.br/api/v2/deputados"
     url: Optional[str] = f"{base}/{dep_id}/despesas?idLegislatura={id_legislatura}&itens=100"
@@ -176,23 +176,23 @@ def fetch_deputado_por_nome(nome: str, dep_id: Optional[int] = None,
         dep_summary = hits[0]
         dep_id = dep_summary['id']
     
-    # Detalhes completos
+    # Full details
     det_data = http_get(f"https://dadosabertos.camara.leg.br/api/v2/deputados/{dep_id}")
     det = det_data.get('dados', {}) if det_data else {}
     
-    # Proposições de autoria recente
+    # Recently authored bills
     props_data = http_get(f"https://dadosabertos.camara.leg.br/api/v2/proposicoes?idDeputadoAutor={dep_id}&ordem=DESC&ordenarPor=ano&itens=25")
     props = props_data.get('dados', []) if props_data else []
     
-    # Frentes parlamentares
+    # Parliamentary caucuses (frentes parlamentares)
     frentes_data = http_get(f"https://dadosabertos.camara.leg.br/api/v2/deputados/{dep_id}/frentes")
     frentes = frentes_data.get('dados', []) if frentes_data else []
     
-    # Órgãos / Comissões
+    # Bodies / committees
     orgaos_data = http_get(f"https://dadosabertos.camara.leg.br/api/v2/deputados/{dep_id}/orgaos")
     orgaos = orgaos_data.get('dados', []) if orgaos_data else []
     
-    # Discursos recentes
+    # Recent speeches
     discursos_data = http_get(f"https://dadosabertos.camara.leg.br/api/v2/deputados/{dep_id}/discursos?ordenarPor=dataHoraInicio&ordem=DESC&itens=10")
     discursos = discursos_data.get('dados', []) if discursos_data else []
 
@@ -270,7 +270,7 @@ def fetch_deputado_por_nome(nome: str, dep_id: Optional[int] = None,
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print(json.dumps({'error': 'Informe o nome do deputado: python3 fetch_camara.py "<Nome>"'}))
+        print(json.dumps({'error': 'Provide the deputy\'s name: python3 fetch_camara.py "<Name>"'}))
         sys.exit(1)
     
     args = [a for a in sys.argv[1:] if a != '--id']
@@ -290,4 +290,4 @@ if __name__ == '__main__':
     if resultado:
         print(json.dumps(resultado, indent=2, ensure_ascii=False))
     else:
-        print(json.dumps({'status': 'not_found', 'message': f'Deputado não encontrado na API da Câmara para: {nome_arg}'}))
+        print(json.dumps({'status': 'not_found', 'message': f'Deputy not found in the Câmara API for: {nome_arg}'}))

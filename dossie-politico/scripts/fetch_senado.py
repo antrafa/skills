@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-fetch_senado.py - Consulta e estruturação de dados da API do Senado Federal.
-Fonte oficial: https://legis.senado.leg.br/dadosabertos/
+fetch_senado.py - Queries and structures data from the Senado Federal (Federal Senate) API.
+Official source: https://legis.senado.leg.br/dadosabertos/
 """
 
 import sys
@@ -28,7 +28,7 @@ def normalize(text: str) -> str:
     return unicodedata.normalize('NFKD', text).encode('ASCII', 'ignore').decode('utf-8').lower().strip()
 
 def http_get(url: str, timeout: int = 15, tentativas: int = 3) -> Optional[Dict[str, Any]]:
-    """As APIs da Camara e do Senado derrubam handshake com frequencia; uma falha unica nao e resposta."""
+    """The Câmara and Senado APIs drop handshakes often; a single failure is not an answer."""
     for tentativa in range(1, tentativas + 1):
         try:
             req = urllib.request.Request(url, headers=HEADERS)
@@ -37,17 +37,17 @@ def http_get(url: str, timeout: int = 15, tentativas: int = 3) -> Optional[Dict[
                     return json.loads(resp.read().decode('utf-8'))
                 return None
         except urllib.error.HTTPError as e:
-            sys.stderr.write(f"[WARN] {e.code} ao consultar {url}\n")
+            sys.stderr.write(f"[WARN] {e.code} while querying {url}\n")
             return None
         except Exception as e:
             if tentativa == tentativas:
-                sys.stderr.write(f"[WARN] Falha ao consultar {url} apos {tentativas} tentativas: {e}\n")
+                sys.stderr.write(f"[WARN] Failed to query {url} after {tentativas} attempts: {e}\n")
             else:
                 time.sleep(0.6 * tentativa)
     return None
 
 def find_senadores(nome: str) -> List[Dict[str, Any]]:
-    """Todos os senadores em exercicio compativeis com o nome, sem escolher sozinho."""
+    """Every sitting senator matching the name, without picking one on its own."""
     norm_query = normalize(nome)
     url_lista = "https://legis.senado.leg.br/dadosabertos/senador/lista/atual.json"
     data = http_get(url_lista)
@@ -76,8 +76,8 @@ def describe_candidates(hits: List[Dict[str, Any]]) -> str:
         for h in hits
     )
     return (
-        f"Nome ambiguo no Senado: {len(hits)} correspondencias. "
-        f"Escolha explicitamente para nao gerar o dossie da pessoa errada:\n{linhas}"
+        f"Ambiguous name in the Senado: {len(hits)} matches. "
+        f"Choose one explicitly so the dossier is not built for the wrong person:\n{linhas}"
     )
 
 
@@ -98,7 +98,7 @@ def fetch_senador_por_nome(nome: str, codigo_parlamentar: Optional[str] = None) 
     mandato = matched.get('Mandato', {})
     codigo = ident.get('CodigoParlamentar')
     
-    # Detalhes completos (tambem cobrem quem foi pedido por --codigo e nao esta na lista atual)
+    # Full details (also cover a senator requested by --codigo who is not on the current list)
     det_data = http_get(f"https://legis.senado.leg.br/dadosabertos/senador/{codigo}.json")
     det_parlamentar = (det_data or {}).get('DetalheParlamentar', {}).get('Parlamentar', {}) or {}
     if not ident.get('NomeParlamentar'):
@@ -106,7 +106,7 @@ def fetch_senador_por_nome(nome: str, codigo_parlamentar: Optional[str] = None) 
     if not mandato:
         mandato = det_parlamentar.get('MandatoAtual', {}) or {}
     
-    # Matérias / Propostas
+    # Bills / proposals
     materias_lista = []
     try:
         mat_data = http_get(f"https://legis.senado.leg.br/dadosabertos/senador/{codigo}/autorias.json")
@@ -116,9 +116,9 @@ def fetch_senador_por_nome(nome: str, codigo_parlamentar: Optional[str] = None) 
                 raw_mat = [raw_mat]
             materias_lista = raw_mat
     except Exception as e:
-        sys.stderr.write(f"[WARN] Erro ao buscar materias do senador: {e}\n")
+        sys.stderr.write(f"[WARN] Error while fetching the senator's bills: {e}\n")
 
-    # Suplentes
+    # Alternates (suplentes)
     suplentes = mandato.get('Suplentes', {}).get('Suplente', [])
     if isinstance(suplentes, dict):
         suplentes = [suplentes]
@@ -173,7 +173,7 @@ def fetch_senador_por_nome(nome: str, codigo_parlamentar: Optional[str] = None) 
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print(json.dumps({'error': 'Informe o nome do senador: python3 fetch_senado.py "<Nome>"'}))
+        print(json.dumps({'error': 'Provide the senator\'s name: python3 fetch_senado.py "<Name>"'}))
         sys.exit(1)
     
     argv = sys.argv[1:]
@@ -191,4 +191,4 @@ if __name__ == '__main__':
     if resultado:
         print(json.dumps(resultado, indent=2, ensure_ascii=False))
     else:
-        print(json.dumps({'status': 'not_found', 'message': f'Senador não encontrado na API do Senado para: {nome_arg}'}))
+        print(json.dumps({'status': 'not_found', 'message': f'Senator not found in the Senado API for: {nome_arg}'}))

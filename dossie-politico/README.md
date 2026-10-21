@@ -1,112 +1,114 @@
-# Dossiê Político — Transparência Cidadã
+# Dossiê Político — Citizen Transparency
 
-Skill para [Claude Code](https://claude.com/claude-code) que produz **dossiês cidadãos, neutros e auditáveis** sobre políticos, agentes públicos, candidatos e pré-candidatos brasileiros, a partir de fontes oficiais e jornalísticas confiáveis.
+A skill for [Claude Code](https://claude.com/claude-code) that produces **neutral, auditable citizen dossiers** on Brazilian politicians, public officials, candidates and pre-candidates, from official and trustworthy journalistic sources.
 
-Cada relatório funciona como um **raio-X do político**: identidade, trajetória, remuneração e gastos públicos, atividade legislativa, patrimônio declarado e uma seção de escândalos, polêmicas, processos e fatos verificados — sempre com fonte auditável, sem recomendar voto e sem transformar ausência de dado em conclusão favorável ou desfavorável.
+Each report works as an **X-ray of the politician**: identity, career, pay and public spending, legislative activity, declared assets and a section on scandals, controversies, lawsuits and verified facts — always with an auditable source, without recommending a vote and without turning missing data into a favorable or unfavorable conclusion.
 
-O resultado é um HTML autossuficiente salvo em `~/.dossie-politico/<nome_do_politico>.html`, listado em um índice navegável `~/.dossie-politico/index.html`.
+The result is a self-contained HTML file saved to `~/.dossie-politico/<nome_do_politico>.html`, listed in a browsable index at `~/.dossie-politico/index.html`. The skill replies in the user's language; the dossiers it generates are in Brazilian Portuguese, for Brazilian readers.
 
-## Por que existe
+## Why it exists
 
-Dados de remuneração, gastos e atividade parlamentar já são públicos, mas estão espalhados em portais diferentes (Câmara, Senado, TSE) e raramente cruzados com o noticiário de processos e controvérsias. Esta skill automatiza a coleta e a consolidação, mantendo cada afirmação rastreável até a fonte original.
+Pay, spending and legislative activity data are already public, but they are scattered across different portals (Câmara dos Deputados, Senado Federal, TSE — the Superior Electoral Court) and rarely cross-checked against the news on lawsuits and controversies. This skill automates the collection and consolidation, keeping every claim traceable to its original source.
 
-## Instalação
+## Installation
 
-Copie ou faça symlink deste diretório para dentro de `~/.claude/skills/`:
+Copy or symlink this directory into `~/.claude/skills/`:
 
 ```bash
 ln -s "$(pwd)" ~/.claude/skills/dossie-politico
 ```
 
-Requer Python 3 (biblioteca padrão apenas — sem dependências externas).
+Requires Python 3 (standard library only — no external dependencies).
 
-## Uso
+## Usage
 
-Invoque a skill pedindo ao Claude Code para investigar um político, por exemplo:
+Invoke the skill by asking Claude Code to investigate a politician, for example:
 
 > "Faça um dossiê do deputado federal Fulano de Tal"
 
-A skill segue o fluxo descrito em [SKILL.md](SKILL.md): define o alvo, coleta dados oficiais, pesquisa fatos de interesse público, escreve um resumo consolidado e gera o relatório.
+The skill follows the workflow described in [SKILL.md](SKILL.md): it defines the subject, collects official data, researches facts of public interest, writes a consolidated summary and generates the report.
 
-### Uso direto dos scripts
+### Running the scripts directly
 
-Coleta de dados de um deputado federal (aceita `--id` para desambiguar homônimos, `--sem-despesas` para pular a agregação da cota parlamentar):
+Collect data on a federal deputy (accepts `--id` to disambiguate namesakes, `--sem-despesas` to skip the parliamentary allowance aggregation):
 
 ```bash
 python3 scripts/fetch_camara.py "<Nome do Deputado>"
 ```
 
-Coleta de dados de um senador (aceita `--codigo` para desambiguar homônimos):
+Collect data on a senator (accepts `--codigo` to disambiguate namesakes):
 
 ```bash
 python3 scripts/fetch_senado.py "<Nome do Senador>"
 ```
 
-Orquestração completa — coleta, geração do HTML e atualização do índice. O payload em `--extra-json` precisa incluir `cobertura_pesquisa` (ver [dossier-schema.md](references/dossier-schema.md)):
+Full orchestration — collection, HTML generation and index update. The payload in `--extra-json` must include `cobertura_pesquisa` (see [dossier-schema.md](references/dossier-schema.md)):
 
 ```bash
 python3 scripts/run_dossier.py "<Nome do Político>" --extra-json /caminho/politico_full.json
 ```
 
-Renderizar um payload completo diretamente, sem passar pela coleta automática:
+Render a complete payload directly, without the automatic collection:
 
 ```bash
 python3 scripts/generate_dossier_html.py /caminho/politico_full.json
 ```
 
-Gerar vários dossiês de uma lista de payloads, abrindo o índice apenas ao final:
+Generate several dossiers from a list of payloads, opening the index only at the end:
 
 ```bash
 python3 scripts/generate_dossiers_batch.py /caminho/politicos.json
 ```
 
-Retificar ou remover um relatório do catálogo:
+Correct or remove a report from the catalog:
 
 ```bash
 python3 scripts/generate_dossier_html.py --remove <Nome_Do_Arquivo>.html --apagar-html
 ```
 
-## Estrutura
+## Layout
 
-| Caminho | Descrição |
+| Path | Description |
 |---|---|
-| `SKILL.md` | Definição da skill e fluxo de trabalho completo para o agente |
-| `scripts/run_dossier.py` | Orquestrador principal da extração, geração e atualização do índice |
-| `scripts/fetch_camara.py` | Coleta na API da Câmara, incluindo a cota parlamentar (CEAP) por ano, categoria e fornecedor |
-| `scripts/fetch_senado.py` | Coleta automatizada na API do Senado Federal |
-| `scripts/fetch_tse_transparency.py` | Consultas eleitorais do TSE e links de busca nos portais oficiais |
-| `scripts/remuneracao_oficial.py` | Fonte única de subsídio, verbas e norma que os fixa |
-| `scripts/generate_dossier_html.py` | Motor de renderização dos relatórios individuais e do `index.html` |
-| `scripts/generate_dossiers_batch.py` | Gera vários relatórios a partir de uma lista JSON, abrindo o índice uma única vez |
-| `references/sources-guide.md` | Guia de endpoints oficiais, portais e dorks de busca |
-| `references/dossier-schema.md` | Esquema JSON formal do dossiê |
-| `references/legal-journalism-ethics.md` | Escopo de quem pode ser objeto de dossiê, rigor jurídico, neutralidade e contraditório |
-| `examples/` | Payloads completos de referência (`exemplo_deputado.json`, `exemplo_senador.json`) |
-| `tests/` | Regressões executáveis |
+| `SKILL.md` | Skill definition and full workflow for the agent |
+| `scripts/run_dossier.py` | Main orchestrator for extraction, generation and index update |
+| `scripts/fetch_camara.py` | Collects from the Câmara API, including the parliamentary allowance (CEAP) by year, category and supplier |
+| `scripts/fetch_senado.py` | Automated collection from the Senado Federal API |
+| `scripts/fetch_governo.py` | Macroeconomic indicators from the Banco Central (BCB SGS) for presidential terms |
+| `scripts/fetch_tse_transparency.py` | TSE electoral lookups and search links on official portals |
+| `scripts/remuneracao_oficial.py` | Single source for salary (subsídio), allowances and the norm that sets them |
+| `scripts/generate_dossier_html.py` | Rendering engine for the individual reports and `index.html` |
+| `scripts/generate_dossiers_batch.py` | Generates several reports from a JSON list, opening the index once |
+| `references/sources-guide.md` | Guide to official endpoints, portals and search dorks |
+| `references/dossier-schema.md` | Formal JSON schema of the dossier |
+| `references/legal-journalism-ethics.md` | Scope of who may be the subject of a dossier, legal rigor, neutrality and the right of reply |
+| `examples/` | Complete reference payloads (`exemplo_deputado.json`, `exemplo_senador.json`, `exemplo_governo_presidencial.json`) |
+| `tests/` | Runnable regressions |
 
-## Fontes de dados
+## Data sources
 
-- [Dados Abertos da Câmara dos Deputados](https://dadosabertos.camara.leg.br/api/v2/)
-- [Dados Abertos do Senado Federal](https://legis.senado.leg.br/dadosabertos/)
-- [DivulgaCandContas — TSE](https://divulgacandcontas.tse.jus.br/)
+- [Dados Abertos da Câmara dos Deputados](https://dadosabertos.camara.leg.br/api/v2/) (Chamber of Deputies open data)
+- [Dados Abertos do Senado Federal](https://legis.senado.leg.br/dadosabertos/) (Federal Senate open data)
+- [DivulgaCandContas — TSE](https://divulgacandcontas.tse.jus.br/) (candidates, assets and campaign finance)
+- [SGS — Banco Central do Brasil](https://www3.bcb.gov.br/sgspub) (economic time series, for presidential terms)
 
-Cargos fora do Congresso Nacional (Executivo, Legislativo estadual e municipal) não têm coletor automático; o preenchimento segue o roteiro manual descrito em [sources-guide.md](references/sources-guide.md).
+Offices outside the Congresso Nacional (Executive, state and municipal Legislative) have no automatic collector; filling them follows the manual procedure described in [sources-guide.md](references/sources-guide.md).
 
-## Princípios
+## Principles
 
-- **Neutralidade**: não recomenda voto, não atribui intenção, não converte ausência de dado em conclusão.
-- **Auditabilidade**: toda afirmação relevante aponta para uma fonte primária ou jornalística verificável; URLs são checadas por HTTP antes da entrega.
-- **Contraditório**: toda controvérsia registra a posição da defesa ou o desfecho judicial, quando localizados.
-- **Correção sem apagamento**: retificações preferem regerar o relatório (mantendo histórico de revisões no rodapé) a simplesmente remover o conteúdo.
+- **Neutrality**: does not recommend a vote, does not attribute intent, does not turn missing data into a conclusion.
+- **Auditability**: every relevant claim points to a verifiable primary or journalistic source; URLs are checked over HTTP before delivery.
+- **Right of reply**: every controversy records the defense's position or the court outcome, when found.
+- **Correction without erasure**: corrections prefer regenerating the report (keeping the revision history in the footer) over simply removing the content.
 
-Veja o detalhamento completo em [legal-journalism-ethics.md](references/legal-journalism-ethics.md).
+See the full detail in [legal-journalism-ethics.md](references/legal-journalism-ethics.md).
 
-## Testes
+## Tests
 
 ```bash
 python3 -m unittest discover -s tests
 ```
 
-## Aviso legal
+## Legal notice
 
-Os relatórios gerados são compilações automatizadas de dados públicos e notícias, com resumo redigido por IA a partir dessas mesmas fontes. Não constituem apuração jornalística autônoma, acusação ou avaliação de caráter. Sempre confira as afirmações nas fontes vinculadas antes de tomar qualquer decisão com base nelas.
+The generated reports are automated compilations of public data and news, with a summary written by AI from those same sources. They are not independent journalistic investigation, accusation or character assessment. Always check the claims against the linked sources before making any decision based on them.

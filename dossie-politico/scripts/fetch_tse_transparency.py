@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-fetch_tse_transparency.py - Consulta e suporte à extração de dados eleitorais e patrimônio do TSE (DivulgaCandContas)
-Fonte oficial: https://divulgacandcontas.tse.jus.br/
+fetch_tse_transparency.py - Queries and supports extraction of electoral and asset data from the TSE (Superior Electoral Court) DivulgaCandContas system
+Official source: https://divulgacandcontas.tse.jus.br/
 """
 
 import sys
@@ -16,7 +16,7 @@ HEADERS = {
 }
 
 def get_tse_endpoints(ano: int, uf: str) -> Dict[str, str]:
-    """Fontes oficiais do DivulgaCandContas e dos Dados Abertos para consulta manual."""
+    """Official DivulgaCandContas and Dados Abertos (open data) sources for manual lookup."""
     base = "https://divulgacandcontas.tse.jus.br/divulga/rest/v1"
     return {
         'eleicao_consulta': f"{base}/eleicao/eleicoes",
@@ -33,17 +33,17 @@ def get_tse_endpoints(ano: int, uf: str) -> Dict[str, str]:
 
 
 def build_transparency_links(nome: str, cargo: str = "", uf: str = "") -> Dict[str, Any]:
-    """Buscas abertas em portais oficiais.
+    """Open searches on official portals.
 
-    Só entra aqui link cujo parâmetro de busca é documentado e funciona. Portais em
-    single-page app (TSE, TCU, STJ) não aceitam termo pela URL: para eles vai a tela de
-    busca, e o dossiê exibe o nome a ser digitado. Link que não abre destrói justamente
-    a auditabilidade que este bloco existe para oferecer.
+    Only links whose search parameter is documented and works belong here. Single-page-app
+    portals (TSE, TCU, STJ) do not take the term through the URL: for them the search
+    screen goes in, and the dossier shows the name to type. A link that does not open
+    destroys exactly the auditability this block exists to offer.
     """
     nome_encoded = urllib.parse.quote(nome)
 
     return {
-        # Verificados: respondem 200 com o termo aplicado no servidor.
+        # Verified: they answer 200 with the term applied server-side.
         'portal_transparencia_federal': f"https://portaldatransparencia.gov.br/busca?termo={nome_encoded}",
         'portal_transparencia_servidores': f"https://portaldatransparencia.gov.br/servidores/busca?termo={nome_encoded}",
         'cgu_ceis_sancoes': f"https://portaldatransparencia.gov.br/sancoes/ceis?termo={nome_encoded}",
@@ -53,7 +53,7 @@ def build_transparency_links(nome: str, cargo: str = "", uf: str = "") -> Dict[s
             f"&plural=true&queryString={nome_encoded}"
         ),
         'stj_jurisprudencia': f"https://scon.stj.jus.br/SCON/pesquisar.jsp?b=ACOR&livre={nome_encoded}",
-        # Telas de busca: digitar o nome manualmente.
+        # Search screens: the name is typed manually.
         'tse_divulgacand': "https://divulgacandcontas.tse.jus.br/divulga/#/",
         'tcu_jurisprudencia_e_inabilitados': "https://pesquisa.apps.tcu.gov.br/#/pesquisa/acordao-completo",
         'diario_oficial_uniao': "https://www.in.gov.br/consulta/",

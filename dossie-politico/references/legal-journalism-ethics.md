@@ -1,95 +1,95 @@
-# Diretrizes de Rigor Jurídico, Jornalístico e Neutralidade
+# Guidelines on Legal and Journalistic Rigor and Neutrality
 
-Ao elaborar o dossiê de uma figura pública ou agente político, a integridade da informação e o respeito aos princípios de auditoria pública são fundamentais.
-
----
-
-## 0. Escopo: quem pode e quem não pode ser objeto de dossiê
-
-O dossiê existe para fiscalizar poder público. O critério é **função pública e interesse público**, nunca curiosidade sobre uma pessoa.
-
-**Podem ser objeto**: detentores de mandato eletivo, candidatos e pré-candidatos formalizados, ocupantes de cargo público ou de confiança, dirigentes de estatais, e — restrito aos atos de interesse público — quem contrata com o poder público, financia campanha ou opera esquema já documentado por fonte oficial ou jornalismo profissional.
-
-**Não podem ser objeto**, ainda que o pedido insista:
-
-- particulares sem função, cargo, candidatura ou contrato público;
-- cônjuges, filhos e demais familiares, salvo quando eles próprios exercem função pública, recebem verba pública ou aparecem em ato oficial — e então apenas nesse recorte;
-- crianças e adolescentes, mesmo filhos de agentes públicos;
-- servidores de baixa hierarquia expostos individualmente por decisão de um superior.
-
-**Nunca publique, mesmo se localizar em fonte aberta**: CPF, RG, título de eleitor, endereço residencial, telefone pessoal, placa de veículo, dados bancários, geolocalização, imagens de familiares, e dado pessoal sensível na acepção do art. 5º, II da LGPD — saúde, vida sexual, orientação sexual, religião, opinião filosófica, filiação sindical, dado genético ou biométrico, origem racial ou étnica. Endereço só entra quando é **gabinete ou sede funcional**; patrimônio só entra quando **declarado à Justiça Eleitoral** ou constante de ato oficial.
-
-Se o pedido recair sobre alguém fora do escopo, diga isso e ofereça o recorte legítimo (o agente público envolvido, o contrato, o ato administrativo) em vez de produzir o dossiê.
+When building the dossier of a public figure or political official, the integrity of the information and respect for the principles of public auditing are fundamental.
 
 ---
 
-## 1. Precisão na Terminologia Jurídica
+## 0. Scope: who may and who may not be the subject of a dossier
 
-Nunca confunda as fases de um procedimento investigativo ou processo judicial:
+The dossier exists to scrutinize public power. The criterion is **public office and public interest**, never curiosity about a person.
 
-1. **Notícia-Crime / Notícia de Fato**: Comunicação inicial ao Ministério Público ou autoridade policial. Não constitui acusação formal.
-2. **Inquérito Policial / Inquérito Civil**: Procedimento preparatório e investigativo para apurar indícios de autoria e materialidade. A pessoa é **investigada**, não ré.
-3. **Denúncia do Ministério Público**: O MP apresenta acusação formal ao Poder Judiciário.
-4. **Recebimento da Denúncia**: A Justiça aceita a denúncia. Apenas a partir deste marco processual a pessoa se torna **ré**.
-5. **Sentença / Acórdão Condenatório**: Decisão de mérito de 1ª instância ou colegiada (Tribunal). Pode caber recurso.
-6. **Trânsito em Julgado**: Decisão definitiva contra a qual não cabe mais recurso ordinário ou extraordinário.
-7. **Arquivamento / Absolvição / Extinção da Punibilidade**: Quando o processo ou inquérito é encerrado por falta de provas, atipicidade da conduta, prescrição ou inocência comprovada.
+**May be the subject**: holders of elected office, formalized candidates and pre-candidates, holders of public or appointed (confiança) positions, executives of state-owned companies, and — restricted to acts of public interest — anyone who contracts with the government, funds a campaign or operates a scheme already documented by an official source or professional journalism.
 
----
+**May not be the subject**, however much the request insists:
 
-## 2. Princípio do Contraditório e Manifestação da Defesa
+- private individuals with no public role, office, candidacy or contract;
+- spouses, children and other relatives, unless they themselves hold a public role, receive public money or appear in an official act — and then only within that scope;
+- children and adolescents, even the children of public officials;
+- low-ranking civil servants exposed individually because of a superior's decision.
 
-- **Obrigatoriedade de Registro**: Todo fato, denúncia ou operação mencionada no dossiê **deve conter** o resumo da posição oficial do parlamentar/político ou de seus advogados constituídos.
-- **Desfechos Judiciais**: Se uma investigação ou processo foi arquivado, rejeitado ou resultou em absolvição, esse status deve ser explicitado com destaque positivo (Badge verde: *Arquivado* ou *Absolvido*), garantindo a verdade factual atualizada.
+**Never publish, even if found in an open source**: CPF (taxpayer ID), RG (identity card), voter ID (título de eleitor), home address, personal phone, vehicle plate, banking data, geolocation, images of relatives, and sensitive personal data as defined in art. 5, II of the LGPD (Lei Geral de Proteção de Dados, Brazil's data protection law) — health, sex life, sexual orientation, religion, philosophical opinion, union membership, genetic or biometric data, racial or ethnic origin. An address goes in only when it is the **office or official seat**; assets go in only when **declared to the Justiça Eleitoral** (electoral courts) or recorded in an official act.
+
+If the request targets someone outside the scope, say so and offer the legitimate scope (the public official involved, the contract, the administrative act) instead of producing the dossier.
 
 ---
 
-## 3. Hierarquia de Fontes Confiáveis
+## 1. Precise legal terminology
 
-1. **Fontes Primárias Oficiais**:
-   - Diários Oficiais (DOU, DOE, DOM)
-   - Portais de Transparência da Câmara, Senado, Governos e Tribunais
-   - Autos processuais públicos (STF, STJ, CNJ, TRFs, TJs)
-   - Sistema DivulgaCandContas do TSE
-2. **Veículos de Jornalismo Profissional e Agências de Checagem**:
+Never confuse the stages of an investigative procedure or court case:
+
+1. **Notícia-Crime / Notícia de Fato** (crime report / fact report): initial communication to the Ministério Público (public prosecutors) or the police. It is not a formal accusation.
+2. **Inquérito Policial / Inquérito Civil** (police / civil inquiry): preparatory, investigative procedure to establish evidence of authorship and materiality. The person is **investigated** (investigado), not a defendant.
+3. **Denúncia do Ministério Público** (indictment): the prosecutors file a formal accusation with the Judiciary.
+4. **Recebimento da Denúncia** (acceptance of the indictment): the court accepts the indictment. Only from this procedural milestone does the person become a **defendant** (réu).
+5. **Sentença / Acórdão Condenatório** (conviction): a merits decision at first instance or by a panel (court). It may be appealed.
+6. **Trânsito em Julgado** (final judgment): a definitive decision against which no ordinary or extraordinary appeal remains.
+7. **Arquivamento / Absolvição / Extinção da Punibilidade** (dismissal / acquittal / extinction of punishability): when the case or inquiry is closed for lack of evidence, conduct that is not a crime, statute of limitations or proven innocence.
+
+---
+
+## 2. Right of reply and the defense's statement
+
+- **Mandatory record**: every fact, indictment or operation mentioned in the dossier **must contain** a summary of the official position of the legislator/politician or of their retained lawyers.
+- **Court outcomes**: if an investigation or case was dismissed, rejected or ended in acquittal, that status must be stated with positive emphasis (green badge: *Arquivado* or *Absolvido*), ensuring the up-to-date factual truth.
+
+---
+
+## 3. Hierarchy of trustworthy sources
+
+1. **Official primary sources**:
+   - Official gazettes (Diários Oficiais: DOU, DOE, DOM)
+   - Transparency portals of the Câmara, Senado, governments and courts
+   - Public court records (STF, STJ, CNJ, TRFs, TJs)
+   - The TSE DivulgaCandContas system
+2. **Professional journalism outlets and fact-checking agencies**:
    - G1, Folha de S.Paulo, O Estado de S. Paulo, O Globo, CNN Brasil, Poder360, Congresso em Foco, Valor Econômico, UOL, Nexo Jornal
-   - Agências de Fact-Checking: Aos Fatos, Lupa, UOL Confere
-3. **Fontes Descartadas**:
-   - Postagens anônimas em redes sociais, fóruns e blogs sem expediente jornalístico ou sem citação de provas documentais.
-   - **URL reconstruída de memória.** Nunca monte o endereço de uma reportagem a partir do padrão do site: cite apenas links que você efetivamente abriu ou que voltaram da ferramenta de busca. O gerador verifica cada URL por HTTP e marca no relatório as que não resolvem — um link quebrado transforma uma afirmação auditável em alegação sem fonte, o que é pior do que declarar a lacuna. Se não tiver a URL, registre o veículo e a data e diga que o link não foi localizado.
+   - Fact-checking agencies: Aos Fatos, Lupa, UOL Confere
+3. **Discarded sources**:
+   - Anonymous posts on social media, forums and blogs with no journalistic masthead or no citation of documentary evidence.
+   - **A URL rebuilt from memory.** Never assemble a news article's address from the site's pattern: cite only links you actually opened or that came back from the search tool. The generator checks each URL over HTTP and flags in the report those that do not resolve — a broken link turns an auditable claim into an unsourced allegation, which is worse than stating the gap. If you do not have the URL, record the outlet and the date and say the link was not found.
 
 ---
 
-## 4. Estilo e Tom Objetivo
+## 4. Objective style and tone
 
-- Mantenha tom enciclopédico, neutro e descritivo.
-- Evite adjetivações valorativas ou juízos de valor subjetivos (e.g., utilize "apurou-se a suspeita de...", "segundo o relatório da Polícia Federal...", "a defesa sustentou que...").
-- Forneça links diretos e auditáveis para cada alegação.
-
----
-
-## 5. Síntese por IA e Interesse Público
-
-- Identifique explicitamente o resumo como conteúdo gerado por IA a partir do dossiê.
-- O resumo deve condensar apenas fatos documentados no relatório. Não pontue, ranqueie, recomende voto, diagnostique caráter ou infira culpa, inocência, intenção ou competência.
-- Dê peso proporcional aos temas. Uma acusação não deve apagar trajetória e atuação pública; realizações não devem ocultar processos relevantes.
-- Preserve no resumo o estágio processual e o contraditório. Não encurte “investigado” para “acusado”, nem “denunciado” para “condenado”.
-- O consolidado deve apresentar todos os escândalos, polêmicas e processos materiais catalogados no relatório. A síntese pode dar pesos diferentes conforme relevância e evidência, mas não pode omitir um caso catalogado; use a lista compacta automática para garantir cobertura integral.
-- Informe lacunas e data de corte. A ausência de registros nas fontes pesquisadas não prova inexistência de fatos.
-- Em disputas eleitorais, diferencie candidatura registrada, candidatura anunciada, pré-candidatura e nome cogitado. Pesquisas de intenção de voto medem preferência, não formalizam candidaturas.
+- Keep an encyclopedic, neutral, descriptive tone.
+- Avoid evaluative adjectives and subjective value judgments (e.g. use "apurou-se a suspeita de...", "segundo o relatório da Polícia Federal...", "a defesa sustentou que..." — "the suspicion of... was investigated", "according to the Federal Police report...", "the defense argued that...").
+- Provide direct, auditable links for every claim.
 
 ---
 
-## 6. Grau de veracidade e força da evidência
+## 5. AI synthesis and public interest
 
-Classifique a **afirmação específica**, nunca o caráter ou a “honestidade” da pessoa. Separe a comprovação de um evento processual da comprovação da acusação: uma denúncia protocolada pode estar confirmada documentalmente, enquanto o mérito permanece sem julgamento.
+- Explicitly label the summary as AI-generated content drawn from the dossier.
+- The summary must condense only facts documented in the report. Do not score, rank, recommend a vote, diagnose character or infer guilt, innocence, intent or competence.
+- Give topics proportional weight. An accusation must not erase a career and public activity; achievements must not hide relevant lawsuits.
+- Keep the procedural stage and the right of reply in the summary. Do not shorten "investigado" (investigated) to "acusado" (accused), nor "denunciado" (indicted) to "condenado" (convicted).
+- The consolidated summary must present every material scandal, controversy and lawsuit catalogued in the report. The synthesis may weigh them differently by relevance and evidence, but it may not omit a catalogued case; use the automatic compact list to guarantee full coverage.
+- State gaps and the cutoff date. The absence of records in the sources searched does not prove that no facts exist.
+- In electoral contests, distinguish registered candidacy, announced candidacy, pre-candidacy and floated name. Voting-intention polls measure preference; they do not formalize candidacies.
 
-Use uma destas categorias e explique o critério no próprio item:
+---
 
-1. **Confirmado por documento/decisão**: há ato oficial, documento primário, gravação íntegra ou decisão pública que comprova exatamente o evento descrito. Informe se cabe recurso e o que o documento não prova.
-2. **Fortemente sustentado**: fontes profissionais independentes e convergentes, apoiadas por documentos ou dados verificáveis, sustentam a afirmação, mas não há decisão definitiva ou fonte primária completa.
-3. **Alegação oficial em apuração**: existe inquérito, denúncia, ação ou acusação formal, porém autoria, materialidade ou responsabilidade ainda não foram julgadas definitivamente.
-4. **Contestado / não comprovado**: a alegação circula publicamente, mas as evidências localizadas são insuficientes, contraditórias ou dependem apenas de uma parte interessada.
-5. **Falso ou enganoso**: use somente quando documento primário ou checagem profissional transparente demonstrar erro factual, adulteração ou omissão decisiva. Diga qual parte é falsa e qual parte, se houver, é verdadeira.
+## 6. Degree of truthfulness and strength of evidence
 
-Para cada polêmica, preencha `grau_veracidade`, `criterio_veracidade`, `o_que_esta_comprovado` e `o_que_nao_esta_comprovado`. Não use porcentagens, estrelas ou notas numéricas: elas sugerem precisão inexistente. Não inclua boatos anônimos apenas para rotulá-los como falsos.
+Classify the **specific claim**, never the person's character or "honesty". Separate proof of a procedural event from proof of the accusation: a filed indictment may be documentarily confirmed while the merits remain unjudged.
+
+Use one of these categories (the `grau_veracidade` value, in Portuguese, as written) and explain the criterion in the item itself:
+
+1. **Confirmado por documento/decisão** (confirmed by document/decision): there is an official act, primary document, full recording or public decision that proves exactly the event described. State whether it can be appealed and what the document does not prove.
+2. **Fortemente sustentado** (strongly supported): independent, converging professional sources, backed by verifiable documents or data, support the claim, but there is no final decision or complete primary source.
+3. **Alegação oficial em apuração** (official allegation under investigation): there is an inquiry, indictment, lawsuit or formal accusation, but authorship, materiality or responsibility have not yet been definitively judged.
+4. **Contestado / não comprovado** (disputed / not proven): the claim circulates publicly, but the evidence found is insufficient, contradictory or depends only on an interested party.
+5. **Falso ou enganoso** (false or misleading): use only when a primary document or a transparent professional fact-check shows a factual error, tampering or decisive omission. Say which part is false and which part, if any, is true.
+
+For each controversy, fill `grau_veracidade`, `criterio_veracidade`, `o_que_esta_comprovado` and `o_que_nao_esta_comprovado`. Do not use percentages, stars or numeric scores: they suggest a precision that does not exist. Do not include anonymous rumors just to label them false.

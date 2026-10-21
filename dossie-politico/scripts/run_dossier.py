@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-run_dossier.py - Orquestrador principal da skill dossie-politico.
-Executa a busca em APIs abertas (Câmara/Senado/TSE), compila o JSON do dossiê, gera o HTML e atualiza o índice em ~/.dossie-politico/
+run_dossier.py - Main orchestrator of the dossie-politico skill.
+Runs the search on open APIs (Câmara/Senado/TSE), compiles the dossier JSON, generates the HTML and updates the index in ~/.dossie-politico/
 """
 
 import sys
@@ -11,7 +11,7 @@ import argparse
 from pathlib import Path
 from typing import Dict, Any, Optional
 
-# Import dos módulos locais
+# Import the local modules
 script_dir = Path(__file__).parent.resolve()
 sys.path.insert(0, str(script_dir))
 
@@ -35,15 +35,15 @@ def run_investigation(
     extra: Dict[str, Any] = {}
     if extra_data_file:
         if not os.path.exists(extra_data_file):
-            raise FileNotFoundError(f"Arquivo de dados complementares não encontrado: {extra_data_file}")
+            raise FileNotFoundError(f"Supplementary data file not found: {extra_data_file}")
         with open(extra_data_file, 'r', encoding='utf-8') as f:
             extra = json.load(f)
-    # Falha antes das chamadas de rede: sem cobertura_pesquisa o dossiê seria recusado no fim.
+    # Fail before the network calls: without cobertura_pesquisa the dossier would be refused at the end.
     if render_html:
         validate_coverage_record(extra)
 
     if governo:
-        print(f"[*] Coletando indicadores macroeconômicos e dados de governo para: '{governo}'...")
+        print(f"[*] Collecting macroeconomic indicators and government data for: '{governo}'...")
         gov_data = fetch_dados_governo(governo)
         mandato = gov_data.get('mandato_executivo') or {}
         pres_nome = mandato.get('presidente') or governo
@@ -91,7 +91,7 @@ def run_investigation(
         }
         dossier.update(gov_data)
     else:
-        print(f"[*] Iniciando investigação e auditoria pública para: '{nome_politico}'...")
+        print(f"[*] Starting the investigation and public audit for: '{nome_politico}'...")
         dossier = {
             'nome': nome_politico,
             'nome_eleitoral': nome_politico,
@@ -113,25 +113,25 @@ def run_investigation(
             'links_transparencia': build_transparency_links(nome_politico)
         }
 
-        # 1. Tentar Câmara dos Deputados
-        print("[1/3] Consultando API de Dados Abertos da Câmara dos Deputados...")
+        # 1. Try the Câmara dos Deputados
+        print("[1/3] Querying the Câmara dos Deputados open data API...")
         camara_res = fetch_deputado_por_nome(nome_politico, camara_id)
         if camara_res and camara_res.get('cargo'):
-            print(f" [+] Encontrado na Câmara: {camara_res.get('nome_eleitoral')} ({camara_res.get('partido')}-{camara_res.get('uf')})")
+            print(f" [+] Found in the Câmara: {camara_res.get('nome_eleitoral')} ({camara_res.get('partido')}-{camara_res.get('uf')})")
             dossier.update(camara_res)
         else:
-            # 2. Tentar Senado Federal
-            print("[2/3] Consultando API de Dados Abertos do Senado Federal...")
+            # 2. Try the Senado Federal
+            print("[2/3] Querying the Senado Federal open data API...")
             senado_res = fetch_senador_por_nome(nome_politico, senado_codigo)
             if senado_res and senado_res.get('cargo'):
-                print(f" [+] Encontrado no Senado: {senado_res.get('nome_eleitoral')} ({senado_res.get('partido')}-{senado_res.get('uf')})")
+                print(f" [+] Found in the Senado: {senado_res.get('nome_eleitoral')} ({senado_res.get('partido')}-{senado_res.get('uf')})")
                 dossier.update(senado_res)
             else:
-                print("[!] Não localizado nas APIs diretas de parlamentares federais em exercício (pode ser Governador, Prefeito, Deputado Estadual ou ex-mandatário).")
+                print("[!] Not found in the direct APIs for sitting federal legislators (may be a governor, mayor, state deputy or former officeholder).")
 
-    # 3. Mesclar dados extras (notícias, escândalos, TSE, etc.) se fornecidos
+    # 3. Merge extra data (news, scandals, TSE, etc.) when provided
     if extra:
-        print(f"[*] Mesclando dados adicionais de investigações/notícias de '{extra_data_file}'...")
+        print(f"[*] Merging additional investigation/news data from '{extra_data_file}'...")
         for k, v in extra.items():
             if isinstance(v, list) and k in dossier and isinstance(dossier[k], list):
                 dossier[k] = v + dossier[k]
@@ -142,21 +142,21 @@ def run_investigation(
         return {'status': 'success', 'html_path': None, 'index_path': None,
                 'index_opened': False, 'dossier_data': dossier}
 
-    # 4. Gerar arquivo HTML e atualizar o índice
+    # 4. Generate the HTML file and update the index
     output_html_path = build_dossier_file(dossier, output_dir, check_links=check_links)
     target_folder = os.path.dirname(output_html_path)
     index_path = os.path.join(target_folder, "index.html")
     
-    print(f"\n[✓] Dossiê concluído com sucesso!")
-    print(f"    Relatório: {output_html_path}")
-    print(f"    Índice Geral: {index_path}")
+    print(f"\n[✓] Dossier completed successfully!")
+    print(f"    Report: {output_html_path}")
+    print(f"    Main index: {index_path}")
     index_opened = False
     if open_index:
         index_opened = open_index_file(index_path)
         if index_opened:
-            print("    Índice aberto no navegador padrão.")
+            print("    Index opened in the default browser.")
         else:
-            print("    [!] O índice foi gerado, mas o navegador não confirmou a abertura automática.")
+            print("    [!] The index was generated, but the browser did not confirm it opened automatically.")
     
     return {
         'status': 'success',
@@ -167,21 +167,21 @@ def run_investigation(
     }
 
 def main():
-    parser = argparse.ArgumentParser(description="Gera dossiê de transparência de um político ou mandato governamental em HTML na pasta ~/.dossie-politico/")
-    parser.add_argument('nome', nargs='?', default=None, help="Nome do político a ser investigado")
-    parser.add_argument('--governo', dest='governo', default=None, help="Preset ou nome de governo presidencial (ex: bolsonaro, lula, fhc, dilma, temer)")
-    parser.add_argument('--extra-json', help="Caminho para arquivo JSON com notícias e dados complementares", default=None)
-    parser.add_argument('--output-dir', help="Diretório de saída (padrão: ~/.dossie-politico)", default=None)
-    parser.add_argument('--json-only', action='store_true', help="Apenas imprime os dados JSON: não gera HTML, não toca no índice e não abre o navegador")
-    parser.add_argument('--id', dest='camara_id', type=int, default=None, help="ID do deputado na Câmara, quando o nome for ambíguo")
-    parser.add_argument('--codigo', dest='senado_codigo', default=None, help="Código do senador, quando o nome for ambíguo")
-    parser.add_argument('--no-check-links', action='store_true', help="Não verifica se as URLs das fontes citadas resolvem")
-    parser.add_argument('--no-open-index', action='store_true', help="Não abre o índice (somente testes/ambientes sem interface)")
+    parser = argparse.ArgumentParser(description="Generates an HTML transparency dossier on a politician or a government term in ~/.dossie-politico/")
+    parser.add_argument('nome', nargs='?', default=None, help="Name of the politician to investigate")
+    parser.add_argument('--governo', dest='governo', default=None, help="Preset or name of a presidential government (e.g. bolsonaro, lula, fhc, dilma, temer)")
+    parser.add_argument('--extra-json', help="Path to a JSON file with news and supplementary data", default=None)
+    parser.add_argument('--output-dir', help="Output directory (default: ~/.dossie-politico)", default=None)
+    parser.add_argument('--json-only', action='store_true', help="Only prints the JSON data: generates no HTML, leaves the index untouched and opens no browser")
+    parser.add_argument('--id', dest='camara_id', type=int, default=None, help="Deputy's Câmara ID, when the name is ambiguous")
+    parser.add_argument('--codigo', dest='senado_codigo', default=None, help="Senator's code, when the name is ambiguous")
+    parser.add_argument('--no-check-links', action='store_true', help="Does not check whether the cited source URLs resolve")
+    parser.add_argument('--no-open-index', action='store_true', help="Does not open the index (tests / headless environments only)")
     
     args = parser.parse_args()
 
     if not args.nome and not args.governo:
-        parser.error("informe o nome do político ou utilize --governo <preset/nome>")
+        parser.error("provide the politician's name or use --governo <preset/name>")
 
     nome_alvo = args.governo or args.nome
     

@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Valores legais de remuneração e verbas do mandato parlamentar federal.
+"""Legal pay and allowance values for a federal legislative term.
 
-Único lugar para atualizar quando a norma mudar. Antes, o valor estava escrito
-duas vezes dentro dos coletores e saía no relatório como dado apurado, sem
-vigência nem fonte — apodrecia em silêncio a cada reajuste.
+The single place to update when the governing norm changes. Before, the value was
+written twice inside the collectors and came out in the report as verified data,
+with no effective date or source — it rotted silently with every pay adjustment.
 
-Nada aqui é reconferido automaticamente: o relatório declara a norma de origem
-e manda o leitor ao portal oficial em vez de afirmar que o número está atual.
+Nothing here is rechecked automatically: the report states the source norm and
+sends the reader to the official portal instead of claiming the number is current.
 """
 
-# Norma que fixa o subsídio dos parlamentares federais.
+# Norm that sets the salary (subsídio) of federal legislators.
 SUBSIDIO_NORMA = "Decreto Legislativo 172/2022"
 SUBSIDIO_VALOR = "R$ 44.008,52"
 SUBSIDIO_CONFERIR_EM = "https://www2.camara.leg.br/transparencia/remuneracao-dos-parlamentares"

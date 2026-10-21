@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-fetch_governo.py - Coleta e estruturação de indicadores macroeconômicos do BCB SGS.
-Fonte oficial: Banco Central do Brasil - Sistema Gerenciador de Séries Temporais (SGS)
+fetch_governo.py - Collects and structures macroeconomic indicators from the BCB SGS.
+Official source: Banco Central do Brasil (central bank) - Sistema Gerenciador de Séries Temporais (SGS, time-series system)
 API: https://api.bcb.gov.br/dados/serie/bcdata.sgs.{codigo}/dados?formato=json
 """
 
@@ -19,15 +19,15 @@ HEADERS = {
     "Accept": "application/json",
 }
 
-# Códigos oficiais das séries no SGS do Banco Central
+# Official series codes in the Banco Central SGS
 BCB_SERIES = {
-    "ipca_mensal": 433,            # Variação mensal do IPCA (%)
-    "selic_meta": 432,              # Meta Selic fixada pelo Copom (% a.a.)
-    "selic_diaria": 1178,           # Selic diária anualizada base 252 (% a.a.)
-    "dolar_ptax": 1,                # Dólar comercial PTAX venda diário (R$)
-    "divida_bruta_pib": 13762,      # Dívida Bruta do Governo Geral (% PIB)
-    "divida_liquida_pib": 4505,     # Dívida Líquida do Setor Público (% PIB)
-    "pib_crescimento_real": 7326,   # PIB - variação real anual (%)
+    "ipca_mensal": 433,            # Monthly IPCA (consumer inflation) change (%)
+    "selic_meta": 432,              # Selic target set by Copom (% p.a.)
+    "selic_diaria": 1178,           # Daily Selic annualized, 252-day base (% p.a.)
+    "dolar_ptax": 1,                # Daily commercial dollar PTAX selling rate (R$)
+    "divida_bruta_pib": 13762,      # General Government Gross Debt (% GDP)
+    "divida_liquida_pib": 4505,     # Public Sector Net Debt (% GDP)
+    "pib_crescimento_real": 7326,   # GDP - real annual change (%)
 }
 
 PRESETS_GOVERNO: Dict[str, Dict[str, Any]] = {
@@ -119,7 +119,7 @@ PRESETS_GOVERNO: Dict[str, Dict[str, Any]] = {
 
 
 def _normalize(text: str) -> str:
-    """Normaliza texto removendo acentos, caracteres especiais e espaços extras."""
+    """Normalizes text by removing accents, special characters and extra spaces."""
     if not text:
         return ""
     nfkd = unicodedata.normalize("NFKD", text)
@@ -129,8 +129,8 @@ def _normalize(text: str) -> str:
 
 def get_preset_governo(nome_ou_preset: str) -> Optional[Dict[str, Any]]:
     """
-    Retorna a configuração do preset para um presidente/governo pré-definido.
-    Aceita apelidos e nomes comuns ('bolsonaro', 'lula', 'fhc', 'dilma', 'temer').
+    Returns the preset configuration for a predefined president/government.
+    Accepts nicknames and common names ('bolsonaro', 'lula', 'fhc', 'dilma', 'temer').
     """
     if not nome_ou_preset:
         return None
@@ -170,9 +170,9 @@ def get_preset_governo(nome_ou_preset: str) -> Optional[Dict[str, Any]]:
 
 def calcular_variacao_acumulada(taxas: List[float]) -> float:
     """
-    Calcula a taxa de variação acumulada composta a partir de uma lista de percentuais.
-    Fórmula: [produtorio(1 + t_i / 100) - 1] * 100
-    Retorna percentual com 2 casas decimais.
+    Computes the compounded cumulative rate of change from a list of percentages.
+    Formula: [product(1 + t_i / 100) - 1] * 100
+    Returns a percentage with 2 decimal places.
     """
     if not taxas:
         return 0.0
@@ -190,7 +190,7 @@ def calcular_variacao_acumulada(taxas: List[float]) -> float:
 
 def http_get_json(url: str, timeout: int = 10, tentativas: int = 3) -> Optional[Any]:
     """
-    Executa requisição HTTP GET retornando JSON com retentativas e timeout.
+    Runs an HTTP GET request returning JSON, with retries and a timeout.
     """
     for tentativa in range(1, tentativas + 1):
         try:
@@ -201,11 +201,11 @@ def http_get_json(url: str, timeout: int = 10, tentativas: int = 3) -> Optional[
                     return json.loads(raw)
                 return None
         except urllib.error.HTTPError as e:
-            sys.stderr.write(f"[WARN] HTTP {e.code} ao consultar {url}\n")
+            sys.stderr.write(f"[WARN] HTTP {e.code} while querying {url}\n")
             return None
         except Exception as e:
             if tentativa == tentativas:
-                sys.stderr.write(f"[WARN] Falha ao consultar {url} ({tentativas} tentativas): {e}\n")
+                sys.stderr.write(f"[WARN] Failed to query {url} ({tentativas} attempts): {e}\n")
             else:
                 time.sleep(0.5 * tentativa)
     return None
@@ -215,12 +215,12 @@ def consultar_serie_bcb(
     codigo: int, data_inicio: str, data_fim: str, timeout: int = 10
 ) -> List[Dict[str, Any]]:
     """
-    Consulta uma série temporal específica na API aberta do BCB SGS.
-    Parâmetros:
-      - codigo: identificador numérico da série no SGS.
-      - data_inicio: 'DD/MM/AAAA'
-      - data_fim: 'DD/MM/AAAA'
-    Retorna lista de dicionários [{'data': 'DD/MM/AAAA', 'valor': float}].
+    Queries one specific time series on the open BCB SGS API.
+    Parameters:
+      - codigo: numeric identifier of the series in the SGS.
+      - data_inicio: 'DD/MM/YYYY'
+      - data_fim: 'DD/MM/YYYY'
+    Returns a list of dicts [{'data': 'DD/MM/YYYY', 'valor': float}].
     """
     url = (
         f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.{codigo}/dados"
@@ -243,7 +243,7 @@ def consultar_serie_bcb(
             if isinstance(raw_val, str):
                 raw_val = raw_val.strip()
                 if "," in raw_val:
-                    # Padrão brasileiro: remove pontos de milhar e substitui vírgula decimal por ponto
+                    # Brazilian format: drop thousands dots and turn the decimal comma into a dot
                     raw_val = raw_val.replace(".", "").replace(",", ".")
             valor_float = float(raw_val)
             resultado.append({"data": data_str, "valor": valor_float})
@@ -254,7 +254,7 @@ def consultar_serie_bcb(
 
 
 def _converter_data(data_str: str) -> tuple:
-    """Converte 'DD/MM/AAAA' para tupla ordenável (ano, mês, dia)."""
+    """Converts 'DD/MM/YYYY' into a sortable (year, month, day) tuple."""
     partes = data_str.split("/")
     if len(partes) == 3:
         try:
@@ -265,7 +265,7 @@ def _converter_data(data_str: str) -> tuple:
 
 
 def _extrair_ano(data_str: str) -> Optional[int]:
-    """Extrai o ano (int) de datas no formato DD/MM/AAAA."""
+    """Extracts the year (int) from dates in DD/MM/YYYY format."""
     ano = _converter_data(data_str)[0]
     return ano if ano > 0 else None
 
@@ -276,12 +276,12 @@ def fetch_dados_governo(
     data_fim: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
-    Coleta indicadores macroeconômicos e estrutura os dados de mandato presidencial.
-    Produz os blocos:
+    Collects macroeconomic indicators and structures the presidential term data.
+    Produces the blocks:
       - tipo_dossie: 'governo_presidencial'
-      - mandato_executivo: metadados do presidente, período, ministros
-      - indicadores_economicos: resumo macro, séries completas e agrupamento anual
-      - cofres_publicos: resultado primário, dívida pública e fontes
+      - mandato_executivo: metadata on the president, period, ministers
+      - indicadores_economicos: macro summary, full series and yearly grouping
+      - cofres_publicos: primary balance, public debt and sources
     """
     preset = get_preset_governo(nome_ou_preset)
 
@@ -290,7 +290,7 @@ def fetch_dados_governo(
         dt_fim = data_fim or preset["data_fim"]
         mandato_meta = preset
     else:
-        # Período customizado
+        # Custom period
         dt_ini = data_inicio or "01/01/2019"
         dt_fim = data_fim or "31/12/2022"
         ano_i = _extrair_ano(dt_ini) or 2019
@@ -309,15 +309,15 @@ def fetch_dados_governo(
             "ministros_notaveis": [],
         }
 
-    # Consulta séries históricas no BCB SGS
+    # Query historical series on the BCB SGS
     serie_ipca = consultar_serie_bcb(BCB_SERIES["ipca_mensal"], dt_ini, dt_fim)
     serie_selic = consultar_serie_bcb(BCB_SERIES["selic_meta"], dt_ini, dt_fim)
     if not serie_selic:
         serie_selic = consultar_serie_bcb(BCB_SERIES["selic_diaria"], dt_ini, dt_fim)
     else:
-        # A meta Selic fixada pelo Copom (série 432) iniciou em 05/03/1999.
-        # Para períodos que iniciam antes disso (ex: governo FHC 1995-2002),
-        # complementa os anos anteriores usando a taxa Selic diária anualizada (série 1178).
+        # The Copom Selic target (series 432) starts on 05/03/1999.
+        # For periods that start earlier (e.g. the FHC government, 1995-2002),
+        # fill the earlier years with the daily annualized Selic rate (series 1178).
         dt_ini_tuple = _converter_data(dt_ini)
         primeira_dt_432 = _converter_data(serie_selic[0]["data"])
         if dt_ini_tuple < primeira_dt_432:
@@ -334,17 +334,17 @@ def fetch_dados_governo(
     ano_fim_calc = _extrair_ano(dt_fim) or mandato_meta["ano_fim"]
     anos_total = max(1, ano_fim_calc - ano_ini_calc + 1)
 
-    # 1. Cálculos de IPCA
+    # 1. IPCA calculations
     taxas_ipca = [item["valor"] for item in serie_ipca]
     ipca_acumulado = calcular_variacao_acumulada(taxas_ipca)
     ipca_media_anual = round(ipca_acumulado / anos_total, 2) if taxas_ipca else 0.0
 
-    # 2. Cálculos de Selic
+    # 2. Selic calculations
     selic_inicial = round(serie_selic[0]["valor"], 2) if serie_selic else 0.0
     selic_final = round(serie_selic[-1]["valor"], 2) if serie_selic else 0.0
     selic_media = round(sum(p["valor"] for p in serie_selic) / len(serie_selic), 2) if serie_selic else 0.0
 
-    # 3. Cálculos de Câmbio (Dólar PTAX)
+    # 3. Exchange rate calculations (PTAX dollar)
     dolar_inicial = round(serie_dolar[0]["valor"], 4) if serie_dolar else 0.0
     dolar_final = round(serie_dolar[-1]["valor"], 4) if serie_dolar else 0.0
     if dolar_inicial > 0 and dolar_final > 0:
@@ -352,16 +352,16 @@ def fetch_dados_governo(
     else:
         dolar_var_pct = 0.0
 
-    # 4. Cálculos de Dívida Bruta (% PIB)
+    # 4. Gross debt calculations (% GDP)
     divida_inicial = round(serie_divida[0]["valor"], 2) if serie_divida else None
     divida_final = round(serie_divida[-1]["valor"], 2) if serie_divida else None
     divida_var_pp = round(divida_final - divida_inicial, 2) if (divida_inicial is not None and divida_final is not None) else None
 
-    # 5. Cálculos de PIB
+    # 5. GDP calculations
     pib_valores = [p["valor"] for p in serie_pib]
     pib_medio_anual = round(sum(pib_valores) / len(pib_valores), 2) if pib_valores else None
 
-    # 6. Agrupamento anual para gráficos (Recharts)
+    # 6. Yearly grouping for charts (Recharts)
     anos_range = range(ano_ini_calc, ano_fim_calc + 1)
     grafico_anual: List[Dict[str, Any]] = []
 
@@ -429,30 +429,30 @@ def fetch_dados_governo(
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Coletor macroeconômico do BCB SGS para governos presidenciais."
+        description="BCB SGS macroeconomic collector for presidential governments."
     )
     parser.add_argument(
         "governo",
         type=str,
-        help="Nome ou identificador do preset (ex: 'bolsonaro', 'lula', 'fhc', 'dilma', 'temer').",
+        help="Preset name or identifier (e.g. 'bolsonaro', 'lula', 'fhc', 'dilma', 'temer').",
     )
     parser.add_argument(
         "--inicio",
         type=str,
         default=None,
-        help="Data inicial customizada no formato DD/MM/AAAA.",
+        help="Custom start date, DD/MM/YYYY.",
     )
     parser.add_argument(
         "--fim",
         type=str,
         default=None,
-        help="Data final customizada no formato DD/MM/AAAA.",
+        help="Custom end date, DD/MM/YYYY.",
     )
     parser.add_argument(
         "--output",
         type=str,
         default=None,
-        help="Caminho opcional para salvar o JSON resultante.",
+        help="Optional path to save the resulting JSON.",
     )
 
     args = parser.parse_args()
@@ -463,7 +463,7 @@ def main():
     if args.output:
         with open(args.output, "w", encoding="utf-8") as f:
             f.write(output_json)
-        sys.stderr.write(f"[INFO] Dados salvos com sucesso em {args.output}\n")
+        sys.stderr.write(f"[INFO] Data saved to {args.output}\n")
     else:
         print(output_json)
 

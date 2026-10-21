@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-generate_dossier_html.py - Gera um dossiê político interativo, completo e autossuficiente em formato HTML.
-Salva o relatório em ~/.dossie-politico/<nome_politico>.html e atualiza o ~/.dossie-politico/index.html
+generate_dossier_html.py - Generates an interactive, complete, self-contained political dossier as HTML.
+Saves the report to ~/.dossie-politico/<nome_politico>.html and updates ~/.dossie-politico/index.html
 """
 
 import sys
@@ -26,7 +26,7 @@ DEFAULT_PROFILE_IMAGE = (
 
 
 def safe_href(value: Any, fallback: str = '#') -> str:
-    """Link de dado externo só vira href se for http(s); `javascript:` e afins viram fallback."""
+    """A link from external data becomes an href only if it is http(s); `javascript:` and the like fall back."""
     candidate = str(value or '').strip()
     if not re.match(r'^https?://', candidate, re.IGNORECASE):
         return html.escape(fallback)
@@ -34,7 +34,7 @@ def safe_href(value: Any, fallback: str = '#') -> str:
 
 
 def safe_image_url(value: Any) -> str:
-    """Retorna a foto informada ou um fallback local sem dependência de rede."""
+    """Returns the given photo or a local fallback with no network dependency."""
     candidate = str(value or '').strip()
     if re.match(r'^(https?://|data:image/)', candidate, re.IGNORECASE):
         return candidate
@@ -42,7 +42,7 @@ def safe_image_url(value: Any) -> str:
 
 
 def image_error_handler() -> str:
-    """Fallback de uma única execução, evitando laços de erro no navegador."""
+    """Single-shot fallback, avoiding error loops in the browser."""
     return f"this.onerror=null;this.src='{DEFAULT_PROFILE_IMAGE}'"
 
 def sanitize_filename(name: str) -> str:
@@ -67,7 +67,7 @@ def get_badge_class(status: str) -> str:
 
 
 def get_evidence_class(level: str) -> str:
-    """Mapeia a força da evidência sem converter a classificação em nota de caráter."""
+    """Maps evidence strength without turning the classification into a character score."""
     normalized = (level or "").lower()
     if any(term in normalized for term in ("confirmado", "documento", "decisão")):
         return "evidence-confirmed"
@@ -91,12 +91,12 @@ TRANSPARENCY_LABELS = {
     'diario_oficial_uniao': '📰 Diário Oficial da União',
 }
 
-# Portais em single-page app não aceitam o termo pela URL: o leitor digita o nome.
+# Single-page-app portals do not take the term through the URL: the reader types the name.
 TRANSPARENCY_MANUAL = {'tse_divulgacand', 'tcu_jurisprudencia_e_inabilitados', 'diario_oficial_uniao'}
 
 
 def is_public_http_url(url: str) -> bool:
-    """A URL vem do JSON montado com dado da web: não deixa a verificação bater em rede interna."""
+    """The URL comes from JSON built with web data: keep the check from hitting the internal network."""
     import ipaddress
     import socket
     from urllib.parse import urlparse
@@ -111,7 +111,7 @@ def is_public_http_url(url: str) -> bool:
 
 
 def check_url(url: str, timeout: int = 10) -> str:
-    """Classifica um link de fonte sem afirmar mais do que a resposta HTTP permite."""
+    """Classifies a source link without claiming more than the HTTP response allows."""
     import urllib.error
     import urllib.request
     if not is_public_http_url(url):
@@ -129,7 +129,7 @@ def check_url(url: str, timeout: int = 10) -> str:
 
 
 def verify_sources(data: Dict[str, Any], workers: int = 8) -> Dict[str, int]:
-    """Marca cada fonte citada com o resultado da verificação. Link morto não é auditável."""
+    """Tags each cited source with the check result. A dead link is not auditable."""
     from concurrent.futures import ThreadPoolExecutor
 
     fontes = [
@@ -152,15 +152,15 @@ def verify_sources(data: Dict[str, Any], workers: int = 8) -> Dict[str, int]:
 
 
 def open_index_file(index_path: str) -> bool:
-    """Abre o índice local no navegador padrão."""
+    """Opens the local index in the default browser."""
     try:
         return bool(webbrowser.open(Path(index_path).resolve().as_uri(), new=2))
     except Exception as exc:
-        print(f"[!] Não foi possível abrir o índice automaticamente: {exc}", file=sys.stderr)
+        print(f"[!] Could not open the index automatically: {exc}", file=sys.stderr)
         return False
 
 def build_citizen_summary(data: Dict[str, Any]) -> Dict[str, str]:
-    """Normaliza o resumo cidadão e escapa todo conteúdo antes da renderização."""
+    """Normalizes the citizen summary and escapes all content before rendering."""
     raw = data.get('resumo_cidadao_ia') or {}
     if isinstance(raw, str):
         raw = {'sintese': raw}
@@ -211,7 +211,7 @@ def build_citizen_summary(data: Dict[str, Any]) -> Dict[str, str]:
 
 
 def build_summary_cases(cases: List[Dict[str, Any]]) -> str:
-    """Condensa todos os casos catalogados sem omitir estágio, limites ou defesa."""
+    """Condenses every catalogued case without dropping stage, limits or defense."""
     if not cases:
         return (
             '<div class="summary-case-empty">Nenhum caso foi catalogado no recorte e nas fontes '
@@ -279,7 +279,7 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
         '🚨 Escândalos, polêmicas e fatos verificados'
     )))
     citizen_summary = build_citizen_summary(data)
-    # Peso proporcional é exigência da ética da skill, mas nada avisava quando o dossiê pendia.
+    # Proportional weight is required by the skill's ethics, but nothing warned when the dossier was lopsided.
     n_casos = len(data.get('controversias_e_noticias') or [])
     n_atuacao = len(data.get('proposicoes_principais') or [])
     proporcao_aviso = ""
@@ -338,11 +338,11 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
     if patrimonio_recente == 'Consultar TSE' and data.get('evolucao_patrimonial'):
         patrimonio_recente = html.escape(str(data['evolucao_patrimonial'][0].get('valor_formatado') or 'Consultar TSE'))
     
-    # Auxílios
+    # Allowances
     auxilios = data.get('auxilios_previstos', [])
     auxilios_html = "".join([f"<li><span class='bullet'>•</span> <div>{html.escape(str(a))}</div></li>" for a in auxilios]) if auxilios else "<li>Sem auxílios adicionais cadastrados.</li>"
     
-    # Despesas discriminadas
+    # Itemized expenses
     gastos_detalhados = data.get('despesas_discriminadas', [])
     gastos_html = ""
     if gastos_detalhados:
@@ -360,7 +360,7 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
             </div>
             """
 
-    # Resumo agregado da cota parlamentar
+    # Aggregated parliamentary allowance summary
     despesas_resumo = data.get('despesas_resumo') or {}
     despesas_resumo_html = ""
     if isinstance(despesas_resumo, dict) and despesas_resumo.get('por_ano'):
@@ -401,7 +401,7 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
             </div>
         """
 
-    # Redes sociais
+    # Social media
     redes = data.get('redes_sociais', [])
     redes_html = ""
     if isinstance(redes, list):
@@ -418,7 +418,7 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
     if not redes_html:
         redes_html = "<span class='text-muted'>Não cadastradas oficialmente</span>"
 
-    # Proposições
+    # Bills
     props = data.get('proposicoes_principais', [])
     props_html = ""
     if props:
@@ -447,7 +447,7 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
     else:
         props_html = "<p class='text-muted'>Nenhuma proposição registrada no período analisado.</p>"
 
-    # Notícias e Controvérsias
+    # News and controversies
     controversias_html = ""
     categories_set = set()
     if controversias:
@@ -477,7 +477,7 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
             if isinstance(fontes, list):
                 for f in fontes:
                     if isinstance(f, dict) and not str(f.get('url') or '').startswith('http'):
-                        # Veículo e data sem URL: melhor declarar a lacuna do que citar link inventado.
+                        # Outlet and date without a URL: better to state the gap than to cite an invented link.
                         f_nome = html.escape(str(f.get('veiculo') or 'Fonte'))
                         f_data = html.escape(str(f.get('data') or ''))
                         sufixo = f" ({f_data})" if f_data else ""
@@ -554,7 +554,7 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
         count = sum(1 for item in controversias if item.get('categoria') == cat)
         filter_buttons_html += f"<button class='filter-btn' onclick='filterControversies(\"{cat_slug}\", this)'>{html.escape(cat)} ({count})</button>"
 
-    # Evolução Patrimonial
+    # Asset evolution
     patrimonio_list = data.get('evolucao_patrimonial', [])
     patrimonio_html = ""
     if patrimonio_list:
@@ -576,7 +576,7 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
     else:
         patrimonio_html = "<tr><td colspan='5' class='text-muted text-center'>Consulte o portal TSE DivulgaCandContas para histórico eleitoral de bens.</td></tr>"
 
-    # Atuação institucional (coletada pelas APIs e antes descartada na renderização)
+    # Institutional activity (collected by the APIs and formerly dropped at render time)
     def _lista(items, render):
         return "".join(render(i) for i in items if i)
 
@@ -630,7 +630,7 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
         </section>
         """
 
-    # Links de transparência para conferência independente
+    # Transparency links for independent checking
     links_transp = data.get('links_transparencia') or {}
     transparencia_html = ""
     if isinstance(links_transp, dict):
@@ -656,7 +656,7 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
         </section>
         """
 
-    # Identificação complementar
+    # Additional identification
     email_contato = html.escape(str(data.get('email') or 'Não informado'))
     data_nascimento = html.escape(str(data.get('data_nascimento') or 'Não informada'))
     gabinete_sala = html.escape(str(data.get('sala_gabinete') or ''))
@@ -694,7 +694,7 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
                         <span class="bio-val">{html.escape(str(mandato.get('vice')))}</span>
                     </div>"""
 
-    # 1. Mandato Executivo e Ministros Notáveis
+    # 1. Executive term and notable ministers
     governo_ministerio_html = ""
     if is_governo and mandato:
         ministros = mandato.get('ministros_notaveis') or []
@@ -730,7 +730,7 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
         </section>
         """
 
-    # 2. Indicadores Macroeconômicos e Contas Públicas (BCB SGS)
+    # 2. Macroeconomic indicators and public accounts (BCB SGS)
     indicadores = data.get('indicadores_economicos') or {}
     resumo_macro = indicadores.get('resumo_macro') or {}
     grafico_anual = indicadores.get('grafico_anual') or []
@@ -856,7 +856,7 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
         </section>
         """
 
-    # 3. Balanço de Promessas de Campanha
+    # 3. Campaign promise scorecard
     promessas_data = data.get('promessas_campanha') or {}
     governo_promessas_html = ""
     if is_governo and promessas_data:
@@ -921,7 +921,7 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
         </section>
         """
 
-    # 4. Reformas Estruturais e Marcos Legais
+    # 4. Structural reforms and legal milestones
     reformas_data = data.get('projetos_de_lei_e_reformas') or []
     governo_reformas_html = ""
     if is_governo and reformas_data:
@@ -957,7 +957,7 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
         </section>
         """
 
-    # Bloco Patrimonial reaproveitável
+    # Reusable asset block
     patrimonio_bloco_html = f"""
         <!-- Evolução Patrimonial -->
         <section>
@@ -1016,7 +1016,7 @@ def generate_dossier_html(data: Dict[str, Any]) -> str:
         if isinstance(link_votacoes, str) and link_votacoes.startswith('http') else ''
     )
 
-    # Links oficiais
+    # Official links
     link_perfil = safe_href(data.get('link_perfil_oficial'), "https://www.camara.leg.br")
     link_gastos = safe_href(data.get('link_transparencia_gastos'), "https://portaldatransparencia.gov.br")
     link_presenca = safe_href(data.get('link_presenca'))
@@ -2858,27 +2858,27 @@ def update_index_catalog(output_dir: str, data: Dict[str, Any], filename: str):
         'resumo_indicadores': resumo_indicadores,
     }
 
-    # Atualiza ou insere
+    # Update or insert
     existing_idx = next((i for i, item in enumerate(entries) if item.get('id') == card_id or item.get('filename') == filename), None)
     if existing_idx is not None:
         entries[existing_idx] = entry_dict
     else:
         entries.insert(0, entry_dict)
 
-    # Grava index.json
+    # Write index.json
     with open(index_json_path, 'w', encoding='utf-8') as f:
         json.dump(entries, f, indent=2, ensure_ascii=False)
 
-    # Renderiza e grava index.html
+    # Render and write index.html
     index_html_content = generate_index_html(entries)
     with open(index_html_path, 'w', encoding='utf-8') as f:
         f.write(index_html_content)
 
 
 def remove_dossier_entry(output_dir: str, filename: str, delete_html: bool = False) -> bool:
-    """Remove uma entrada exata do catálogo e, opcionalmente, seu HTML individual."""
+    """Removes one exact catalog entry and, optionally, its individual HTML."""
     if os.path.basename(filename) != filename:
-        raise ValueError("O nome do arquivo não pode conter diretórios.")
+        raise ValueError("The file name cannot contain directories.")
 
     index_json_path = os.path.join(output_dir, "index.json")
     index_html_path = os.path.join(output_dir, "index.html")
@@ -2909,12 +2909,12 @@ def remove_dossier_entry(output_dir: str, filename: str, delete_html: bool = Fal
     return True
 
 def validate_coverage_record(data: Dict[str, Any]) -> None:
-    """Impede que um dossiê seja entregue sem auditoria mínima de cobertura."""
+    """Blocks a dossier from being delivered without the minimum coverage audit."""
     coverage = data.get('cobertura_pesquisa')
     if not isinstance(coverage, dict):
         raise ValueError(
-            "Dossiê incompleto: informe 'cobertura_pesquisa' após executar a auditoria "
-            "mínima descrita em references/sources-guide.md."
+            "Incomplete dossier: provide 'cobertura_pesquisa' after running the minimum "
+            "coverage audit described in references/sources-guide.md."
         )
 
     missing_scalars = [
@@ -2931,14 +2931,14 @@ def validate_coverage_record(data: Dict[str, Any]) -> None:
     missing = missing_scalars + missing_lists
     if missing:
         raise ValueError(
-            "Dossiê incompleto: o registro 'cobertura_pesquisa' precisa preencher: "
+            "Incomplete dossier: the 'cobertura_pesquisa' record must fill in: "
             + ", ".join(missing)
             + "."
         )
 
 
 def read_previous_revisions(output_dir: str, filename: str) -> List[str]:
-    """Datas das gerações anteriores deste mesmo relatório, para o leitor saber que houve revisão."""
+    """Dates of earlier generations of this same report, so the reader knows it was revised."""
     index_json_path = os.path.join(output_dir, "index.json")
     if not os.path.exists(index_json_path):
         return []
@@ -2962,11 +2962,11 @@ def build_dossier_file(data: Dict[str, Any], output_dir: Optional[str] = None,
         tally = verify_sources(data)
         if tally:
             resumo = ", ".join(f"{qtd} {nome}" for nome, qtd in sorted(tally.items()))
-            print(f"[*] Verificação das fontes citadas: {resumo}.")
+            print(f"[*] Cited source check: {resumo}.")
             mortos = tally.get('quebrado', 0) + tally.get('indisponivel', 0)
             if mortos:
-                print(f"[!] {mortos} fonte(s) não resolveram e aparecem marcadas no relatório. "
-                      "Substitua por URLs conferidas antes de tratar o dossiê como auditável.",
+                print(f"[!] {mortos} source(s) did not resolve and are flagged in the report. "
+                      "Replace them with checked URLs before treating the dossier as auditable.",
                       file=sys.stderr)
     if output_dir is None:
         home = str(Path.home())
@@ -2993,44 +2993,44 @@ def build_dossier_file(data: Dict[str, Any], output_dir: Optional[str] = None,
     with open(json_filepath, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
         
-    # Atualiza catálogo e index.html
+    # Update the catalog and index.html
     update_index_catalog(output_dir, data, filename)
     
     return filepath
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Gera o dossiê HTML, atualiza o catálogo e abre o índice geral.")
-    parser.add_argument('json_path', nargs='?', help="Payload JSON completo do dossiê")
-    parser.add_argument('--remove', metavar='ARQUIVO.html',
-                        help="Retira uma pessoa do catálogo (retificação / direito de resposta)")
+    parser = argparse.ArgumentParser(description="Generates the HTML dossier, updates the catalog and opens the main index.")
+    parser.add_argument('json_path', nargs='?', help="Complete dossier JSON payload")
+    parser.add_argument('--remove', metavar='FILE.html',
+                        help="Removes a person from the catalog (correction / right of reply)")
     parser.add_argument('--apagar-html', action='store_true',
-                        help="Com --remove, apaga também o relatório individual")
-    parser.add_argument('output_dir', nargs='?', default=None, help="Diretório de saída (padrão: ~/.dossie-politico)")
-    parser.add_argument('--output-dir', dest='output_dir_flag', default=None, help="Mesma coisa, na forma de opção")
-    parser.add_argument('--no-open-index', action='store_true', help="Não abre o índice (somente testes/ambientes sem interface)")
-    parser.add_argument('--no-check-links', action='store_true', help="Não verifica se as URLs das fontes citadas resolvem")
+                        help="With --remove, also deletes the individual report")
+    parser.add_argument('output_dir', nargs='?', default=None, help="Output directory (default: ~/.dossie-politico)")
+    parser.add_argument('--output-dir', dest='output_dir_flag', default=None, help="Same thing, as an option")
+    parser.add_argument('--no-open-index', action='store_true', help="Does not open the index (tests / headless environments only)")
+    parser.add_argument('--no-check-links', action='store_true', help="Does not check whether the cited source URLs resolve")
     args = parser.parse_args()
     json_path = args.json_path
     out_dir = args.output_dir_flag or args.output_dir or os.path.join(str(Path.home()), ".dossie-politico")
 
     if args.remove:
         if remove_dossier_entry(out_dir, args.remove, delete_html=args.apagar_html):
-            print(f"Entrada removida do catálogo: {args.remove}")
+            print(f"Entry removed from the catalog: {args.remove}")
         else:
-            print(f"Nada a remover: '{args.remove}' não está no catálogo.", file=sys.stderr)
+            print(f"Nothing to remove: '{args.remove}' is not in the catalog.", file=sys.stderr)
             raise SystemExit(1)
         raise SystemExit(0)
 
     if not json_path:
-        parser.error("informe o payload JSON ou use --remove ARQUIVO.html")
+        parser.error("provide the JSON payload or use --remove FILE.html")
     
     with open(json_path, 'r', encoding='utf-8') as f:
         dossier_data = json.load(f)
         
     generated_path = build_dossier_file(dossier_data, out_dir, check_links=not args.no_check_links)
     index_path = os.path.join(os.path.dirname(generated_path), 'index.html')
-    print(f"Dossiê HTML gerado com sucesso em:\n{generated_path}")
-    print(f"Índice atualizado em:\n{index_path}")
+    print(f"HTML dossier generated at:\n{generated_path}")
+    print(f"Index updated at:\n{index_path}")
     if not args.no_open_index:
         if open_index_file(index_path):
-            print("Índice aberto no navegador padrão.")
+            print("Index opened in the default browser.")
