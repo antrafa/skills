@@ -66,7 +66,7 @@ read as a free-form request and routed by intent.
 | `/alterego mr` | `[<iid>\|<url>]` | Evaluate a remote MR/PR and measure impact |
 | `/alterego adr` | `<decision>` \| `review` | Structural decision with recorded rationale, or a review of the triggers |
 | `/alterego commit` | `[<scope>]` | Commit message from the diff |
-| `/alterego pr-desc` | `[<iid>\|<branch>]` | MR/PR description in five blocks |
+| `/alterego pr-desc` | `[<iid>\|<branch>]` | MR/PR description in six blocks |
 | `/alterego tour-project` | `[<focus>]` | Technical onboarding in a new repository |
 | `/alterego project-analyser` | `[<module>]` | 360° technical audit of the codebase |
 | `/alterego idea` | `[<idea>\|<file>]` | Refine a raw idea into a viable, testable proposal |
@@ -242,10 +242,12 @@ A description you can review without opening the diff blind.
 /alterego pr-desc 42
 ```
 
-**What you get:** a title in the commit format and five blocks: **What changed**
-(by intent, not by file), **Why**, **Reviewer guide** (where to start, what is
+**What you get:** a title in the commit format and six blocks: **Summary** (one
+sentence and the smallest visual of the change), **Why**, **Evidence** (before
+and after the author actually ran), **Reviewer guide** (where to start, what is
 mechanical noise), **How to validate** (executable steps) and
-**Out of scope and side effects** (who is affected without having asked). If the
+**Risk and side effects** (whether there is a way back, the blast radius, who
+is affected without having asked). If the
 repository has an MR template, it is filled in rather than replaced. Opening or
 editing the MR on the remote is an external action: only with the "yes".
 

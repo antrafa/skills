@@ -113,7 +113,7 @@ Full guide, with examples and what each one returns: [`COMMANDS.md`](COMMANDS.md
 | `/alterego mr [<iid>\|<url>]` | Remote MR/PR in an isolated worktree, measuring what breaks outside the diff. Nothing is posted without confirmation. |
 | `/alterego adr <decision>` | Structural decision with context, trade-offs, discarded options and reopening triggers. `adr review` says which triggers fired. |
 | `/alterego commit [<scope>]` | Commit message from the real diff, one intent per commit, Conventional Commits. Does not commit without the yes. |
-| `/alterego pr-desc [<iid>]` | MR/PR description in five blocks: what changed, why, reviewer guide, how to validate, out of scope. Does not post without the yes. |
+| `/alterego pr-desc [<iid>]` | MR/PR description in six blocks: summary, why, evidence, reviewer guide, how to validate, risk and way back. Does not post without the yes. |
 | `/alterego tour-project [<focus>]` | Technical onboarding: stack, architecture, critical points, flows in Mermaid, study order. |
 | `/alterego project-analyser [<module>]` | 360° audit: architecture, OWASP, tests, business rules, debt. |
 | `/alterego idea [<idea>]` | Refines a raw idea in four phases (EXPLORE, CHALLENGE, REFINE, FIT) into a go / pivot / stop tied to the cheapest next test. |

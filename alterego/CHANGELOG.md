@@ -7,6 +7,7 @@ Format from [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions f
 ## [Unreleased]
 
 ### Changed
+- `references/playbook-delivery.md`: `pr-desc` opens with a visual summary, adds an Evidence block (before and after the author ran) and turns "Out of scope" into "Risk and side effects", which always states whether the change is a one-way or two-way door and its blast radius.
 - `references/playbook-troubleshooting.md`: the diagnosis memo gains a 6th item, the follow-up safeguard (alert, regression test, pitfalls entry) that keeps the incident from recurring unnoticed.
 - `references/playbook-refactor.md`: the closing checklist asks for the debt deliberately left behind to be named.
 - `references/report-design.md`: only links in the content open in a new window; side-menu links navigate in the same window, since they lead to pages of the same set.
