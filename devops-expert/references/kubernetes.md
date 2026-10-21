@@ -1,81 +1,84 @@
-# Kubernetes — Diagnóstico e Boas Práticas
+# Kubernetes — Diagnosis and Good Practices
 
-## Índice
-- [Comandos de inspeção](#comandos-de-inspeção)
-- [Sintoma → causa provável](#sintoma--causa-provável)
-- [Lendo `describe` e `events` corretamente](#lendo-describe-e-events-corretamente)
+## Contents
+- [Inspection commands](#inspection-commands)
+- [Symptom → likely cause](#symptom--likely-cause)
+- [Reading `describe` and `events` correctly](#reading-describe-and-events-correctly)
 - [Manifests: requests/limits](#manifests-requestslimits)
 - [Probes (liveness/readiness/startup)](#probes-livenessreadinessstartup)
-- [securityContext mínimo](#securitycontext-mínimo)
-- [Rede: Service, Ingress, DNS](#rede-service-ingress-dns)
+- [Minimal securityContext](#minimal-securitycontext)
+- [Networking: Service, Ingress, DNS](#networking-service-ingress-dns)
 - [Storage: PVC/PV](#storage-pvcpv)
 
-## Comandos de inspeção
+## Inspection commands
 
-Sempre comece pela visão geral, depois desça para o pod específico:
+Always start from the overview, then drill down to the specific pod:
 
 ```bash
-kubectl get pods -n <namespace> -o wide          # estado, node, restarts
+kubectl get pods -n <namespace> -o wide          # state, node, restarts
 kubectl get pods -n <namespace> --sort-by=.status.startTime
-kubectl describe pod <pod> -n <namespace>        # eventos, causa do estado atual
-kubectl logs <pod> -n <namespace> --previous      # log da execução anterior (crash)
-kubectl logs <pod> -n <namespace> -c <container>  # pod com múltiplos containers
+kubectl describe pod <pod> -n <namespace>        # events, cause of the current state
+kubectl logs <pod> -n <namespace> --previous      # log of the previous run (crash)
+kubectl logs <pod> -n <namespace> -c <container>  # pod with multiple containers
 kubectl get events -n <namespace> --sort-by='.lastTimestamp'
-kubectl top pod -n <namespace>                    # uso real de CPU/mem (requer metrics-server)
-kubectl get deploy,rs,pod -n <namespace> -l app=<label>  # cadeia Deployment → ReplicaSet → Pod
+kubectl top pod -n <namespace>                    # real CPU/mem usage (requires metrics-server)
+kubectl get deploy,rs,pod -n <namespace> -l app=<label>  # Deployment → ReplicaSet → Pod chain
 kubectl rollout status deploy/<nome> -n <namespace>
 kubectl rollout history deploy/<nome> -n <namespace>
 ```
 
-Para investigar dentro do container sem alterar a imagem de produção, use um
-container de debug efêmero em vez de instalar ferramentas na imagem real:
+To investigate inside the container without changing the production image,
+use an ephemeral debug container instead of installing tools in the real
+image:
 
 ```bash
 kubectl debug -it <pod> -n <namespace> --image=busybox --target=<container>
 ```
 
-`kubectl debug` **escreve no cluster**: adiciona um container efêmero ao pod,
-que fica registrado nele até o pod ser recriado. Entregue o comando para o
-usuário rodar; não é inspeção somente leitura.
+`kubectl debug` **writes to the cluster**: it adds an ephemeral container to
+the pod, which stays registered on it until the pod is recreated. Hand the
+command to the user to run; it is not read-only inspection.
 
-## Sintoma → causa provável
+## Symptom → likely cause
 
-| Sintoma (`kubectl get pods`) | Causas mais prováveis | Onde confirmar |
+| Symptom (`kubectl get pods`) | Most likely causes | Where to confirm |
 |---|---|---|
-| `CrashLoopBackOff` | Aplicação crasha ao iniciar (erro de config, dependência indisponível), liveness probe matando o processo antes dele ficar pronto, falta de memória (ver `OOMKilled` no describe) | `kubectl logs --previous`, `kubectl describe pod` (seção `Last State`) |
-| `ImagePullBackOff` / `ErrImagePull` | Tag de imagem errada/inexistente, registry privado sem `imagePullSecrets`, rate limit do registry | `kubectl describe pod` (evento `Failed to pull image`) |
-| `Pending` | Sem node com recursos suficientes (CPU/mem request alto demais), `nodeSelector`/`affinity` sem node compatível, PVC não bindou | `kubectl describe pod` (seção `Events`, ex. `FailedScheduling`) |
-| `OOMKilled` (visível em `describe` → `Last State: Terminated, Reason: OOMKilled`) | `resources.limits.memory` menor que o uso real da aplicação; em JVM, heap sem teto relativo ao limit do container | Ajustar limit com base em `kubectl top pod` ao longo do tempo, não só um snapshot; em JVM, ajustar o heap junto (ver [requests/limits](#manifests-requestslimits)) |
-| Readiness nunca fica `Ready` mas o pod está `Running` | Endpoint de readiness não responde a tempo, porta errada no probe, app demora mais que `initialDelaySeconds` para subir | `kubectl describe pod` (evento de probe falhando), logs da app |
-| Deploy "trava" (nunca completa rollout) | `maxUnavailable`/`maxSurge` incompatível com o número de réplicas, novo pod nunca fica `Ready` (ver linha acima), `PodDisruptionBudget` bloqueando | `kubectl rollout status`, `kubectl describe deploy` |
-| Pod reiniciando sem erro aparente no log | Node sob pressão de memória/disco fazendo eviction, `SIGTERM` não tratado pela app (kill forçado após `terminationGracePeriodSeconds`) | `kubectl describe pod` (seção `Reason`), `kubectl describe node <node>` (`Conditions`) |
+| `CrashLoopBackOff` | Application crashes on start (config error, dependency unavailable), liveness probe killing the process before it is ready, lack of memory (see `OOMKilled` in describe) | `kubectl logs --previous`, `kubectl describe pod` (`Last State` section) |
+| `ImagePullBackOff` / `ErrImagePull` | Wrong/nonexistent image tag, private registry without `imagePullSecrets`, registry rate limit | `kubectl describe pod` (`Failed to pull image` event) |
+| `Pending` | No node with enough resources (CPU/mem request too high), `nodeSelector`/`affinity` with no compatible node, PVC did not bind | `kubectl describe pod` (`Events` section, e.g. `FailedScheduling`) |
+| `OOMKilled` (visible in `describe` → `Last State: Terminated, Reason: OOMKilled`) | `resources.limits.memory` lower than the application's real usage; on the JVM, heap without a ceiling relative to the container limit | Adjust the limit based on `kubectl top pod` over time, not just one snapshot; on the JVM, adjust the heap with it (see [requests/limits](#manifests-requestslimits)) |
+| Readiness never becomes `Ready` but the pod is `Running` | Readiness endpoint does not respond in time, wrong port in the probe, app takes longer than `initialDelaySeconds` to come up | `kubectl describe pod` (probe failing event), app logs |
+| Deploy "hangs" (rollout never completes) | `maxUnavailable`/`maxSurge` incompatible with the number of replicas, new pod never becomes `Ready` (see row above), `PodDisruptionBudget` blocking | `kubectl rollout status`, `kubectl describe deploy` |
+| Pod restarting with no apparent error in the log | Node under memory/disk pressure causing eviction, `SIGTERM` not handled by the app (forced kill after `terminationGracePeriodSeconds`) | `kubectl describe pod` (`Reason` section), `kubectl describe node <node>` (`Conditions`) |
 
-## Lendo `describe` e `events` corretamente
+## Reading `describe` and `events` correctly
 
-`kubectl describe pod` tem duas seções que resolvem a maioria dos casos antes
-de qualquer outra investigação:
+`kubectl describe pod` has two sections that settle most cases before any
+other investigation:
 
-- **`Last State`**: mostra `Reason` (`OOMKilled`, `Error`, `Completed`) e
-  `Exit Code` da execução anterior. Código não-zero definido pela app é crash
-  da aplicação. 137 é SIGKILL: só é falta de memória quando vem com
-  `Reason: OOMKilled`; com `Reason: Error`, costuma ser o kubelet matando um
-  processo que não encerrou dentro do `terminationGracePeriodSeconds` (ex.:
-  após liveness falhar). 143 é SIGTERM tratado pela app.
-- **`Events`**: ordem cronológica do que o scheduler/kubelet tentou fazer.
-  Leia de cima para baixo — o primeiro evento de erro geralmente é a causa
-  raiz, os seguintes costumam ser repetições/consequência.
+- **`Last State`**: shows the `Reason` (`OOMKilled`, `Error`, `Completed`)
+  and `Exit Code` of the previous run. A non-zero code defined by the app is
+  an application crash. 137 is SIGKILL: it is only lack of memory when it
+  comes with `Reason: OOMKilled`; with `Reason: Error`, it is usually the
+  kubelet killing a process that did not exit within
+  `terminationGracePeriodSeconds` (e.g. after liveness fails). 143 is SIGTERM
+  handled by the app.
+- **`Events`**: chronological order of what the scheduler/kubelet tried to
+  do. Read top to bottom — the first error event is usually the root cause,
+  the following ones are usually repetitions/consequences.
 
-Eventos ficam no cluster por 1h por padrão (`--event-ttl` do apiserver); se o pod já
-não existe mais e o `describe` não mostra nada útil, procure em
-`kubectl get events` filtrado por `--field-selector involvedObject.name=<pod>`
-enquanto ainda estiver disponível, ou nos logs centralizados do cluster
-(ex.: agregador de logs do ambiente), se existir.
+Events stay in the cluster for 1h by default (the apiserver's
+`--event-ttl`); if the pod no longer exists and `describe` shows nothing
+useful, look in `kubectl get events` filtered by
+`--field-selector involvedObject.name=<pod>` while it is still available, or
+in the cluster's centralized logs (e.g. the environment's log aggregator), if
+there is one.
 
 ## Manifests: requests/limits
 
-Sempre declare `requests` de CPU e memória e `limits` de memória — sem
-requests o scheduler não tem como decidir bem, e sem limit de memória um pod
-pode consumir toda a memória do node e afetar vizinhos.
+Always declare CPU and memory `requests` and memory `limits` — without
+requests the scheduler cannot decide well, and without a memory limit a pod
+can consume all of the node's memory and affect its neighbours.
 
 ```yaml
 resources:
@@ -86,34 +89,37 @@ resources:
     memory: "256Mi"
 ```
 
-- `requests` é o que o scheduler reserva ao decidir em qual node colocar o
-  pod — dimensione pelo uso normal, não pelo pico.
-- `limits` de memória deve ter alguma folga sobre o uso real observado
-  (`kubectl top pod` ao longo do tempo, não um único snapshot) — limit
-  igual ao uso médio garante `OOMKilled` no primeiro pico.
-- Limit de CPU é decisão caso a caso: ele não mata o pod, mas faz throttling
-  (a aplicação é freada mesmo com o node ocioso), e o boot de JVM é onde isso
-  mais aparece. Quando o time exigir limit de CPU, dimensione com folga para o
-  startup.
-- **JVM**: o limit de memória do container cobre heap + metaspace + threads +
-  buffers nativos. Fixe o heap relativo ao limit
-  (`JAVA_TOOL_OPTIONS=-XX:MaxRAMPercentage=75`, ou `-Xmx` explícito) e suba os
-  dois juntos; aumentar só o limit deixa o heap crescer até bater nele de novo.
-- Não copie `requests`/`limits` de outro serviço "porque parece razoável" —
-  cada aplicação tem perfil de consumo diferente; meça antes de fixar.
+- `requests` is what the scheduler reserves when deciding which node to
+  place the pod on — size it by normal usage, not by peak.
+- The memory `limits` must have some headroom over the observed real usage
+  (`kubectl top pod` over time, not a single snapshot) — a limit equal to the
+  average usage guarantees `OOMKilled` on the first peak.
+- A CPU limit is a case-by-case decision: it does not kill the pod, but it
+  causes throttling (the application is slowed down even with the node idle),
+  and JVM boot is where this shows the most. When the team requires a CPU
+  limit, size it with headroom for startup.
+- **JVM**: the container memory limit covers heap + metaspace + threads +
+  native buffers. Pin the heap relative to the limit
+  (`JAVA_TOOL_OPTIONS=-XX:MaxRAMPercentage=75`, or an explicit `-Xmx`) and
+  raise both together; raising only the limit lets the heap grow until it
+  hits it again.
+- Do not copy `requests`/`limits` from another service "because it looks
+  reasonable" — each application has a different consumption profile;
+  measure before pinning.
 
 ## Probes (liveness/readiness/startup)
 
-- **`readinessProbe`**: decide se o pod recebe tráfego do Service. Falha aqui
-  não reinicia o pod, só o tira da lista de endpoints — é o probe certo para
-  "app está temporariamente sobrecarregada, mas viva".
-- **`livenessProbe`**: falha aqui mata e reinicia o container. Um liveness
-  mal calibrado (timeout curto, endpoint pesado) causa reinícios em cascata
-  sob carga — quando um app está lento mas funcional, isso pode ser confundido
-  com `CrashLoopBackOff` de causa raiz completamente diferente.
-- **`startupProbe`**: use para apps com boot lento, para o liveness só
-  começar a contar depois que a app realmente inicializou — evita que o
-  liveness mate o pod ainda durante o startup normal.
+- **`readinessProbe`**: decides whether the pod receives traffic from the
+  Service. A failure here does not restart the pod, it only removes it from
+  the list of endpoints — it is the right probe for "the app is temporarily
+  overloaded, but alive".
+- **`livenessProbe`**: a failure here kills and restarts the container. A
+  badly calibrated liveness (short timeout, heavy endpoint) causes cascading
+  restarts under load — when an app is slow but functional, this can be
+  mistaken for a `CrashLoopBackOff` with a completely different root cause.
+- **`startupProbe`**: use it for apps with slow boot, so liveness only starts
+  counting after the app has really initialized — keeps liveness from killing
+  the pod during normal startup.
 
 ```yaml
 readinessProbe:
@@ -127,11 +133,12 @@ livenessProbe:
   failureThreshold: 3
 ```
 
-Nunca aponte liveness/readiness para o mesmo endpoint de "health geral" que
-depende de recursos externos (banco, fila) — se o banco cair, isso derruba
-todos os pods da aplicação via liveness em vez de só marcar como not-ready.
+Never point liveness/readiness at the same "general health" endpoint that
+depends on external resources (database, queue) — if the database goes down,
+this takes down every pod of the application via liveness instead of only
+marking them not-ready.
 
-## securityContext mínimo
+## Minimal securityContext
 
 ```yaml
 securityContext:
@@ -142,26 +149,25 @@ securityContext:
     drop: ["ALL"]
 ```
 
-Rode como root ou com filesystem gravável só se a aplicação exigir de forma
-comprovada (ex.: grava cache local) — nesse caso, monte um `volume` específico
-gravável em vez de liberar o filesystem inteiro.
+Run as root or with a writable filesystem only if the application provably
+requires it (e.g. it writes a local cache) — in that case, mount a specific
+writable `volume` instead of opening up the whole filesystem.
 
-## Rede: Service, Ingress, DNS
+## Networking: Service, Ingress, DNS
 
-- Um Service não encontra pods → confira se o `selector` do Service bate
-  exatamente com os `labels` do pod (`kubectl get endpoints <service>` vazio
-  é o sinal mais direto).
-- DNS interno resolve como `<service>.<namespace>.svc.cluster.local` — erros
-  de resolução cruzando namespace geralmente são nome incompleto.
-- Ingress sem efeito: confira se o Ingress Controller do cluster corresponde
-  à `ingressClassName` declarada, e se o Service referenciado existe no mesmo
-  namespace do Ingress.
+- A Service does not find pods → check that the Service's `selector` matches
+  the pod's `labels` exactly (an empty `kubectl get endpoints <service>` is
+  the most direct sign).
+- Internal DNS resolves as `<service>.<namespace>.svc.cluster.local` —
+  resolution errors across namespaces are usually an incomplete name.
+- Ingress with no effect: check that the cluster's Ingress Controller
+  matches the declared `ingressClassName`, and that the referenced Service
+  exists in the same namespace as the Ingress.
 
 ## Storage: PVC/PV
 
-- Pod em `Pending` por `FailedScheduling` relacionado a volume: o PVC não
-  bindou. Cheque `kubectl get pvc -n <namespace>` — `Pending` ali indica que
-  não há `StorageClass`/`PV` compatível disponível.
-- Nunca aponte dois pods de escrita para o mesmo PVC com `ReadWriteOnce` em
-  nodes diferentes — isso trava o segundo pod em `Pending`, não é bug do
-  agendador.
+- Pod in `Pending` due to a volume-related `FailedScheduling`: the PVC did
+  not bind. Check `kubectl get pvc -n <namespace>` — `Pending` there means
+  there is no compatible `StorageClass`/`PV` available.
+- Never point two writing pods at the same `ReadWriteOnce` PVC on different
+  nodes — that locks the second pod in `Pending`, it is not a scheduler bug.

@@ -1,40 +1,38 @@
-# Docker — Armadilhas e Checklist
+# Docker — Pitfalls and Checklist
 
-O básico (multi-stage, ordem de camadas para cache, `.dockerignore`,
-`USER` não-root, base `alpine`/`slim`) você já sabe — não precisa de
-tutorial aqui. Este arquivo cobre só o que costuma passar despercebido
-numa revisão de Dockerfile e o que checar antes de dar uma imagem como
-pronta.
+The basics (multi-stage, layer order for caching, `.dockerignore`, non-root
+`USER`, `alpine`/`slim` base) you already know — no tutorial needed here.
+This file covers only what usually slips through a Dockerfile review and
+what to check before calling an image ready.
 
-## Armadilhas que passam despercebidas
+## Pitfalls that slip through
 
-| Sintoma / achado | Causa real | O que fazer |
+| Symptom / finding | Real cause | What to do |
 |---|---|---|
-| Build só funciona com `node_modules/` do host presente | `ENV NODE_ENV=production` declarado **antes** do `npm install`/`npm ci` faz o npm pular devDependencies, então `tsc`/bundler nunca é instalado; o build "passa" porque `COPY . .` trouxe o `node_modules/` local — e quebra assim que um `.dockerignore` excluir a pasta | Só defina `NODE_ENV=production` no estágio de runtime; instale devDeps no estágio de build e faça `npm prune --omit=dev` (ou `npm ci --omit=dev` num estágio limpo) antes de copiar para o runtime |
-| Token/senha "removida" do Dockerfile mas ainda visível em `docker history` | Qualquer `ARG`/`ENV` usado durante o build fica gravado na camada, mesmo que apagado depois; imagens já publicadas continuam com o valor | Segredo de build só via `RUN --mount=type=secret,id=...` (BuildKit) ou `.npmrc` montado no build. **Rotacione** o segredo já vazado — trocar o Dockerfile não desfaz a exposição |
-| Imagem grande apesar de `rm -rf /var/lib/apt/lists/*` | A limpeza está num `RUN` separado da instalação — o espaço já foi gravado na camada anterior e a remoção não libera nada | Instalação e limpeza no mesmo `RUN`, encadeadas com `&&` |
-| `docker compose up` funciona, mas o pod no cluster falha com `exec format error` | Imagem buildada para a arquitetura da máquina local (`arm64` num Mac) e o cluster é `amd64` | `docker build --platform linux/amd64` (ou buildx multi-arch) — e no CI, garanta que o runner builda para a arquitetura do cluster |
-| `depends_on` no compose não espera o banco ficar pronto | `depends_on` espera só o container iniciar, não o serviço aceitar conexão | `healthcheck` no serviço + `condition: service_healthy`, ou retry de conexão na própria aplicação |
-| Ferramentas de debug (`curl`, `vim`, `netcat`) na imagem final "por garantia" | Aumentam superfície de ataque e tamanho sem necessidade | Debug em produção é com `kubectl debug` (container efêmero), não com ferramenta embutida na imagem — ver `kubernetes.md` |
-| Pod demora o `terminationGracePeriodSeconds` inteiro para parar e a app não fecha conexões | `ENTRYPOINT`/`CMD` em forma de shell (`CMD node app.js`) ou script `sh -c` sem `exec`: o PID 1 é o shell, que não repassa o SIGTERM para a app | Forma exec (`CMD ["node", "app.js"]`), ou `exec` na última linha do script de entrada |
-| Base `alpine` quebra dependência nativa (`bcrypt`, `sharp`, drivers) | musl vs glibc | Use `-slim` (Debian) nos dois estágios em vez de forçar alpine; a diferença de tamanho não compensa o risco |
+| Build only works with the host's `node_modules/` present | `ENV NODE_ENV=production` declared **before** `npm install`/`npm ci` makes npm skip devDependencies, so `tsc`/the bundler is never installed; the build "passes" because `COPY . .` brought in the local `node_modules/` — and breaks as soon as a `.dockerignore` excludes the folder | Only set `NODE_ENV=production` in the runtime stage; install devDeps in the build stage and run `npm prune --omit=dev` (or `npm ci --omit=dev` in a clean stage) before copying to runtime |
+| Token/password "removed" from the Dockerfile but still visible in `docker history` | Any `ARG`/`ENV` used during the build is recorded in the layer, even if deleted later; images already published keep the value | Build secrets only via `RUN --mount=type=secret,id=...` (BuildKit) or an `.npmrc` mounted at build time. **Rotate** the leaked secret — changing the Dockerfile does not undo the exposure |
+| Large image despite `rm -rf /var/lib/apt/lists/*` | The cleanup is in a `RUN` separate from the install — the space was already recorded in the previous layer and the removal frees nothing | Install and cleanup in the same `RUN`, chained with `&&` |
+| `docker compose up` works, but the pod in the cluster fails with `exec format error` | Image built for the local machine's architecture (`arm64` on a Mac) and the cluster is `amd64` | `docker build --platform linux/amd64` (or buildx multi-arch) — and in CI, make sure the runner builds for the cluster's architecture |
+| `depends_on` in compose does not wait for the database to be ready | `depends_on` only waits for the container to start, not for the service to accept connections | `healthcheck` on the service + `condition: service_healthy`, or connection retry in the application itself |
+| Debug tools (`curl`, `vim`, `netcat`) in the final image "just in case" | They increase attack surface and size for no reason | Debugging in production is done with `kubectl debug` (ephemeral container), not with a tool baked into the image — see `kubernetes.md` |
+| Pod takes the whole `terminationGracePeriodSeconds` to stop and the app does not close connections | `ENTRYPOINT`/`CMD` in shell form (`CMD node app.js`) or an `sh -c` script without `exec`: PID 1 is the shell, which does not forward SIGTERM to the app | Exec form (`CMD ["node", "app.js"]`), or `exec` on the last line of the entry script |
+| `alpine` base breaks a native dependency (`bcrypt`, `sharp`, drivers) | musl vs glibc | Use `-slim` (Debian) in both stages instead of forcing alpine; the size difference is not worth the risk |
 
-## Checklist antes de entregar um Dockerfile
+## Checklist before delivering a Dockerfile
 
-- [ ] Multi-stage: o estágio final não contém compilador, devDependencies
-      nem fonte — só o artefato e as dependências de runtime.
-- [ ] Ordem de camadas: manifesto de dependências (`package*.json`,
-      `pom.xml`, `requirements.txt`) copiado e instalado **antes** do
-      `COPY . .`.
-- [ ] `npm ci` (com lockfile commitado) em vez de `npm install`; se não há
-      lockfile, diga isso ao usuário em vez de trocar silenciosamente.
-- [ ] `.dockerignore` entregue com pelo menos `node_modules`, `.git`,
+- [ ] Multi-stage: the final stage contains no compiler, devDependencies or
+      source — only the artifact and the runtime dependencies.
+- [ ] Layer order: dependency manifest (`package*.json`, `pom.xml`,
+      `requirements.txt`) copied and installed **before** `COPY . .`.
+- [ ] `npm ci` (with a committed lockfile) instead of `npm install`; if there
+      is no lockfile, tell the user instead of silently switching.
+- [ ] `.dockerignore` delivered with at least `node_modules`, `.git`,
       `dist`/`target`, `.env*`.
-- [ ] Nenhum `ARG`/`ENV` com segredo; se houve, o aviso de rotação está
-      na resposta.
-- [ ] `USER` não-root no estágio final; se precisa gravar em disco, um
-      volume específico, não filesystem inteiro gravável.
-- [ ] Como validar, para o usuário rodar (Docker raramente está disponível
-      onde a skill roda): `docker build`, `docker image ls` (tamanho),
-      `docker history <img> | grep -i <segredo>` (deve vir vazio), rebuild
-      após `touch src/x.ts` (só o estágio de compilação deve reexecutar).
+- [ ] No `ARG`/`ENV` with a secret; if there was one, the rotation warning is
+      in the reply.
+- [ ] Non-root `USER` in the final stage; if it needs to write to disk, a
+      specific volume, not a fully writable filesystem.
+- [ ] How to validate, for the user to run (Docker is rarely available where
+      the skill runs): `docker build`, `docker image ls` (size),
+      `docker history <img> | grep -i <secret>` (must come back empty),
+      rebuild after `touch src/x.ts` (only the compile stage should re-run).

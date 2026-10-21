@@ -1,87 +1,91 @@
-# Terraform — Infraestrutura como Código
+# Terraform — Infrastructure as Code
 
-## Índice
-- [Estrutura de um módulo](#estrutura-de-um-módulo)
-- [Ciclo init/plan/apply/destroy](#ciclo-initplanapplydestroy)
-- [Gestão de state](#gestão-de-state)
-- [Variáveis e workspaces](#variáveis-e-workspaces)
-- [Boas práticas](#boas-práticas)
-- [Armadilhas comuns](#armadilhas-comuns)
+## Contents
+- [Module structure](#module-structure)
+- [init/plan/apply/destroy cycle](#initplanapplydestroy-cycle)
+- [State management](#state-management)
+- [Variables and workspaces](#variables-and-workspaces)
+- [Good practices](#good-practices)
+- [Common pitfalls](#common-pitfalls)
 
-## Estrutura de um módulo
+## Module structure
 
 ```
 meu-modulo/
-├── main.tf          # recursos
-├── variables.tf      # inputs (com description e type sempre)
-├── outputs.tf        # outputs consumidos por quem usa o módulo
-├── versions.tf        # required_providers e required_version
+├── main.tf          # resources
+├── variables.tf      # inputs (always with description and type)
+├── outputs.tf        # outputs consumed by whoever uses the module
+├── versions.tf        # required_providers and required_version
 └── README.md
 ```
 
-Um módulo reutilizável não deve ter valores fixos que dependem do ambiente
-(nome de projeto, região, tamanho de instância) — esses valores entram via
-`variables.tf` e são passados por quem instancia o módulo.
+A reusable module must not have fixed values that depend on the environment
+(project name, region, instance size) — those values come in via
+`variables.tf` and are passed by whoever instantiates the module.
 
-## Ciclo init/plan/apply/destroy
+## init/plan/apply/destroy cycle
 
 ```bash
-terraform init                 # baixa providers/módulos, configura backend
-terraform validate             # valida sintaxe/tipos, sem acessar a infra
-terraform plan -out=tfplan     # mostra o que vai mudar, sem aplicar
-terraform apply tfplan         # aplica exatamente o plan revisado
-terraform destroy              # remove os recursos gerenciados
+terraform init                 # downloads providers/modules, configures the backend
+terraform validate             # validates syntax/types, without touching the infra
+terraform plan -out=tfplan     # shows what will change, without applying
+terraform apply tfplan         # applies exactly the reviewed plan
+terraform destroy              # removes the managed resources
 ```
 
-**Nunca rode `terraform apply` sem revisar o `plan` correspondente
-primeiro** — aplicar `tfplan` salvo (em vez de rodar `apply` direto)
-garante que o que foi revisado é exatamente o que será aplicado, sem uma
-janela onde o estado remoto mudou entre o plan e o apply.
+**Never run `terraform apply` without first reviewing the corresponding
+`plan`** — applying the saved `tfplan` (instead of running `apply` directly)
+guarantees that what was reviewed is exactly what will be applied, with no
+window where the remote state changed between the plan and the apply.
 
-Leia a saída do `plan` pelos símbolos:
-- `+` cria, `-` destrói, `~` atualiza in-place, `-/+` destrói e recria.
-- `-/+` é o mais perigoso: o recurso antigo é destruído e o dado dele se
-  perde (ex.: banco recriado do zero); sem `create_before_destroy`, há também
-  downtime. Pare e confirme antes de aplicar isso em ambiente com dado real.
-- O `plan` diz o motivo da recriação: a linha marcada `# forces replacement`
-  é o atributo que obriga a troca (nome, zona, chave). Mudar esse atributo de
-  volta, ou usar `moved`, costuma evitar a recriação.
-- Recurso que não pode ser recriado (banco, bucket com dado) leva
-  `lifecycle { prevent_destroy = true }`: o `plan` falha em vez de destruir.
+Read the `plan` output by its symbols:
+- `+` creates, `-` destroys, `~` updates in place, `-/+` destroys and
+  recreates.
+- `-/+` is the most dangerous: the old resource is destroyed and its data is
+  lost (e.g. a database recreated from scratch); without
+  `create_before_destroy`, there is also downtime. Stop and confirm before
+  applying this to an environment with real data.
+- The `plan` states the reason for the recreation: the line marked
+  `# forces replacement` is the attribute that forces the replacement (name,
+  zone, key). Changing that attribute back, or using `moved`, usually avoids
+  the recreation.
+- A resource that cannot be recreated (database, bucket with data) gets
+  `lifecycle { prevent_destroy = true }`: the `plan` fails instead of
+  destroying.
 
-## Gestão de state
+## State management
 
-O state (`terraform.tfstate`) é a fonte de verdade de quais recursos reais
-correspondem a quais blocos do código — e contém, em texto plano, qualquer
-valor sensível gerenciado (senhas geradas, chaves).
+The state (`terraform.tfstate`) is the source of truth for which real
+resources correspond to which blocks of code — and it contains, in plain
+text, any sensitive value it manages (generated passwords, keys).
 
-- **Sempre use backend remoto** (S3 com `use_lockfile = true` — lock nativo
-  desde o Terraform 1.11; o lock via DynamoDB foi descontinuado —, Azure
-  Storage, GCS, HCP Terraform) com locking habilitado — state local em disco de uma máquina não
-  escala para mais de uma pessoa e não tem lock, gerando corrupção quando
-  dois `apply` rodam ao mesmo tempo.
-- **Nunca versione `.tfstate` no git** — ele carrega segredos e gera conflito
-  de merge impossível de resolver manualmente.
-- **Drift** (infra real diferente do state) acontece quando alguém muda um
-  recurso manualmente pelo console/CLI do provedor. Detecte com
-  `terraform plan` regular — se aparecer mudança que ninguém fez no código,
-  é drift, não bug do Terraform. Corrija a causa (acesso manual ao ambiente),
-  não só o state.
-- `terraform state list` / `terraform state show <recurso>` inspecionam o
-  state sem precisar abrir o arquivo bruto.
-- `sensitive = true` em variável e output só esconde o valor da saída do
-  `plan` e do log: no state ele continua em texto. Proteja o backend
-  (acesso, criptografia), não só o código.
-- Não proponha `terraform state rm`, `state mv` ou `import` como atalho sem o
-  usuário pedir: mexer no state à mão desalinha código e infra sem deixar
-  rastro no `plan`. Prefira `moved` e blocos `import` no código, que passam
-  pela revisão.
+- **Always use a remote backend** (S3 with `use_lockfile = true` — native
+  locking since Terraform 1.11; DynamoDB locking was deprecated —, Azure
+  Storage, GCS, HCP Terraform) with locking enabled — local state on one
+  machine's disk does not scale beyond one person and has no lock, causing
+  corruption when two `apply` runs happen at the same time.
+- **Never version `.tfstate` in git** — it carries secrets and creates merge
+  conflicts impossible to resolve by hand.
+- **Drift** (real infra different from the state) happens when someone
+  changes a resource manually through the provider's console/CLI. Detect it
+  with a regular `terraform plan` — if a change appears that nobody made in
+  the code, it is drift, not a Terraform bug. Fix the cause (manual access to
+  the environment), not just the state.
+- `terraform state list` / `terraform state show <resource>` inspect the
+  state without opening the raw file.
+- `sensitive = true` on a variable and output only hides the value from the
+  `plan` output and the log: in the state it remains in plain text. Protect
+  the backend (access, encryption), not just the code.
+- Do not propose `terraform state rm`, `state mv` or `import` as a shortcut
+  unless the user asks: editing the state by hand misaligns code and infra
+  without leaving a trace in the `plan`. Prefer `moved` and `import` blocks in
+  the code, which go through review.
 
-## Variáveis e workspaces
+## Variables and workspaces
 
 ```hcl
 variable "ambiente" {
-  description = "Nome do ambiente (hml, pro)"
+  description = "Environment name (hml, pro)"
   type        = string
 }
 ```
@@ -90,35 +94,36 @@ variable "ambiente" {
 terraform plan -var="ambiente=hml" -var-file="hml.tfvars"
 ```
 
-Workspaces (`terraform workspace new hml`) isolam state por ambiente dentro
-do mesmo código — útil quando a diferença entre ambientes é só valor de
-variável. Quando a topologia difere estruturalmente entre ambientes (não só
-valores), prefira diretórios/módulos separados a forçar tudo num workspace
-só; misturar os dois modelos confunde qual state pertence a qual ambiente.
+Workspaces (`terraform workspace new hml`) isolate state per environment
+within the same code — useful when the difference between environments is
+only variable values. When the topology differs structurally between
+environments (not just values), prefer separate directories/modules to
+forcing everything into a single workspace; mixing the two models confuses
+which state belongs to which environment.
 
-## Boas práticas
+## Good practices
 
-- Nunca hardcode segredo em `.tf`/`.tfvars` versionado — use variável de
-  ambiente (`TF_VAR_*`), secret manager do provedor, ou um `.tfvars` fora do
-  controle de versão.
-- Fixe a versão do provider (`required_providers` com `version = "~> 5.0"`)
-  — um `apply` num pipeline meses depois, sem fixação, pode puxar uma versão
-  de provider com mudança de comportamento.
-- Nomeie recursos por função, não por valor atual (ex.: `aws_instance.api`,
-  não `aws_instance.t3_medium`) — o nome sobrevive a uma mudança de tipo de
-  instância, e renomear depois exige `moved` (ver abaixo).
+- Never hardcode a secret in a versioned `.tf`/`.tfvars` — use an
+  environment variable (`TF_VAR_*`), the provider's secret manager, or a
+  `.tfvars` outside version control.
+- Pin the provider version (`required_providers` with `version = "~> 5.0"`)
+  — an `apply` in a pipeline months later, without pinning, can pull a
+  provider version with a behaviour change.
+- Name resources by function, not by current value (e.g. `aws_instance.api`,
+  not `aws_instance.t3_medium`) — the name survives an instance type change,
+  and renaming later requires `moved` (see below).
 
-## Armadilhas comuns
+## Common pitfalls
 
-- **Renomear um `resource` block em vez de usar `moved`**: renomear
-  `resource "aws_instance" "old" {}` para `"new"` sem um bloco `moved` faz o
-  Terraform entender como destruir o antigo e criar um novo — use
-  `moved { from = aws_instance.old to = aws_instance.new }` para preservar o
-  recurso real.
-- **`terraform apply` direto em CI sem `plan` salvo revisável**: pipelines
-  de produção devem gerar o `plan` como artifact e exigir aprovação manual
-  antes do `apply` — mesmo padrão de "nunca aplicar sem confirmação" usado
-  em mudança de cluster.
-- **Módulo de terceiros sem pin de versão** (`source = "git::..."` sem
-  `ref=`): o módulo pode mudar de comportamento entre execuções sem nenhuma
-  mudança no seu próprio código.
+- **Renaming a `resource` block instead of using `moved`**: renaming
+  `resource "aws_instance" "old" {}` to `"new"` without a `moved` block makes
+  Terraform read it as destroying the old one and creating a new one — use
+  `moved { from = aws_instance.old to = aws_instance.new }` to preserve the
+  real resource.
+- **`terraform apply` straight in CI without a reviewable saved `plan`**:
+  production pipelines must generate the `plan` as an artifact and require
+  manual approval before the `apply` — the same "never apply without
+  confirmation" pattern used for cluster changes.
+- **Third-party module without a version pin** (`source = "git::..."`
+  without `ref=`): the module can change behaviour between runs without any
+  change in your own code.
