@@ -1,17 +1,18 @@
 #!/bin/bash
-# Hook PreToolUse (matcher: Bash) do guardrails. Bloqueia, antes de executar,
-# os comandos da regra 5 do SKILL.md que dá para reconhecer pelo texto.
-# Adaptado de mattpocock/skills@git-guardrails-claude-code (MIT).
+# guardrails PreToolUse hook (matcher: Bash). Blocks, before execution, the
+# commands from rule 5 of SKILL.md that can be recognized from their text.
+# Adapted from mattpocock/skills@git-guardrails-claude-code (MIT).
 #
-# Contrato do Claude Code: exit 2 bloqueia a chamada e entrega o stderr ao
-# agente; qualquer outro exit deixa passar.
+# Claude Code contract: exit 2 blocks the call and hands stderr to the agent;
+# any other exit lets it through.
 #
-# Teste: scripts/test-block-dangerous.sh
+# Test: scripts/test-block-dangerous.sh
 
 INPUT=$(cat)
 
-# Sem jq, casa contra o JSON cru: bloqueia a mais (o campo description também
-# entra na busca), nunca a menos. Liberar tudo em silêncio seria pior.
+# Without jq, match against the raw JSON: over-block (the description field
+# also enters the search), never under-block. Silently allowing everything
+# would be worse.
 if command -v jq >/dev/null 2>&1; then
   COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
 else
@@ -19,21 +20,22 @@ else
 fi
 [ -z "$COMMAND" ] && exit 0
 
-# S: qualquer coisa dentro do mesmo comando (sem atravessar | ; &) até um
-# espaço — é o que deixa passar opção antes do subcomando (kubectl -n x delete).
-# E: fim do token, para "push" não bater em "feat/push-x".
+# S: anything within the same command (without crossing | ; &) up to a
+# space — this is what lets an option through before the subcommand
+# (kubectl -n x delete).
+# E: end of token, so "push" does not match "feat/push-x".
 S='[^|;&]*[[:space:]]'
 E='([[:space:]"]|$)'
 
 PADROES=(
-  # git: reescreve histórico ou descarta trabalho
+  # git: rewrites history or discards work
   "\bgit${S}push${E}"
   "\bgit${S}reset${S}--hard${E}"
   "\bgit${S}clean${S}(-[a-zA-Z]*f[a-zA-Z]*|--force)${E}"
   "\bgit${S}branch${S}(-[a-zA-Z]*D[a-zA-Z]*|--delete${S}--force|--force${S}--delete)${E}"
   "\bgit${S}(checkout|restore)${S}(\.|--${E})"
   "\bgit${S}stash${S}(drop|clear)${E}"
-  # infraestrutura: destrói recurso fora desta sessão
+  # infrastructure: destroys a resource outside this session
   "\bkubectl${S}delete${E}"
   "\bhelm${S}(uninstall|delete)${E}"
   "\bterraform${S}(destroy|-destroy)${E}"
@@ -47,9 +49,10 @@ PADROES=(
 for padrao in "${PADROES[@]}"; do
   if printf '%s' "$COMMAND" | grep -qE -- "$padrao"; then
     cat >&2 <<MSG
-BLOQUEADO pelo guardrails: '$COMMAND' bate no padrão '$padrao'.
-Você não tem autoridade para rodar isso. Se a ação for desejada, mostre o comando
-e a consequência ao usuário e peça que ele mesmo rode (prefixo ! no prompt).
+BLOCKED by guardrails: '$COMMAND' matches the pattern '$padrao'.
+You do not have the authority to run this. If the action is wanted, show the
+command and its consequence to the user and ask them to run it themselves
+(prefix ! in the prompt).
 MSG
     exit 2
   fi

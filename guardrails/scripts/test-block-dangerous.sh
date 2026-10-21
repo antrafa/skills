@@ -1,6 +1,6 @@
 #!/bin/bash
-# Casos do hook block-dangerous.sh: o que tem que bloquear e o que tem que passar.
-# Roda com e sem jq no PATH. Uso: scripts/test-block-dangerous.sh
+# Cases for the block-dangerous.sh hook: what must be blocked and what must pass.
+# Runs with and without jq on PATH. Usage: scripts/test-block-dangerous.sh
 
 HOOK="$(dirname "$0")/block-dangerous.sh"
 
@@ -56,7 +56,7 @@ PASSA=(
   'ls | grep push'
 )
 
-# Monta o JSON sem jq, para o teste também valer onde ele não existe.
+# Builds the JSON without jq, so the test also holds where jq is missing.
 json() { printf '{"tool_input":{"command":"%s"}}' "$(printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g')"; }
 
 SEM_JQ=$(mktemp -d)
@@ -64,11 +64,11 @@ trap 'rm -rf "$SEM_JQ"' EXIT
 for bin in cat grep printf; do ln -s "$(command -v "$bin")" "$SEM_JQ/$bin"; done
 
 falhas=0
-roda() { # <esperado> <PATH> <comando>
+roda() { # <expected> <PATH> <command>
   json "$3" | env PATH="$2" /bin/bash "$HOOK" >/dev/null 2>&1
   local obtido=$?
   [ "$obtido" = "$1" ] && return
-  echo "FALHOU (PATH=$2): esperado exit=$1, obtido exit=$obtido :: $3"
+  echo "FAILED (PATH=$2): expected exit=$1, got exit=$obtido :: $3"
   falhas=$((falhas + 1))
 }
 
@@ -78,5 +78,5 @@ for path in "$PATH" "$SEM_JQ"; do
 done
 
 total=$(( (${#BLOQUEIA[@]} + ${#PASSA[@]}) * 2 ))
-echo "$((total - falhas))/$total casos ok"
+echo "$((total - falhas))/$total cases ok"
 [ "$falhas" -eq 0 ]
