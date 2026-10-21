@@ -89,10 +89,10 @@ skill's `SKILL.md` or `README.md` lists what it needs.
 
 ## Language
 
-The instructions for `guardrails`, `cluster-analyzer`, `devops-expert`,
-`performance-architect` and `dossie-politico` are written in Portuguese. The
-other skills are written in English. Agents follow either version from prompts
-in any language. `dossie-politico` only covers Brazilian public data.
+All skills are written in English and reply in the user's language. Their
+descriptions keep the Portuguese trigger phrases. `dossie-politico` only covers
+Brazilian public data, and the dossiers it generates are in Brazilian
+Portuguese.
 
 ## Quality
 
