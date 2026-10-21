@@ -48,6 +48,15 @@ modo de permissão ativo (auto-aceite, bypass, plan, "yolo").
    instalado, o "sim" não basta: o agente mostra o comando e o usuário roda
    com `!` (ver *Camada mecânica*).
 
+   **Rodar pipeline ou job também pede a sua própria permissão**, separada da
+   do commit e da do push: disparar pipeline, dar play em job manual, retry,
+   trigger, `glab ci run`, `glab api .../jobs/<id>/play`. O "sim" tem que nomear
+   a execução. "Comita e sobe", "pode subir" ou "manda" cobrem o commit e o
+   push, não o deploy: quem pede pode querer rodar o job, escolher a hora ou a
+   pipeline. Depois do push, parar, mostrar a pipeline e o job e perguntar quem
+   dispara. Vale também para o segundo ambiente de uma sequência já combinada
+   ("começa pela homologação"): cada execução, seu próprio "sim".
+
 5. **Toda ação destrutiva ou difícil de reverter exige confirmação.** Inclui, sem
    se limitar a:
    - `git push --force`, `git reset --hard`, `git checkout --` / `restore` /
